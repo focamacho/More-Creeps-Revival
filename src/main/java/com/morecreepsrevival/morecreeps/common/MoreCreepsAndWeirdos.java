@@ -360,7 +360,7 @@ public class MoreCreepsAndWeirdos {
     @EventHandler
     public void preInit(FMLPreInitializationEvent event) {
         MoreCreepsConfig.preInit(event);
-
+        CreepsItemHandler.initItems();
         proxy.preInit(event);
     }
 

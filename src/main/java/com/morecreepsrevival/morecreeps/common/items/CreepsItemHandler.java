@@ -17,73 +17,136 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 @EventBusSubscriber(modid = MoreCreepsAndWeirdos.modid)
 public class CreepsItemHandler {
-    //Achievements
-    public static final Item floobAchievement = new CreepsItem("floob_achievement");
 
-    public static final Item goToHellAchievement = new CreepsItem("gotohell_achievement");
+    // Achievements
+    public static Item floobAchievement;
+    public static Item goToHellAchievement;
+    public static Item pigWhispererAchievement;
+    public static Item theZipperAchievement;
 
-    public static final Item pigWhispererAchievement = new CreepsItem("pigwhisperer_achievement");
+    // Items
+    public static Item guineaPigRadio;
+    public static Item lifeGem;
+    public static Item bandaid;
+    public static Item popsicle;
+    public static Item blorpCola;
+    public static Item money;
+    public static Item armSword;
+    public static Item zebraBody;
+    public static Item zebraBoots;
+    public static Item zebraHelmet;
+    public static Item zebraLegs;
+    public static Item armyGem;
+    public static Item atom;
+    public static Item babyJarEmpty;
+    public static Item babyJarFull;
+    public static Item lolly;
+    public static Item gooDonut;
+    public static Item raygun;
+    public static Item dev_raygun;
+    public static Item evilEgg;
+    public static Item earthGem;
+    public static Item miningGem;
+    public static Item skyGem;
+    public static Item healingGem;
+    public static Item fireGem;
+    public static Item donut;
+    public static Item gemSword;
+    public static Item frisbee;
+    public static Item shrinkRay;
+    public static Item horseHeadGem;
+    public static Item sundae;
+    public static Item shrinkShrink;
+    public static Item gun;
+    public static Item extinguisher;
+    public static Item rayRay;
+    public static Item dev_rayRay;
+    public static Item rocket;
+    public static Item floobRaygun;
+    public static Item limbs;
+    public static Item bulletBullet;
+    public static Item smoke;
+    public static Item growRay;
+    public static Item zebraHide;
+    public static Item cavemanClub;
+    public static Item growbotGrowRay;
+    public static Item salGun;
+    public static Item battery;
+    public static Item ram16k;
+    public static Item mobilePhone;
+    public static Item medicine;
+    public static Item luckyDress;
+    public static Item peeBucket;
+    public static Item vhsTape;
+    public static Item vhsTape2;
+    public static Item vHammer;
 
-    public static final Item theZipperAchievement = new CreepsItem("thezipper_achievement");
-
-    //Particles
-    public static final Item guineaPigRadio = new ItemGuineaPigRadio();
-    public static final Item lifeGem = new ItemLifeGem();
-    public static final Item bandaid = new ItemBandaid();
-    public static final Item popsicle = new ItemPopsicle();
-    public static final Item blorpCola = new ItemBlorpCola();
-    public static final Item money = new ItemMoney();
-    public static final Item armSword = new ItemArmSword();
-    public static final Item zebraBody = new ItemArmorZebraBody();
-    public static final Item zebraBoots = new ItemArmorZebraBoots();
-    public static final Item zebraHelmet = new ItemArmorZebraHelmet();
-    public static final Item zebraLegs = new ItemArmorZebraLegs();
-    public static final Item armyGem = new ItemArmyGem();
-    public static final Item atom = new ItemAtom();
-    public static final Item babyJarEmpty = new ItemBabyJarEmpty();
-    public static final Item babyJarFull = new ItemBabyJarFull();
-    public static final Item lolly = new ItemLolly();
-    public static final Item gooDonut = new ItemGooDonut();
-    public static final Item raygun = new ItemRaygun();
-    public static final Item dev_raygun = new ItemDevRaygun();
-    public static final Item evilEgg = new ItemEvilEgg();
-    public static final Item earthGem = new ItemEarthGem();
-    public static final Item miningGem = new ItemMiningGem();
-    public static final Item skyGem = new ItemSkyGem();
-    public static final Item healingGem = new ItemHealingGem();
-    public static final Item fireGem = new ItemFireGem();
-    public static final Item donut = new ItemDonut();
-    public static final Item gemSword = new ItemGemSword();
-    public static final Item frisbee = new ItemFrisbee();
-    public static final Item shrinkRay = new ItemShrinkRay();
-    public static final Item horseHeadGem = new ItemHorseHeadGem();
-    public static final Item sundae = new ItemSundae();
-    public static final Item shrinkShrink = new CreepsItem("shrinkshrink", true);
-    public static final Item gun = new ItemGun();
-    public static final Item extinguisher = new ItemExtinguisher();
-    public static final Item rayRay = new CreepsItem("rayray", true);
-    public static final Item dev_rayRay = new CreepsItem("dev_rayray", true);
-    public static final Item rocket = new ItemRocket();
-    public static final Item floobRaygun = new ItemRaygun("floob_raygun", true);
-    public static final Item limbs = new ItemLimbs();
-    public static final Item bulletBullet = new CreepsItem("bulletbullet", true);
-    public static final Item smoke = new CreepsItem("smoke", true);
-    public static final Item growRay = new ItemGrowRay();
-    public static final Item zebraHide = new ItemZebraHide();
-    public static final Item cavemanClub = new ItemCavemanClub();
-    public static final Item growbotGrowRay = new ItemGrowRay("growbot_growray", true);
-    public static final Item salGun = new ItemGun("sal_gun", true);
-    public static final Item battery = new ItemBattery();
-    public static final Item ram16k = new ItemRam16K();
-    public static final Item mobilePhone = new ItemMobilePhone();
-    public static final Item medicine = new ItemMedicine();
-    public static final Item luckyDress = new ItemLuckyDress();
-    public static final Item peeBucket = new ItemPeeBuck();
-    public static final Item vhsTape = new ItemVHSTape();
-    public static final Item vhsTape2 = new ItemTameVHSTape();
-    public static final Item vHammer = new ItemVhammer();
-    //Items
     public static ArmorMaterial ZEBRA_ARMOR = EnumHelper.addArmorMaterial("zebra_armor", "zebra_armor", 25, new int[]{2, 4, 6, 2}, 5, SoundEvents.ITEM_ARMOR_EQUIP_GENERIC, 0);
+
+    public static void initItems() {
+        // Achievements
+        floobAchievement = new CreepsItem("floob_achievement");
+        goToHellAchievement = new CreepsItem("gotohell_achievement");
+        pigWhispererAchievement = new CreepsItem("pigwhisperer_achievement");
+        theZipperAchievement = new CreepsItem("thezipper_achievement");
+
+        // Particles and items
+        guineaPigRadio = new ItemGuineaPigRadio();
+        lifeGem = new ItemLifeGem();
+        bandaid = new ItemBandaid();
+        popsicle = new ItemPopsicle();
+        blorpCola = new ItemBlorpCola();
+        money = new ItemMoney();
+        armSword = new ItemArmSword();
+        zebraBody = new ItemArmorZebraBody();
+        zebraBoots = new ItemArmorZebraBoots();
+        zebraHelmet = new ItemArmorZebraHelmet();
+        zebraLegs = new ItemArmorZebraLegs();
+        armyGem = new ItemArmyGem();
+        atom = new ItemAtom();
+        babyJarEmpty = new ItemBabyJarEmpty();
+        babyJarFull = new ItemBabyJarFull();
+        lolly = new ItemLolly();
+        gooDonut = new ItemGooDonut();
+        raygun = new ItemRaygun();
+        dev_raygun = new ItemDevRaygun();
+        evilEgg = new ItemEvilEgg();
+        earthGem = new ItemEarthGem();
+        miningGem = new ItemMiningGem();
+        skyGem = new ItemSkyGem();
+        healingGem = new ItemHealingGem();
+        fireGem = new ItemFireGem();
+        donut = new ItemDonut();
+        gemSword = new ItemGemSword();
+        frisbee = new ItemFrisbee();
+        shrinkRay = new ItemShrinkRay();
+        horseHeadGem = new ItemHorseHeadGem();
+        sundae = new ItemSundae();
+        shrinkShrink = new CreepsItem("shrinkshrink", true);
+        gun = new ItemGun();
+        extinguisher = new ItemExtinguisher();
+        rayRay = new CreepsItem("rayray", true);
+        dev_rayRay = new CreepsItem("dev_rayray", true);
+        rocket = new ItemRocket();
+        floobRaygun = new ItemRaygun("floob_raygun", true);
+        limbs = new ItemLimbs();
+        bulletBullet = new CreepsItem("bulletbullet", true);
+        smoke = new CreepsItem("smoke", true);
+        growRay = new ItemGrowRay();
+        zebraHide = new ItemZebraHide();
+        cavemanClub = new ItemCavemanClub();
+        growbotGrowRay = new ItemGrowRay("growbot_growray", true);
+        salGun = new ItemGun("sal_gun", true);
+        battery = new ItemBattery();
+        ram16k = new ItemRam16K();
+        mobilePhone = new ItemMobilePhone();
+        medicine = new ItemMedicine();
+        luckyDress = new ItemLuckyDress();
+        peeBucket = new ItemPeeBuck();
+        vhsTape = new ItemVHSTape();
+        vhsTape2 = new ItemTameVHSTape();
+        vHammer = new ItemVhammer();
+    }
 
     @SubscribeEvent
     public static void registerItems(RegistryEvent.Register<Item> event) {
