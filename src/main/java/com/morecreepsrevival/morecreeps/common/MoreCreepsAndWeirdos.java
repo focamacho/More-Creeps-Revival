@@ -62,7 +62,7 @@ import java.time.LocalDate;
 import java.time.temporal.TemporalAdjusters;
 import java.util.*;
 
-@Mod(modid = MoreCreepsAndWeirdos.modid, name = MoreCreepsAndWeirdos.name, version = MoreCreepsAndWeirdos.version, updateJSON = MoreCreepsAndWeirdos.updateJSON, useMetadata = true)
+@Mod(modid = MoreCreepsAndWeirdos.modid, name = MoreCreepsAndWeirdos.name, version = MoreCreepsAndWeirdos.version, useMetadata = true)
 @EventBusSubscriber(modid = MoreCreepsAndWeirdos.modid)
 public class MoreCreepsAndWeirdos {
     public static final String modid = "morecreeps";
@@ -71,7 +71,6 @@ public class MoreCreepsAndWeirdos {
 
     public static final String version = "1.0.25";
 
-    public static final String updateJSON = "https://www.morecreepsrevival.com/update.json";
     public static final CreativeTabs creativeTab = new CreativeTabs("creepsTab") {
         public ItemStack getTabIconItem() {
             return new ItemStack(CreepsItemHandler.floobAchievement);
