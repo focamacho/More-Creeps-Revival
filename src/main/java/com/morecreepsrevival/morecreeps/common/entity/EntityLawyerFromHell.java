@@ -29,19 +29,17 @@ import net.minecraft.world.World;
 
 import javax.annotation.Nonnull;
 
-public class EntityLawyerFromHell extends EntityCreepBase implements IMob, IEntityCanChangeSize
-{
+public class EntityLawyerFromHell extends EntityCreepBase implements IMob, IEntityCanChangeSize {
     private static final DataParameter<Boolean> undead = EntityDataManager.<Boolean>createKey(EntityLawyerFromHell.class, DataSerializers.BOOLEAN);
 
-    public EntityLawyerFromHell(World world)
-    {
+    public EntityLawyerFromHell(World world) {
         super(world);
 
         setCreepTypeName("Lawyer From Hell");
 
         creatureType = EnumCreatureType.MONSTER;
 
-        baseHealth = (float)rand.nextInt(40) + 40.0f;
+        baseHealth = (float) rand.nextInt(40) + 40.0f;
 
         baseSpeed = 0.3d;
 
@@ -49,16 +47,14 @@ public class EntityLawyerFromHell extends EntityCreepBase implements IMob, IEnti
     }
 
     @Override
-    protected void entityInit()
-    {
+    protected void entityInit() {
         super.entityInit();
 
         dataManager.register(undead, Boolean.valueOf(false));
     }
 
     @Override
-    protected void initEntityAI()
-    {
+    protected void initEntityAI() {
         clearAITasks();
 
         NodeProcessor nodeProcessor = getNavigator().getNodeProcessor();
@@ -83,17 +79,14 @@ public class EntityLawyerFromHell extends EntityCreepBase implements IMob, IEnti
 
         targetTasks.addTask(1, new EntityAIHurtByTarget(this, false));
 
-        if (getUndead())
-        {
+        if (getUndead()) {
             targetTasks.addTask(2, new EntityAINearestAttackableTarget<>(this, EntityPlayer.class, true));
         }
     }
 
     @Override
-    protected void updateTexture()
-    {
-        if (getUndead())
-        {
+    protected void updateTexture() {
+        if (getUndead()) {
             setTexture("textures/entity/lawyerfromhellundead.png");
 
             return;
@@ -103,62 +96,52 @@ public class EntityLawyerFromHell extends EntityCreepBase implements IMob, IEnti
     }
 
     @Override
-    public void onUpdate()
-    {
+    public void onUpdate() {
         super.onUpdate();
 
-        if (!getUndead())
-        {
+        if (!getUndead()) {
             EntityLivingBase target = getAttackTarget();
 
-            if (target == null)
-            {
+            if (target == null) {
                 EntityPlayer player = world.getNearestPlayerNotCreative(this, 16.0d);
 
-                if (player != null)
-                {
+                if (player != null) {
                     ILawyerFine capability = player.getCapability(LawyerFineProvider.capability, null);
 
-                    if (capability != null)
-                    {
+                    if (capability != null) {
                         int fine = capability.getFine();
 
-                        if (fine > 0)
-                        {
+                        if (fine > 0) {
                             setAttackTarget(player);
                         }
                     }
                 }
-            }
-            else if (target instanceof EntityPlayer)
-            {
-                EntityPlayer targetPlayer = (EntityPlayer)target;
+            } else if (target instanceof EntityPlayer) {
+                EntityPlayer targetPlayer = (EntityPlayer) target;
 
                 ILawyerFine capability = targetPlayer.getCapability(LawyerFineProvider.capability, null);
 
-                if (capability != null && capability.getFine() < 1)
-                {
+                if (capability != null && capability.getFine() < 1) {
                     setAttackTarget(null);
                 }
             }
         }
     }
 
-    public void setUndead(boolean b)
-    {
-        if (getUndead() == b)
-        {
+    public boolean getUndead() {
+        return ((Boolean) dataManager.get(undead)).booleanValue();
+    }
+
+    public void setUndead(boolean b) {
+        if (getUndead() == b) {
             return;
         }
 
         dataManager.set(undead, Boolean.valueOf(b));
 
-        if (b)
-        {
+        if (b) {
             setHeldItem(EnumHand.MAIN_HAND, new ItemStack(Items.BONE));
-        }
-        else
-        {
+        } else {
             setHeldItem(EnumHand.MAIN_HAND, ItemStack.EMPTY);
         }
 
@@ -167,16 +150,9 @@ public class EntityLawyerFromHell extends EntityCreepBase implements IMob, IEnti
         initEntityAI();
     }
 
-    public boolean getUndead()
-    {
-        return ((Boolean)dataManager.get(undead)).booleanValue();
-    }
-
     @Override
-    public boolean isEntityInsideOpaqueBlock()
-    {
-        if (getUndead() && !isNotColliding())
-        {
+    public boolean isEntityInsideOpaqueBlock() {
+        if (getUndead() && !isNotColliding()) {
             return false;
         }
 
@@ -184,10 +160,8 @@ public class EntityLawyerFromHell extends EntityCreepBase implements IMob, IEnti
     }
 
     @Override
-    protected SoundEvent getAmbientSound()
-    {
-        if (getUndead())
-        {
+    protected SoundEvent getAmbientSound() {
+        if (getUndead()) {
             return CreepsSoundHandler.undeadLawyerSound;
         }
 
@@ -195,10 +169,8 @@ public class EntityLawyerFromHell extends EntityCreepBase implements IMob, IEnti
     }
 
     @Override
-    protected SoundEvent getHurtSound(DamageSource damageSource)
-    {
-        if (getUndead())
-        {
+    protected SoundEvent getHurtSound(DamageSource damageSource) {
+        if (getUndead()) {
             return CreepsSoundHandler.undeadLawyerHurtSound;
         }
 
@@ -206,10 +178,8 @@ public class EntityLawyerFromHell extends EntityCreepBase implements IMob, IEnti
     }
 
     @Override
-    protected SoundEvent getDeathSound()
-    {
-        if (getUndead())
-        {
+    protected SoundEvent getDeathSound() {
+        if (getUndead()) {
             return CreepsSoundHandler.undeadLawyerDeathSound;
         }
 
@@ -217,16 +187,13 @@ public class EntityLawyerFromHell extends EntityCreepBase implements IMob, IEnti
     }
 
     @Override
-    public int getMaxSpawnedInChunk()
-    {
+    public int getMaxSpawnedInChunk() {
         return 4;
     }
 
     @Override
-    protected double getMoveSpeed()
-    {
-        if (getUndead())
-        {
+    protected double getMoveSpeed() {
+        if (getUndead()) {
             return 0.24d;
         }
 
@@ -234,10 +201,8 @@ public class EntityLawyerFromHell extends EntityCreepBase implements IMob, IEnti
     }
 
     @Override
-    protected double getAttackDamage()
-    {
-        if (getUndead())
-        {
+    protected double getAttackDamage() {
+        if (getUndead()) {
             return 2.0d;
         }
 
@@ -245,36 +210,29 @@ public class EntityLawyerFromHell extends EntityCreepBase implements IMob, IEnti
     }
 
     @Override
-    public boolean attackEntityAsMob(@Nonnull Entity entity)
-    {
-        if (entity instanceof EntityPlayer)
-        {
+    public boolean attackEntityAsMob(@Nonnull Entity entity) {
+        if (entity instanceof EntityPlayer) {
             ILawyerFine capability = entity.getCapability(LawyerFineProvider.capability, null);
 
-            if (capability != null)
-            {
-                EntityPlayer player = (EntityPlayer)entity;
+            if (capability != null) {
+                EntityPlayer player = (EntityPlayer) entity;
 
                 int fine = capability.getFine();
 
-                if (fine < 1 && !getUndead())
-                {
+                if (fine < 1 && !getUndead()) {
                     setAttackTarget(null);
 
                     setRevengeTarget(null);
 
                     return false;
-                }
-                else if (rand.nextInt(50) == 0)
-                {
+                } else if (rand.nextInt(50) == 0) {
                     suckMoney(player);
                 }
 
-                if (!world.isRemote && MoreCreepsConfig.jailActive && fine >= 2500 && !getUndead() && JailManager.buildJail(player, world, rand))
-                {
+                if (!world.isRemote && MoreCreepsConfig.jailActive && fine >= 2500 && !getUndead() && JailManager.buildJail(player, world, rand)) {
                     capability.setFine(0);
 
-                    CreepsPacketHandler.INSTANCE.sendTo(new MessageSetLawyerFine(0), (EntityPlayerMP)player);
+                    CreepsPacketHandler.INSTANCE.sendTo(new MessageSetLawyerFine(0), (EntityPlayerMP) player);
                 }
             }
         }
@@ -283,33 +241,26 @@ public class EntityLawyerFromHell extends EntityCreepBase implements IMob, IEnti
     }
 
     @Override
-    public boolean attackEntityFrom(@Nonnull DamageSource damageSource, float amt)
-    {
-        if (!getUndead())
-        {
+    public boolean attackEntityFrom(@Nonnull DamageSource damageSource, float amt) {
+        if (!getUndead()) {
             EntityPlayer playerTarget = null;
 
             Entity entity = damageSource.getTrueSource();
 
-            if (entity instanceof EntityPlayer)
-            {
-                playerTarget = (EntityPlayer)entity;
+            if (entity instanceof EntityPlayer) {
+                playerTarget = (EntityPlayer) entity;
 
-                if (rand.nextInt(5) == 0)
-                {
+                if (rand.nextInt(5) == 0) {
                     int randInt = rand.nextInt(20) + 5;
 
-                    for (int i = 0; i < randInt; i++)
-                    {
+                    for (int i = 0; i < randInt; i++) {
                         ILawyerFine capability = playerTarget.getCapability(LawyerFineProvider.capability, null);
 
-                        if (capability != null)
-                        {
+                        if (capability != null) {
                             capability.addFine(25);
 
-                            if (!world.isRemote)
-                            {
-                                CreepsPacketHandler.INSTANCE.sendTo(new MessageSetLawyerFine(capability.getFine()), (EntityPlayerMP)playerTarget);
+                            if (!world.isRemote) {
+                                CreepsPacketHandler.INSTANCE.sendTo(new MessageSetLawyerFine(capability.getFine()), (EntityPlayerMP) playerTarget);
                             }
                         }
 
@@ -321,61 +272,49 @@ public class EntityLawyerFromHell extends EntityCreepBase implements IMob, IEnti
 
                         money.setNoDespawn();
 
-                        if (!world.isRemote)
-                        {
+                        if (!world.isRemote) {
                             world.spawnEntity(money);
                         }
                     }
                 }
 
-                if (rand.nextInt(5) == 0)
-                {
+                if (rand.nextInt(5) == 0) {
                     int randInt = rand.nextInt(3) + 1;
 
-                    for (int i = 0; i < randInt; i++)
-                    {
+                    for (int i = 0; i < randInt; i++) {
                         ILawyerFine capability = playerTarget.getCapability(LawyerFineProvider.capability, null);
 
-                        if (capability != null)
-                        {
+                        if (capability != null) {
                             capability.addFine(10);
 
-                            if (!world.isRemote)
-                            {
-                                CreepsPacketHandler.INSTANCE.sendTo(new MessageSetLawyerFine(capability.getFine()), (EntityPlayerMP)playerTarget);
+                            if (!world.isRemote) {
+                                CreepsPacketHandler.INSTANCE.sendTo(new MessageSetLawyerFine(capability.getFine()), (EntityPlayerMP) playerTarget);
                             }
                         }
 
                         playSound(CreepsSoundHandler.lawyerMoneyHitSound, getSoundVolume(), getSoundPitch());
 
-                        if (!world.isRemote)
-                        {
+                        if (!world.isRemote) {
                             dropItem(Items.PAPER, 1);
                         }
                     }
                 }
-            }
-            else if (entity instanceof EntityCreepBase)
-            {
-                EntityCreepBase creep = (EntityCreepBase)entity;
+            } else if (entity instanceof EntityCreepBase) {
+                EntityCreepBase creep = (EntityCreepBase) entity;
 
-                if (creep.isTamed())
-                {
+                if (creep.isTamed()) {
                     playerTarget = creep.getOwner();
                 }
             }
 
-            if (playerTarget != null)
-            {
+            if (playerTarget != null) {
                 ILawyerFine capability = playerTarget.getCapability(LawyerFineProvider.capability, null);
 
-                if (capability != null)
-                {
+                if (capability != null) {
                     capability.addFine(50);
 
-                    if (!world.isRemote)
-                    {
-                        CreepsPacketHandler.INSTANCE.sendTo(new MessageSetLawyerFine(capability.getFine()), (EntityPlayerMP)playerTarget);
+                    if (!world.isRemote) {
+                        CreepsPacketHandler.INSTANCE.sendTo(new MessageSetLawyerFine(capability.getFine()), (EntityPlayerMP) playerTarget);
                     }
                 }
 
@@ -386,22 +325,18 @@ public class EntityLawyerFromHell extends EntityCreepBase implements IMob, IEnti
         return super.attackEntityFrom(damageSource, amt);
     }
 
-    private void suckMoney(EntityPlayer player)
-    {
+    private void suckMoney(EntityPlayer player) {
         int invSize = player.inventory.mainInventory.size();
 
         boolean take = false;
 
         boolean isUndead = getUndead();
 
-        for (int i = 0; i < invSize; i++)
-        {
+        for (int i = 0; i < invSize; i++) {
             ItemStack itemStack = player.inventory.mainInventory.get(i);
 
-            if (itemStack.getItem() == CreepsItemHandler.money)
-            {
-                if (!isUndead)
-                {
+            if (itemStack.getItem() == CreepsItemHandler.money) {
+                if (!isUndead) {
                     playSound(CreepsSoundHandler.lawyerSuckSound, getSoundVolume(), getSoundPitch());
                 }
 
@@ -413,15 +348,13 @@ public class EntityLawyerFromHell extends EntityCreepBase implements IMob, IEnti
             }
         }
 
-        if (take && !isUndead)
-        {
+        if (take && !isUndead) {
             playSound(CreepsSoundHandler.lawyerTakeSound, getSoundVolume(), getSoundPitch());
         }
     }
 
     @Override
-    public void writeEntityToNBT(NBTTagCompound compound)
-    {
+    public void writeEntityToNBT(NBTTagCompound compound) {
         super.writeEntityToNBT(compound);
 
         NBTTagCompound props = compound.getCompoundTag("MoreCreepsLawyerFromHell");
@@ -432,38 +365,32 @@ public class EntityLawyerFromHell extends EntityCreepBase implements IMob, IEnti
     }
 
     @Override
-    public void readEntityFromNBT(NBTTagCompound compound)
-    {
+    public void readEntityFromNBT(NBTTagCompound compound) {
         super.readEntityFromNBT(compound);
 
         NBTTagCompound props = compound.getCompoundTag("MoreCreepsLawyerFromHell");
 
-        if(props.hasKey("Undead"))
-        {
-            setUndead( props.getBoolean("Undead"));
+        if (props.hasKey("Undead")) {
+            setUndead(props.getBoolean("Undead"));
         }
 
         dataManager.setDirty(undead);
     }
 
     @Override
-    public void onDeath(@Nonnull DamageSource cause)
-    {
-        if (!getUndead())
-        {
+    public void onDeath(@Nonnull DamageSource cause) {
+        if (!getUndead()) {
             Entity entity = cause.getTrueSource();
 
-            if (rand.nextInt(3) == 0 && entity instanceof EntityPlayer)
-            {
+            if (rand.nextInt(3) == 0 && entity instanceof EntityPlayer) {
                 int randAmt = rand.nextInt(4) + 3;
 
-                for (int i = 0; i < randAmt; i++)
-                {
+                for (int i = 0; i < randAmt; i++) {
                     smoke2();
 
                     EntityLawyerFromHell lawyer = new EntityLawyerFromHell(world);
 
-                    lawyer.setLocationAndAngles(entity.posX + (double)(rand.nextInt(4) - rand.nextInt(4)), entity.posY - 1.5d, entity.posZ + (double)(rand.nextInt(4) - rand.nextInt(4)), rotationYaw, 0.0f);
+                    lawyer.setLocationAndAngles(entity.posX + (double) (rand.nextInt(4) - rand.nextInt(4)), entity.posY - 1.5d, entity.posZ + (double) (rand.nextInt(4) - rand.nextInt(4)), rotationYaw, 0.0f);
 
                     lawyer.motionY = 20.0d;
 
@@ -473,23 +400,17 @@ public class EntityLawyerFromHell extends EntityCreepBase implements IMob, IEnti
 
                     lawyer.setInitialHealth();
 
-                    if (!world.isRemote)
-                    {
+                    if (!world.isRemote) {
                         world.spawnEntity(lawyer);
                     }
                 }
-            }
-            else if (rand.nextInt(5) == 0)
-            {
+            } else if (rand.nextInt(5) == 0) {
                 EntityBum bum = new EntityBum(world);
                 world.spawnEntity(bum);
-            }
-            else if (!world.isRemote && rand.nextInt(10) == 0)
-            {
+            } else if (!world.isRemote && rand.nextInt(10) == 0) {
                 int randInt = rand.nextInt(40) + 10;
 
-                for (int i = 0; i < randInt; i++)
-                {
+                for (int i = 0; i < randInt; i++) {
                     dropItem(CreepsItemHandler.money, 1);
                 }
             }
@@ -501,39 +422,41 @@ public class EntityLawyerFromHell extends EntityCreepBase implements IMob, IEnti
     }
 
     @Override
-    public float maxShrink() { return 0.5f; }
+    public float maxShrink() {
+        return 0.5f;
+    }
 
     @Override
-    public float getShrinkRayAmount() { return 0.2f; }
+    public float getShrinkRayAmount() {
+        return 0.2f;
+    }
 
     @Override
     public void onShrink(EntityShrink source) {
         EntityLivingBase raythrower = source.getThrower();
 
-        if(raythrower == null || !(raythrower instanceof EntityPlayer)) return;
+        if (raythrower == null || !(raythrower instanceof EntityPlayer)) return;
 
         EntityPlayer playerTarget = (EntityPlayer) raythrower;
 
         ILawyerFine capability = playerTarget.getCapability(LawyerFineProvider.capability, null);
 
-        if (capability != null)
-        {
+        if (capability != null) {
             capability.addFine(50);
 
-            if (!world.isRemote)
-            {
-                CreepsPacketHandler.INSTANCE.sendTo(new MessageSetLawyerFine(capability.getFine()), (EntityPlayerMP)playerTarget);
+            if (!world.isRemote) {
+                CreepsPacketHandler.INSTANCE.sendTo(new MessageSetLawyerFine(capability.getFine()), (EntityPlayerMP) playerTarget);
             }
         }
     }
+
     @Override
     public float maxGrowth() {
         return 5.0f;
     }
 
     @Override
-    public float getGrowRayAmount()
-    {
+    public float getGrowRayAmount() {
         return 0.2F;
     }
 
@@ -541,19 +464,17 @@ public class EntityLawyerFromHell extends EntityCreepBase implements IMob, IEnti
     public void onGrow(EntityGrow source) {
         EntityLivingBase raythrower = source.getThrower();
 
-        if(raythrower == null || !(raythrower instanceof EntityPlayer)) return;
+        if (raythrower == null || !(raythrower instanceof EntityPlayer)) return;
 
         EntityPlayer playerTarget = (EntityPlayer) raythrower;
 
         ILawyerFine capability = playerTarget.getCapability(LawyerFineProvider.capability, null);
 
-        if (capability != null)
-        {
+        if (capability != null) {
             capability.addFine(50);
 
-            if (!world.isRemote)
-            {
-                CreepsPacketHandler.INSTANCE.sendTo(new MessageSetLawyerFine(capability.getFine()), (EntityPlayerMP)playerTarget);
+            if (!world.isRemote) {
+                CreepsPacketHandler.INSTANCE.sendTo(new MessageSetLawyerFine(capability.getFine()), (EntityPlayerMP) playerTarget);
             }
         }
     }

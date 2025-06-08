@@ -14,10 +14,8 @@ import net.minecraft.util.DamageSource;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.world.World;
 
-public class EntityG extends EntityCreepBase implements IMob, IEntityCanChangeSize
-{
-    public EntityG(World worldIn)
-    {
+public class EntityG extends EntityCreepBase implements IMob, IEntityCanChangeSize {
+    public EntityG(World worldIn) {
         super(worldIn);
 
         setCreepTypeName("G");
@@ -28,7 +26,7 @@ public class EntityG extends EntityCreepBase implements IMob, IEntityCanChangeSi
 
         setModelSize(2.0f);
 
-        baseHealth = (float)rand.nextInt(40) + 40.0f;
+        baseHealth = (float) rand.nextInt(40) + 40.0f;
 
         baseSpeed = 0.3d;
 
@@ -38,20 +36,17 @@ public class EntityG extends EntityCreepBase implements IMob, IEntityCanChangeSi
     }
 
     @Override
-    protected void updateTexture()
-    {
+    protected void updateTexture() {
         setTexture("textures/entity/g.png");
     }
 
     @Override
-    public int getMaxSpawnedInChunk()
-    {
+    public int getMaxSpawnedInChunk() {
         return 1;
     }
 
     @Override
-    protected void initEntityAI()
-    {
+    protected void initEntityAI() {
         clearAITasks();
 
         NodeProcessor nodeProcessor = getNavigator().getNodeProcessor();
@@ -80,185 +75,165 @@ public class EntityG extends EntityCreepBase implements IMob, IEntityCanChangeSi
     }
 
     @Override
-    protected SoundEvent getAmbientSound()
-    {
+    protected SoundEvent getAmbientSound() {
         return CreepsSoundHandler.gSound;
     }
 
     @Override
-    protected SoundEvent getHurtSound(DamageSource damageSource)
-    {
+    protected SoundEvent getHurtSound(DamageSource damageSource) {
         return CreepsSoundHandler.gHurtSound;
     }
 
     @Override
-    protected SoundEvent getDeathSound()
-    {
+    protected SoundEvent getDeathSound() {
         return CreepsSoundHandler.gDeathSound;
     }
 
     @Override
-    protected void dropItemsOnDeath()
-    {
+    protected void dropItemsOnDeath() {
         int maxItems = 0;
 
-        if (rand.nextInt(200) == 98)
-        {
+        if (rand.nextInt(200) == 98) {
             dropItem(Item.getItemFromBlock(Blocks.GOLD_BLOCK), 1);
 
             maxItems++;
         }
 
-        if (rand.nextInt(5) == 0)
-        {
+        if (rand.nextInt(5) == 0) {
             dropItem(Items.GOLD_INGOT, rand.nextInt(2) + 1);
 
             maxItems++;
         }
 
-        if (rand.nextInt(150) > 145)
-        {
+        if (rand.nextInt(150) > 145) {
             dropItem(Items.GOLDEN_SWORD, 1);
 
             maxItems++;
         }
 
-        if (maxItems < 3 && rand.nextInt(100) > 98)
-        {
+        if (maxItems < 3 && rand.nextInt(100) > 98) {
             dropItem(Items.GOLDEN_PICKAXE, 1);
 
             maxItems++;
         }
 
-        if (maxItems < 3 && rand.nextInt(100) > 98)
-        {
+        if (maxItems < 3 && rand.nextInt(100) > 98) {
             dropItem(Items.GOLDEN_SHOVEL, 1);
 
             maxItems++;
         }
 
-        if (maxItems < 3 && rand.nextInt(100) > 98)
-        {
+        if (maxItems < 3 && rand.nextInt(100) > 98) {
             dropItem(Items.GOLDEN_AXE, 1);
 
             maxItems++;
         }
 
-        if (maxItems < 3 && rand.nextInt(100) > 98)
-        {
+        if (maxItems < 3 && rand.nextInt(100) > 98) {
             dropItem(Items.GOLDEN_HELMET, 1);
 
             maxItems++;
         }
 
-        if (maxItems < 3 && rand.nextInt(100) > 98)
-        {
+        if (maxItems < 3 && rand.nextInt(100) > 98) {
             dropItem(Items.GOLDEN_CHESTPLATE, 1);
 
             maxItems++;
         }
 
-        if (maxItems < 3 && rand.nextInt(100) > 98)
-        {
+        if (maxItems < 3 && rand.nextInt(100) > 98) {
             dropItem(Items.GOLDEN_BOOTS, 1);
 
             maxItems++;
         }
 
-        if (maxItems < 3 && rand.nextInt(100) > 80)
-        {
+        if (maxItems < 3 && rand.nextInt(100) > 80) {
             dropItem(Items.WHEAT, rand.nextInt(6) + 1);
 
             maxItems++;
         }
 
-        if (maxItems < 3 && rand.nextInt(100) > 98)
-        {
+        if (maxItems < 3 && rand.nextInt(100) > 98) {
             dropItem(Item.getItemFromBlock(Blocks.GLASS), rand.nextInt(6) + 1);
 
             maxItems++;
         }
 
-        if (maxItems < 3 && rand.nextInt(100) > 98)
-        {
+        if (maxItems < 3 && rand.nextInt(100) > 98) {
             dropItem(CreepsItemHandler.gooDonut, rand.nextInt(3) + 1);
 
             maxItems++;
         }
 
-        if (maxItems < 3 && rand.nextInt(100) > 88)
-        {
+        if (maxItems < 3 && rand.nextInt(100) > 88) {
             dropItem(Item.getItemFromBlock(Blocks.GRASS), rand.nextInt(6) + 1);
 
             maxItems++;
         }
 
-        if (maxItems < 3 && rand.nextInt(100) > 98)
-        {
+        if (maxItems < 3 && rand.nextInt(100) > 98) {
             dropItem(Item.getItemFromBlock(Blocks.GLOWSTONE), rand.nextInt(2) + 1);
 
             maxItems++;
         }
 
-        if (maxItems < 3 && rand.nextInt(100) > 98)
-        {
+        if (maxItems < 3 && rand.nextInt(100) > 98) {
             dropItem(Items.GLOWSTONE_DUST, rand.nextInt(2) + 1);
 
             maxItems++;
         }
 
-        if (maxItems < 3 && rand.nextInt(100) > 98)
-        {
+        if (maxItems < 3 && rand.nextInt(100) > 98) {
             dropItem(Items.GLASS_BOTTLE, rand.nextInt(2) + 1);
 
             maxItems++;
         }
 
-        if (maxItems < 3 && rand.nextInt(100) > 98)
-        {
+        if (maxItems < 3 && rand.nextInt(100) > 98) {
             dropItem(Items.GOLD_NUGGET, rand.nextInt(2) + 1);
 
             maxItems++;
         }
 
-        if (maxItems < 3 && rand.nextInt(100) == 88)
-        {
+        if (maxItems < 3 && rand.nextInt(100) == 88) {
             dropItem(Items.GOLDEN_APPLE, rand.nextInt(2) + 1);
 
             maxItems++;
         }
 
-        if (maxItems < 3 && rand.nextInt(100) > 98)
-        {
+        if (maxItems < 3 && rand.nextInt(100) > 98) {
             dropItem(Items.GUNPOWDER, rand.nextInt(2) + 1);
 
             maxItems++;
         }
 
-        if (maxItems < 3 && rand.nextInt(100) == 88)
-        {
+        if (maxItems < 3 && rand.nextInt(100) == 88) {
             dropItem(Items.GHAST_TEAR, rand.nextInt(2) + 1);
         }
     }
 
     @Override
-    public float maxShrink() { return 0.5f; }
+    public float maxShrink() {
+        return 0.5f;
+    }
 
     @Override
-    public float getShrinkRayAmount() { return 0.2f; }
+    public float getShrinkRayAmount() {
+        return 0.2f;
+    }
 
     @Override
     public void onShrink(EntityShrink source) {
 
     }
+
     @Override
     public float maxGrowth() {
         return 5.0f;
     }
 
     @Override
-    public float getGrowRayAmount()
-    {
+    public float getGrowRayAmount() {
         return 0.2F;
     }
 

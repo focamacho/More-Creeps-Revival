@@ -20,8 +20,7 @@ import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
 
-public class EntityManDog extends EntityCreepBase
-{
+public class EntityManDog extends EntityCreepBase {
     private static final DataParameter<Boolean> superDog = EntityDataManager.<Boolean>createKey(EntityManDog.class, DataSerializers.BOOLEAN);
 
     private static final DataParameter<Integer> tamedFood = EntityDataManager.createKey(EntityManDog.class, DataSerializers.VARINT);
@@ -42,8 +41,7 @@ public class EntityManDog extends EntityCreepBase
 
     private double prevDist = 0.0f;
 
-    public EntityManDog(World worldIn)
-    {
+    public EntityManDog(World worldIn) {
         super(worldIn);
 
         setCreepTypeName("Mandog");
@@ -56,8 +54,7 @@ public class EntityManDog extends EntityCreepBase
     }
 
     @Override
-    protected void initEntityAI()
-    {
+    protected void initEntityAI() {
         clearAITasks();
 
         NodeProcessor nodeProcessor = getNavigator().getNodeProcessor();
@@ -84,8 +81,7 @@ public class EntityManDog extends EntityCreepBase
     }
 
     @Override
-    protected void entityInit()
-    {
+    protected void entityInit() {
         super.entityInit();
 
         dataManager.register(superDog, Boolean.valueOf(false));
@@ -106,53 +102,41 @@ public class EntityManDog extends EntityCreepBase
     }
 
     @Override
-    protected void updateTexture()
-    {
-        if (isTamed())
-        {
+    protected void updateTexture() {
+        if (isTamed()) {
             setTexture("textures/entity/mandogtamed.png");
-        }
-        else
-        {
+        } else {
             setTexture("textures/entity/mandog.png");
         }
     }
 
     @Override
-    public boolean processInteract(EntityPlayer player, EnumHand hand)
-    {
-        if (hand == EnumHand.OFF_HAND)
-        {
+    public boolean processInteract(EntityPlayer player, EnumHand hand) {
+        if (hand == EnumHand.OFF_HAND) {
             return super.processInteract(player, hand);
         }
 
         ItemStack itemStack = player.getHeldItem(hand);
 
-        if (itemStack.isEmpty())
-        {
-            if (isTamed())
-            {
+        if (itemStack.isEmpty()) {
+            if (isTamed()) {
                 setChase(false);
 
                 setFetch(false);
 
                 setFrisbeeEntity(null);
             }
-        }
-        else
-        {
+        } else {
             Item item = itemStack.getItem();
 
-            if (item == Items.COOKED_PORKCHOP && !isTamed())
-            {
+            if (item == Items.COOKED_PORKCHOP && !isTamed()) {
                 itemStack.shrink(1);
 
                 setTamedFood(getTamedFood() - 1);
 
                 smoke();
 
-                if (getTamedFood() < 1)
-                {
+                if (getTamedFood() < 1) {
                     smoke();
 
                     tame(player);
@@ -166,16 +150,13 @@ public class EntityManDog extends EntityCreepBase
     }
 
     @Override
-    protected SoundEvent getTamedSound()
-    {
+    protected SoundEvent getTamedSound() {
         return CreepsSoundHandler.manDogTamedSound;
     }
 
     @Override
-    protected SoundEvent getAmbientSound()
-    {
-        if (getSuperDog())
-        {
+    protected SoundEvent getAmbientSound() {
+        if (getSuperDog()) {
             return CreepsSoundHandler.superDogNameSound;
         }
 
@@ -183,71 +164,65 @@ public class EntityManDog extends EntityCreepBase
     }
 
     @Override
-    protected SoundEvent getHurtSound(DamageSource damageSource)
-    {
+    protected SoundEvent getHurtSound(DamageSource damageSource) {
         return CreepsSoundHandler.manDogHurtSound;
     }
 
     @Override
-    protected SoundEvent getDeathSound()
-    {
+    protected SoundEvent getDeathSound() {
         return CreepsSoundHandler.manDogDeathSound;
     }
 
-    protected void setSuperDog(boolean b)
-    {
+    public boolean getSuperDog() {
+        return ((Boolean) dataManager.get(superDog)).booleanValue();
+    }
+
+    protected void setSuperDog(boolean b) {
         dataManager.set(superDog, Boolean.valueOf(b));
     }
 
-    public boolean getSuperDog()
-    {
-        return ((Boolean)dataManager.get(superDog)).booleanValue();
-    }
-
-    protected void setTamedFood(int i)
-    {
-        dataManager.set(tamedFood, i);
-    }
-
-    public int getTamedFood()
-    {
+    public int getTamedFood() {
         return dataManager.get(tamedFood);
     }
 
-    protected void setChase(boolean b)
-    {
+    protected void setTamedFood(int i) {
+        dataManager.set(tamedFood, i);
+    }
+
+    public boolean getChase() {
+        return ((Boolean) dataManager.get(chase)).booleanValue();
+    }
+
+    protected void setChase(boolean b) {
         dataManager.set(chase, Boolean.valueOf(b));
     }
 
-    public boolean getChase()
-    {
-        return ((Boolean)dataManager.get(chase)).booleanValue();
+    public boolean getFetch() {
+        return ((Boolean) dataManager.get(fetch)).booleanValue();
     }
 
-    protected void setFetch(boolean b)
-    {
+    protected void setFetch(boolean b) {
         dataManager.set(fetch, Boolean.valueOf(b));
     }
 
-    public boolean getFetch()
-    {
-        return ((Boolean)dataManager.get(fetch)).booleanValue();
-    }
-
-    protected void setFrisbeeTime(int i)
-    {
-        dataManager.set(frisbeeTime, i);
-    }
-
-    public int getFrisbeeTime()
-    {
+    public int getFrisbeeTime() {
         return dataManager.get(frisbeeTime);
     }
 
-    protected void setFrisbeeEntity(Entity entity)
-    {
-        if (entity == null)
-        {
+    protected void setFrisbeeTime(int i) {
+        dataManager.set(frisbeeTime, i);
+    }
+
+    public Entity getFrisbeeEntity() {
+        if (dataManager.get(frisbeeEnt) == 0) {
+            return null;
+        }
+
+        return world.getEntityByID(dataManager.get(frisbeeEnt));
+    }
+
+    protected void setFrisbeeEntity(Entity entity) {
+        if (entity == null) {
             dataManager.set(frisbeeEnt, 0);
 
             return;
@@ -256,63 +231,42 @@ public class EntityManDog extends EntityCreepBase
         dataManager.set(frisbeeEnt, entity.getEntityId());
     }
 
-    public Entity getFrisbeeEntity()
-    {
-        if (dataManager.get(frisbeeEnt) == 0)
-        {
-            return null;
-        }
-
-        return world.getEntityByID(dataManager.get(frisbeeEnt));
-    }
-
-    protected void setAttempts(int i)
-    {
-        dataManager.set(attempts, i);
-    }
-
-    public int getAttempts()
-    {
+    public int getAttempts() {
         return dataManager.get(attempts);
     }
 
-    protected void setFrisbeeHold(boolean b)
-    {
+    protected void setAttempts(int i) {
+        dataManager.set(attempts, i);
+    }
+
+    public boolean getFrisbeeHold() {
+        return ((Boolean) dataManager.get(frisbeeHold)).booleanValue();
+    }
+
+    protected void setFrisbeeHold(boolean b) {
         dataManager.set(frisbeeHold, Boolean.valueOf(b));
     }
 
-    public boolean getFrisbeeHold()
-    {
-        return ((Boolean)dataManager.get(frisbeeHold)).booleanValue();
-    }
-
     @Override
-    public int getMaxSpawnedInChunk()
-    {
+    public int getMaxSpawnedInChunk() {
         return 1;
     }
 
     @Override
-    protected void dropItemsOnDeath()
-    {
+    protected void dropItemsOnDeath() {
         dropItem(Items.BONE, 1);
     }
 
     @Override
-    public void onLivingUpdate()
-    {
+    public void onLivingUpdate() {
         super.onLivingUpdate();
 
-        if (isTamed())
-        {
+        if (isTamed()) {
             setFrisbeeTime(getFrisbeeTime() + 1);
 
-            if (getFrisbeeTime() >= 20 && !isDead && !getChase() && !getFetch())
-            {
-                for (Entity entity : world.getEntitiesWithinAABBExcludingEntity(this, getEntityBoundingBox().grow(25.0d, 25.0d, 25.0d)))
-                {
-                    if (entity instanceof EntityFrisbee)
-                    {
+            if (getFrisbeeTime() >= 20 && !isDead && !getChase() && !getFetch()) {
+                for (Entity entity : world.getEntitiesWithinAABBExcludingEntity(this, getEntityBoundingBox().grow(25.0d, 25.0d, 25.0d))) {
+                    if (entity instanceof EntityFrisbee) {
                         faceEntity(entity, 360.0f, 0.0f);
 
                         setFrisbeeEntity(entity);
@@ -326,18 +280,13 @@ public class EntityManDog extends EntityCreepBase
 
             Entity frisbeeEntity = getFrisbeeEntity();
 
-            if (getChase())
-            {
-                if (frisbeeEntity == null || frisbeeEntity.isDead)
-                {
+            if (getChase()) {
+                if (frisbeeEntity == null || frisbeeEntity.isDead) {
                     setChase(false);
 
                     setFrisbeeTime(0);
-                }
-                else
-                {
-                    if (Math.abs(posY - frisbeeEntity.posY) < 2.0d)
-                    {
+                } else {
+                    if (Math.abs(posY - frisbeeEntity.posY) < 2.0d) {
                         faceEntity(frisbeeEntity, 360.0f, 0.0f);
                     }
 
@@ -347,24 +296,19 @@ public class EntityManDog extends EntityCreepBase
 
                     dist = frisbeeEntity.posX - posX;
 
-                    if (dist == prevDist)
-                    {
-                        if (rand.nextInt(2) == 0)
-                        {
+                    if (dist == prevDist) {
+                        if (rand.nextInt(2) == 0) {
                             motionX += 0.75d;
 
                             motionZ += 0.75d;
-                        }
-                        else
-                        {
+                        } else {
                             motionX -= 0.75d;
 
                             motionZ -= 0.75d;
                         }
                     }
 
-                    if (Math.abs(frisbeeEntity.posX - posX) < 1.0d && Math.abs(frisbeeEntity.posY - posY) < 1.0d && Math.abs(frisbeeEntity.posZ - posZ) < 1.0d)
-                    {
+                    if (Math.abs(frisbeeEntity.posX - posX) < 1.0d && Math.abs(frisbeeEntity.posY - posY) < 1.0d && Math.abs(frisbeeEntity.posZ - posZ) < 1.0d) {
                         playSound(SoundEvents.BLOCK_LAVA_POP, 0.2f, ((rand.nextFloat() - rand.nextFloat()) * 0.7f + 1.0f) * 2.0f);
 
                         frisbeeEntity.setDead();
@@ -377,8 +321,7 @@ public class EntityManDog extends EntityCreepBase
 
                         EntityPlayer player = getOwner();
 
-                        if (player != null)
-                        {
+                        if (player != null) {
                             setFrisbeeEntity(player);
 
                             faceEntity(player, 360.0f, 0.0f);
@@ -391,28 +334,24 @@ public class EntityManDog extends EntityCreepBase
 
                     float f = MathHelper.sqrt(d * d + d2 * d2);
 
-                    motionX = (d / (double)f) * 0.40000000000000002D * 0.50000000192092897D + motionX * 0.18000000098023225D;
+                    motionX = (d / (double) f) * 0.40000000000000002D * 0.50000000192092897D + motionX * 0.18000000098023225D;
 
-                    motionZ = (d2 / (double)f) * 0.40000000000000002D * 0.40000000192092894D + motionZ * 0.18000000098023225D;
+                    motionZ = (d2 / (double) f) * 0.40000000000000002D * 0.40000000192092894D + motionZ * 0.18000000098023225D;
 
-                    if (onGround)
-                    {
+                    if (onGround) {
                         double d4 = (frisbeeEntity.posY - posY) * 0.18000000098023225d;
 
-                        if (d4 > 0.5d)
-                        {
+                        if (d4 > 0.5d) {
                             d4 = 0.5d;
                         }
 
                         motionY = d4;
                     }
 
-                    if (Math.abs(frisbeeEntity.posX - posX) < 5.0d && Math.abs(frisbeeEntity.posZ - posZ) < 5.0d && frisbeeEntity.motionX == 0.0d)
-                    {
+                    if (Math.abs(frisbeeEntity.posX - posX) < 5.0d && Math.abs(frisbeeEntity.posZ - posZ) < 5.0d && frisbeeEntity.motionX == 0.0d) {
                         setAttempts(getAttempts() + 1);
 
-                        if (getAttempts() > 100)
-                        {
+                        if (getAttempts() > 100) {
                             setChase(false);
 
                             setFrisbeeTime(0);
@@ -425,8 +364,7 @@ public class EntityManDog extends EntityCreepBase
 
                             EntityPlayer player = getOwner();
 
-                            if (player != null)
-                            {
+                            if (player != null) {
                                 setFrisbeeEntity(player);
 
                                 faceEntity(player, 360.0f, 0.0f);
@@ -436,18 +374,14 @@ public class EntityManDog extends EntityCreepBase
                 }
             }
 
-            if (getFetch())
-            {
+            if (getFetch()) {
                 frisbeeEntity = getFrisbeeEntity();
 
-                if (frisbeeEntity != null)
-                {
-                    if (Math.abs(frisbeeEntity.posX - posX) < 2.0d && Math.abs(frisbeeEntity.posY - posY) < 2.0d && Math.abs(frisbeeEntity.posZ - posZ) < 2.0d)
-                    {
+                if (frisbeeEntity != null) {
+                    if (Math.abs(frisbeeEntity.posX - posX) < 2.0d && Math.abs(frisbeeEntity.posY - posY) < 2.0d && Math.abs(frisbeeEntity.posZ - posZ) < 2.0d) {
                         playSound(SoundEvents.BLOCK_LAVA_POP, 0.2f, ((rand.nextFloat() - rand.nextFloat()) * .07f + 1.0f) * 2.0f);
 
-                        if (!world.isRemote && getFrisbeeHold())
-                        {
+                        if (!world.isRemote && getFrisbeeHold()) {
                             dropItem(CreepsItemHandler.frisbee, 1);
                         }
 
@@ -464,16 +398,14 @@ public class EntityManDog extends EntityCreepBase
 
                     float f1 = MathHelper.sqrt(d1 * d1 + d3 * d3);
 
-                    motionX = (d1 / (double)f1) * 0.40000000000000002D * 0.50000000192092897D + motionX * 0.18000000098023225D;
+                    motionX = (d1 / (double) f1) * 0.40000000000000002D * 0.50000000192092897D + motionX * 0.18000000098023225D;
 
-                    motionZ = (d3 / (double)f1) * 0.40000000000000002D * 0.40000000192092894D + motionZ * 0.18000000098023225D;
+                    motionZ = (d3 / (double) f1) * 0.40000000000000002D * 0.40000000192092894D + motionZ * 0.18000000098023225D;
 
-                    if (onGround)
-                    {
+                    if (onGround) {
                         double d5 = (frisbeeEntity.posY - posY) * 0.18000000098023225D;
 
-                        if (d5 > 0.5D)
-                        {
+                        if (d5 > 0.5D) {
                             d5 = 0.5D;
                         }
 
@@ -485,14 +417,12 @@ public class EntityManDog extends EntityCreepBase
     }
 
     @Override
-    public boolean isTamable()
-    {
+    public boolean isTamable() {
         return true;
     }
 
     @Override
-    public void writeEntityToNBT(NBTTagCompound compound)
-    {
+    public void writeEntityToNBT(NBTTagCompound compound) {
         super.writeEntityToNBT(compound);
 
         NBTTagCompound props = compound.getCompoundTag("MoreCreepsManDog");
@@ -511,34 +441,28 @@ public class EntityManDog extends EntityCreepBase
     }
 
     @Override
-    public void readEntityFromNBT(NBTTagCompound compound)
-    {
+    public void readEntityFromNBT(NBTTagCompound compound) {
         super.readEntityFromNBT(compound);
 
         NBTTagCompound props = compound.getCompoundTag("MoreCreepsManDog");
 
-        if (props.hasKey("Attempts"))
-        {
+        if (props.hasKey("Attempts")) {
             setAttempts(props.getInteger("Attempts"));
         }
 
-        if (props.hasKey("FrisbeeHold"))
-        {
+        if (props.hasKey("FrisbeeHold")) {
             setFrisbeeHold(props.getBoolean("FrisbeeHold"));
         }
 
-        if (props.hasKey("Chase"))
-        {
+        if (props.hasKey("Chase")) {
             setChase(props.getBoolean("Chase"));
         }
 
-        if (props.hasKey("Fetch"))
-        {
+        if (props.hasKey("Fetch")) {
             setFetch(props.getBoolean("Fetch"));
         }
 
-        if (props.hasKey("TamedFood"))
-        {
+        if (props.hasKey("TamedFood")) {
             setTamedFood(props.getInteger("TamedFood"));
         }
     }

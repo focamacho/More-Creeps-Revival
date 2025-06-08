@@ -7,8 +7,8 @@ import net.minecraft.util.math.MathHelper;
 
 import java.util.Random;
 
-public class ModelEvilPig extends ModelBase
-{
+public class ModelEvilPig extends ModelBase {
+    public static Random rand = new Random();
     public ModelRenderer body;
     public ModelRenderer headEvilpig;
     public ModelRenderer leg1;
@@ -20,13 +20,9 @@ public class ModelEvilPig extends ModelBase
     public ModelRenderer headEvilpig3;
     public ModelRenderer headEvilpig4;
     public ModelRenderer headEvilpig5;
-
-    public static Random rand = new Random();
-
     public int headEvilPigPop = 0;
 
-    public ModelEvilPig()
-    {
+    public ModelEvilPig() {
         byte byte0 = 6;
         headEvilpig = new ModelRenderer(this, 0, 0);
         headEvilpig.addBox(-16F, -4F, -10F, 8, 8, 8);
@@ -64,8 +60,7 @@ public class ModelEvilPig extends ModelBase
     }
 
     @Override
-    public void render(Entity entity, float f, float f1, float f2, float f3, float f4, float f5)
-    {
+    public void render(Entity entity, float f, float f1, float f2, float f3, float f4, float f5) {
         setRotationAngles(f, f1, f2, f3, f4, f5, entity);
         body.render(f5);
         headEvilpig.render(f5);
@@ -81,32 +76,29 @@ public class ModelEvilPig extends ModelBase
     }
 
     @Override
-    public void setRotationAngles(float f, float f1, float f2, float f3, float f4, float f5, Entity entity)
-    {
-        body.rotateAngleX = ((float)Math.PI / 2F);
+    public void setRotationAngles(float f, float f1, float f2, float f3, float f4, float f5, Entity entity) {
+        body.rotateAngleX = ((float) Math.PI / 2F);
         leg1.rotateAngleX = MathHelper.cos(f * 0.6662F + 0.0F) * 1.4F * f1;
-        leg2.rotateAngleX = MathHelper.cos(f * 0.6662F + (float)Math.PI) * 1.4F * f1;
-        leg3.rotateAngleX = MathHelper.cos(f * 0.6662F + (float)Math.PI) * 1.4F * f1;
+        leg2.rotateAngleX = MathHelper.cos(f * 0.6662F + (float) Math.PI) * 1.4F * f1;
+        leg3.rotateAngleX = MathHelper.cos(f * 0.6662F + (float) Math.PI) * 1.4F * f1;
         leg4.rotateAngleX = MathHelper.cos(f * 0.6662F + 0.0F) * 1.4F * f1;
         headEvilpig.rotateAngleX = -(f4 / 50.29578F);
         headEvilpig.rotateAngleY = f3 / 50.29578F;
-        headEvilpig1.rotateAngleX = -(f4 / (180F / (float)Math.PI));
-        headEvilpig1.rotateAngleY = f3 / (180F / (float)Math.PI);
+        headEvilpig1.rotateAngleX = -(f4 / (180F / (float) Math.PI));
+        headEvilpig1.rotateAngleY = f3 / (180F / (float) Math.PI);
         headEvilpig2.rotateAngleX = -(f4 / 52.29578F);
         headEvilpig2.rotateAngleY = f3 / 52.29578F;
         headEvilpig3.rotateAngleX = -(f4 / 52.29578F);
         headEvilpig3.rotateAngleY = f3 / 52.29578F;
-        headEvilpig4.rotateAngleX = -(f4 / (180F / (float)Math.PI));
-        headEvilpig4.rotateAngleY = f3 / (180F / (float)Math.PI);
+        headEvilpig4.rotateAngleX = -(f4 / (180F / (float) Math.PI));
+        headEvilpig4.rotateAngleY = f3 / (180F / (float) Math.PI);
         headEvilpig5.rotateAngleX = -(f4 / 50.29578F);
         headEvilpig5.rotateAngleY = f3 / 50.29578F;
 
-        if (rand.nextInt(50) == 0)
-        {
+        if (rand.nextInt(50) == 0) {
             headEvilPigPop++;
 
-            if (headEvilPigPop > 5)
-            {
+            if (headEvilPigPop > 5) {
                 headEvilPigPop = 0;
             }
 
@@ -117,8 +109,7 @@ public class ModelEvilPig extends ModelBase
             headEvilpig4.rotationPointZ = -9F;
             headEvilpig5.rotationPointZ = -6F;
 
-            switch (headEvilPigPop)
-            {
+            switch (headEvilPigPop) {
                 case 0:
                 case 2:
                     headEvilpig.rotationPointZ = -13F;

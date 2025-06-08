@@ -5,11 +5,9 @@ import net.minecraft.client.renderer.entity.Render;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraftforge.fml.client.registry.IRenderFactory;
 
-public class RenderBigBabyFactory implements IRenderFactory<EntityBigBaby>
-{
+public class RenderBigBabyFactory implements IRenderFactory<EntityBigBaby> {
     @Override
-    public Render<? super EntityBigBaby> createRenderFor(RenderManager renderManager)
-    {
+    public Render<? super EntityBigBaby> createRenderFor(RenderManager renderManager) {
         return new RenderBigBaby<>(renderManager);
     }
 }

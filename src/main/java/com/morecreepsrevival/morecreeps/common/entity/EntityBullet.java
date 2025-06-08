@@ -18,10 +18,12 @@ import net.minecraft.world.World;
 
 import javax.annotation.Nonnull;
 
-public class EntityBullet extends Entity
-{
+public class EntityBullet extends Entity {
     private static final DataParameter<Integer> shootingEntity = EntityDataManager.createKey(EntityBullet.class, DataSerializers.VARINT);
-
+    public double accelerationX;
+    public double accelerationY;
+    public double accelerationZ;
+    public double speed = 1;
     protected int damage;
     protected boolean playerFire;
     private int xTile;
@@ -30,13 +32,8 @@ public class EntityBullet extends Entity
     private int inTile;
     private boolean inGround;
     private int ticksInAir;
-    public double accelerationX;
-    public double accelerationY;
-    public double accelerationZ;
-    public double speed = 1;
 
-    public EntityBullet(World worldIn)
-    {
+    public EntityBullet(World worldIn) {
         super(worldIn);
 
         xTile = -1;
@@ -64,31 +61,28 @@ public class EntityBullet extends Entity
         playerFire = false;
     }
 
-    public EntityBullet(World world, double d, double d1, double d2)
-    {
+    public EntityBullet(World world, double d, double d1, double d2) {
         this(world);
 
         setPosition(d, d1, d2);
     }
 
-    public EntityBullet(World world, EntityLivingBase entityliving)
-    {
+    public EntityBullet(World world, EntityLivingBase entityliving) {
         this(world);
 
         dataManager.set(shootingEntity, entityliving.getEntityId());
 
-        if (entityliving instanceof EntityPlayer)
-        {
+        if (entityliving instanceof EntityPlayer) {
             damage = 4;
 
             playerFire = true;
         }
 
-        setLocationAndAngles(entityliving.posX, entityliving.posY + (double)entityliving.getEyeHeight(), entityliving.posZ, entityliving.rotationYaw, entityliving.rotationPitch);
+        setLocationAndAngles(entityliving.posX, entityliving.posY + (double) entityliving.getEyeHeight(), entityliving.posZ, entityliving.rotationYaw, entityliving.rotationPitch);
 
-        double xHeading = -MathHelper.sin(entityliving.rotationYaw * (float)Math.PI / 180.0f);
+        double xHeading = -MathHelper.sin(entityliving.rotationYaw * (float) Math.PI / 180.0f);
 
-        double zHeading = MathHelper.cos(entityliving.rotationYaw * (float)Math.PI / 180.0f);
+        double zHeading = MathHelper.cos(entityliving.rotationYaw * (float) Math.PI / 180.0f);
 
         double par13 = xHeading * 0.5d;
 
@@ -96,7 +90,7 @@ public class EntityBullet extends Entity
 
         double par17 = zHeading * 0.5d;
 
-        double par9 = MathHelper.sin((float)(par13 * par13 + par15 * par15 + par17 * par17));
+        double par9 = MathHelper.sin((float) (par13 * par13 + par15 * par15 + par17 * par17));
 
         accelerationX = par13 / par9 * 1.1d;
 
@@ -104,31 +98,29 @@ public class EntityBullet extends Entity
 
         setSize(0.5f, 0.5f);
 
-        posX -= (MathHelper.cos(rotationYaw / 180.0f * (float)Math.PI) * 0.16f);
+        posX -= (MathHelper.cos(rotationYaw / 180.0f * (float) Math.PI) * 0.16f);
 
         posY -= 0.3500000014901161d;
 
-        posZ -= (MathHelper.sin(rotationYaw / 180.0f * (float)Math.PI) * 0.16f);
+        posZ -= (MathHelper.sin(rotationYaw / 180.0f * (float) Math.PI) * 0.16f);
 
         setPosition(posX, posY, posZ);
 
-        motionX = -MathHelper.sin(rotationYaw / 180.0f * (float)Math.PI) * MathHelper.cos(rotationPitch / 180.0f * (float)Math.PI);
+        motionX = -MathHelper.sin(rotationYaw / 180.0f * (float) Math.PI) * MathHelper.cos(rotationPitch / 180.0f * (float) Math.PI);
 
-        motionZ = MathHelper.cos(rotationYaw / 180.0f * (float)Math.PI) * MathHelper.cos(rotationPitch / 180.0f * (float)Math.PI);
+        motionZ = MathHelper.cos(rotationYaw / 180.0f * (float) Math.PI) * MathHelper.cos(rotationPitch / 180.0f * (float) Math.PI);
 
-        motionY = -MathHelper.sin(rotationPitch / 180.0f * (float)Math.PI);
+        motionY = -MathHelper.sin(rotationPitch / 180.0f * (float) Math.PI);
     }
 
-    public EntityBullet(World world, EntityLivingBase entityliving, double targetx, double targety, double targetz)
-    {
+    public EntityBullet(World world, EntityLivingBase entityliving, double targetx, double targety, double targetz) {
         this(world);
 
         dataManager.set(shootingEntity, entityliving.getEntityId());
 
         // TODO: if loyal army guy damage = 6
 
-        if (entityliving instanceof EntitySneakySal)
-        {
+        if (entityliving instanceof EntitySneakySal) {
             //par5 -= 0.344000234d;
         }
 
@@ -150,19 +142,16 @@ public class EntityBullet extends Entity
     }
 
     @Override
-    protected void entityInit()
-    {
+    protected void entityInit() {
         dataManager.register(shootingEntity, 0);
     }
 
     @Override
-    public boolean isInRangeToRenderDist(double d)
-    {
+    public boolean isInRangeToRenderDist(double d) {
         return true;
     }
 
-    public void shoot(Entity shooter, float pitch, float yaw, float p_184547_4_, float velocity, float inaccuracy)
-    {
+    public void shoot(Entity shooter, float pitch, float yaw, float p_184547_4_, float velocity, float inaccuracy) {
         float f = -MathHelper.sin(yaw * 0.017453292F) * MathHelper.cos(pitch * 0.017453292F);
         float f1 = -MathHelper.sin(pitch * 0.017453292F);
         float f2 = MathHelper.cos(yaw * 0.017453292F) * MathHelper.cos(pitch * 0.017453292F);
@@ -170,15 +159,13 @@ public class EntityBullet extends Entity
         this.motionX += shooter.motionX;
         this.motionZ += shooter.motionZ;
 
-        if (!shooter.onGround)
-        {
+        if (!shooter.onGround) {
             this.motionY += shooter.motionY;
         }
     }
 
     @Override
-    public void writeEntityToNBT(@Nonnull NBTTagCompound compound)
-    {
+    public void writeEntityToNBT(@Nonnull NBTTagCompound compound) {
         compound.setInteger("xTile", xTile);
 
         compound.setInteger("yTile", yTile);
@@ -191,8 +178,7 @@ public class EntityBullet extends Entity
     }
 
     @Override
-    public void readEntityFromNBT(@Nonnull NBTTagCompound compound)
-    {
+    public void readEntityFromNBT(@Nonnull NBTTagCompound compound) {
         xTile = compound.getInteger("xTile");
 
         yTile = compound.getInteger("yTile");
@@ -205,13 +191,11 @@ public class EntityBullet extends Entity
     }
 
     @Override
-    public void setDead()
-    {
+    public void setDead() {
         super.setDead();
     }
 
-    private void blast(Vec3d pos)
-    {
+    private void blast(Vec3d pos) {
         double x = pos.x;
         double y = pos.y;
         double z = pos.z;
@@ -219,8 +203,7 @@ public class EntityBullet extends Entity
         world.spawnParticle(EnumParticleTypes.SMOKE_NORMAL, x, y, z, 0f, 0f, 0f);
     }
 
-    private void blood(Vec3d hitPlace)
-    {
+    private void blood(Vec3d hitPlace) {
         double x = hitPlace.x;
         double y = hitPlace.y;
         double z = hitPlace.z;
@@ -230,12 +213,10 @@ public class EntityBullet extends Entity
     }
 
     @Override
-    public void onUpdate()
-    {
+    public void onUpdate() {
         super.onUpdate();
 
-        if (ticksInAir > 75)
-        {
+        if (ticksInAir > 75) {
             setDead();
 
             return;
@@ -251,8 +232,7 @@ public class EntityBullet extends Entity
 
         var2 = new Vec3d(posX + motionX, posY + motionY, posZ + motionZ);
 
-        if (rtr != null)
-        {
+        if (rtr != null) {
             var2 = new Vec3d(rtr.hitVec.x, rtr.hitVec.y, rtr.hitVec.z);
         }
 
@@ -260,22 +240,18 @@ public class EntityBullet extends Entity
 
         double var6 = 0.0d;
 
-        for (Entity entity : world.getEntitiesWithinAABBExcludingEntity(this, getEntityBoundingBox().grow(motionX, motionY, motionZ).expand(1.0d, 1.0d, 1.0d)))
-        {
-            if (entity.canBeCollidedWith() && (!entity.equals(getShootingEntity()) || ticksInAir >= 25))
-            {
+        for (Entity entity : world.getEntitiesWithinAABBExcludingEntity(this, getEntityBoundingBox().grow(motionX, motionY, motionZ).expand(1.0d, 1.0d, 1.0d))) {
+            if (entity.canBeCollidedWith() && (!entity.equals(getShootingEntity()) || ticksInAir >= 25)) {
                 float var10 = 0.3f;
 
                 AxisAlignedBB boundingBox = entity.getEntityBoundingBox().expand(var10, var10, var10);
 
                 RayTraceResult rtr2 = boundingBox.calculateIntercept(var15, var2);
 
-                if (rtr2 != null)
-                {
+                if (rtr2 != null) {
                     double var13 = var15.distanceTo(rtr2.hitVec);
 
-                    if (var13 < var6 || var6 == 0.0d)
-                    {
+                    if (var13 < var6 || var6 == 0.0d) {
                         var4 = entity;
 
                         var6 = var13;
@@ -284,13 +260,11 @@ public class EntityBullet extends Entity
             }
         }
 
-        if (var4 != null)
-        {
+        if (var4 != null) {
             rtr = new RayTraceResult(var4);
         }
 
-        if (rtr != null)
-        {
+        if (rtr != null) {
             onHit(rtr);
         }
 
@@ -302,22 +276,20 @@ public class EntityBullet extends Entity
 
         float var16 = MathHelper.sqrt(motionX * motionX + motionZ * motionZ);
 
-        rotationYaw = (float)(Math.atan2(motionX, motionZ) * 180.0d / Math.PI);
+        rotationYaw = (float) (Math.atan2(motionX, motionZ) * 180.0d / Math.PI);
 
-        for (rotationPitch = (float)(Math.atan2(motionY, var16) * 180.0d / Math.PI); (rotationPitch - prevRotationPitch) < -180.0f; prevRotationPitch -= 360.0f);
+        for (rotationPitch = (float) (Math.atan2(motionY, var16) * 180.0d / Math.PI); (rotationPitch - prevRotationPitch) < -180.0f; prevRotationPitch -= 360.0f)
+            ;
 
-        while ((rotationPitch - prevRotationPitch) >= 180.0f)
-        {
+        while ((rotationPitch - prevRotationPitch) >= 180.0f) {
             prevRotationPitch += 360.0f;
         }
 
-        while ((rotationYaw - prevRotationYaw) < -180.0f)
-        {
+        while ((rotationYaw - prevRotationYaw) < -180.0f) {
             prevRotationYaw -= 360.0f;
         }
 
-        while ((rotationYaw - prevRotationYaw) >= 180.0f)
-        {
+        while ((rotationYaw - prevRotationYaw) >= 180.0f) {
             prevRotationYaw += 360.0f;
         }
 
@@ -327,13 +299,11 @@ public class EntityBullet extends Entity
 
         float var17 = 0.95f;
 
-        if (handleWaterMovement())
-        {
-            for (int i = 0; i < 4; i++)
-            {
+        if (handleWaterMovement()) {
+            for (int i = 0; i < 4; i++) {
                 float var18 = 0.25f;
 
-                world.spawnParticle(EnumParticleTypes.WATER_BUBBLE, posX - motionX * (double)var18, posY - motionY * (double)var18, posZ - motionZ * (double)var18, motionX, motionY, motionZ);
+                world.spawnParticle(EnumParticleTypes.WATER_BUBBLE, posX - motionX * (double) var18, posY - motionY * (double) var18, posZ - motionZ * (double) var18, motionX, motionY, motionZ);
             }
 
             var17 = 0.8f;
@@ -356,43 +326,32 @@ public class EntityBullet extends Entity
         ticksInAir++;
     }
 
-    private void onHit(RayTraceResult rtr)
-    {
+    private void onHit(RayTraceResult rtr) {
         Entity entityHit = rtr.entityHit;
 
-        if (entityHit != null && entityHit == getShootingEntity())
-        {
+        if (entityHit != null && entityHit == getShootingEntity()) {
             return;
         }
 
-        if (entityHit != null && entityHit.attackEntityFrom(DamageSource.causeThrownDamage(this, getShootingEntity()), damage))
-        {
-            if (MoreCreepsConfig.blood && !(entityHit instanceof EntityCreepBase && !((EntityCreepBase)entityHit).canBleed()))
-            {
+        if (entityHit != null && entityHit.attackEntityFrom(DamageSource.causeThrownDamage(this, getShootingEntity()), damage)) {
+            if (MoreCreepsConfig.blood && !(entityHit instanceof EntityCreepBase && !((EntityCreepBase) entityHit).canBleed())) {
                 blood(rtr.hitVec);
             }
         }
 
-        if (rtr.typeOfHit == RayTraceResult.Type.BLOCK)
-        {
+        if (rtr.typeOfHit == RayTraceResult.Type.BLOCK) {
             BlockPos blockHitPos = rtr.getBlockPos();
 
-            if (!world.isAirBlock(blockHitPos))
-            {
+            if (!world.isAirBlock(blockHitPos)) {
                 Block blockHit = world.getBlockState(blockHitPos).getBlock();
 
-                if (blockHit == Blocks.ICE)
-                {
+                if (blockHit == Blocks.ICE) {
                     world.setBlockState(blockHitPos, Blocks.WATER.getDefaultState());
-                }
-                else if (blockHit == Blocks.GLASS)
-                {
+                } else if (blockHit == Blocks.GLASS) {
                     blast(rtr.hitVec);
 
                     world.destroyBlock(blockHitPos, false);
-                }
-                else
-                {
+                } else {
                     blast(rtr.hitVec);
                 }
             }
@@ -403,8 +362,7 @@ public class EntityBullet extends Entity
         setDead();
     }
 
-    public Entity getShootingEntity()
-    {
+    public Entity getShootingEntity() {
         return world.getEntityByID(dataManager.get(shootingEntity));
     }
 }

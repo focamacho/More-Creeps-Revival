@@ -5,8 +5,7 @@ import net.minecraft.client.model.ModelRenderer;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.math.MathHelper;
 
-public class ModelCamel extends ModelBase
-{
+public class ModelCamel extends ModelBase {
     public ModelRenderer body;
     public ModelRenderer leg1;
     public ModelRenderer leg2;
@@ -23,8 +22,7 @@ public class ModelCamel extends ModelBase
     public float tailwag;
     public int taildirection;
 
-    public ModelCamel()
-    {
+    public ModelCamel() {
         float f2 = 0.0F;
         body = new ModelRenderer(this, 36, 0);
         body.addBox(-1F, -3F, -4.5F, 2, 6, 9, 3.9F);
@@ -73,8 +71,7 @@ public class ModelCamel extends ModelBase
     }
 
     @Override
-    public void render(Entity entity, float f, float f1, float f2, float f3, float f4, float f5)
-    {
+    public void render(Entity entity, float f, float f1, float f2, float f3, float f4, float f5) {
         setRotationAngles(f, f1, f2, f3, f4, f5, entity);
         body.render(f5);
         leg1.render(f5);
@@ -92,36 +89,30 @@ public class ModelCamel extends ModelBase
     }
 
     @Override
-    public void setRotationAngles(float f, float f1, float f2, float f3, float f4, float f5, Entity entity)
-    {
-        headCamel.rotateAngleY = f3 / (180F / (float)Math.PI);
-        headCamel.rotateAngleX = f4 / (180F / (float)Math.PI);
+    public void setRotationAngles(float f, float f1, float f2, float f3, float f4, float f5, Entity entity) {
+        headCamel.rotateAngleY = f3 / (180F / (float) Math.PI);
+        headCamel.rotateAngleX = f4 / (180F / (float) Math.PI);
         mouth.rotateAngleY = earR.rotateAngleY = earL.rotateAngleY = headCamel.rotateAngleY;
         earR.rotateAngleX = earL.rotateAngleX = headCamel.rotateAngleX;
         mouth.rotateAngleX = headCamel.rotateAngleX + 0.29382F;
 
-        if (taildirection > 0)
-        {
+        if (taildirection > 0) {
             tailwag += 0.0002F;
 
-            if (tailwag > 0.067F)
-            {
+            if (tailwag > 0.067F) {
                 taildirection = taildirection * -1;
             }
-        }
-        else
-        {
+        } else {
             tailwag -= 0.0002F;
 
-            if ((double)tailwag < -0.067000000000000004D)
-            {
+            if ((double) tailwag < -0.067000000000000004D) {
                 taildirection = taildirection * -1;
             }
         }
 
         leg1.rotateAngleX = MathHelper.cos(f * 0.6662F) * 1.4F * f1;
-        leg2.rotateAngleX = MathHelper.cos(f * 0.6662F + (float)Math.PI) * 1.4F * f1;
-        leg3.rotateAngleX = MathHelper.cos(f * 0.6662F + (float)Math.PI) * 1.4F * f1;
+        leg2.rotateAngleX = MathHelper.cos(f * 0.6662F + (float) Math.PI) * 1.4F * f1;
+        leg3.rotateAngleX = MathHelper.cos(f * 0.6662F + (float) Math.PI) * 1.4F * f1;
         leg4.rotateAngleX = MathHelper.cos(f * 0.6662F) * 1.4F * f1;
     }
 }

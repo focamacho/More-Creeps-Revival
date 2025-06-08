@@ -4,6 +4,7 @@ import com.morecreepsrevival.morecreeps.common.sounds.CreepsSoundHandler;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EnumCreatureType;
+import net.minecraft.entity.ai.*;
 import net.minecraft.entity.monster.IMob;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
@@ -16,16 +17,13 @@ import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
-import net.minecraft.entity.ai.*;
 
 import javax.annotation.Nonnull;
 
-public class EntityEvilCreature extends EntityCreepBase implements IMob, IEntityCanChangeSize
-{
+public class EntityEvilCreature extends EntityCreepBase implements IMob, IEntityCanChangeSize {
     private static final DataParameter<Boolean> jumping = EntityDataManager.<Boolean>createKey(EntityEvilCreature.class, DataSerializers.BOOLEAN);
 
-    public EntityEvilCreature(World world)
-    {
+    public EntityEvilCreature(World world) {
         super(world);
 
         setCreepTypeName("Evil Creature");
@@ -36,7 +34,7 @@ public class EntityEvilCreature extends EntityCreepBase implements IMob, IEntity
 
         setModelSize(3.0f);
 
-        baseHealth = (float)rand.nextInt(75) + 35.0f;
+        baseHealth = (float) rand.nextInt(75) + 35.0f;
 
         baseSpeed = 0.2d;
 
@@ -48,16 +46,14 @@ public class EntityEvilCreature extends EntityCreepBase implements IMob, IEntity
     }
 
     @Override
-    protected void entityInit()
-    {
+    protected void entityInit() {
         super.entityInit();
 
         dataManager.register(jumping, Boolean.valueOf(false));
     }
 
     @Override
-    protected void initEntityAI()
-    {
+    protected void initEntityAI() {
         clearAITasks();
 
         NodeProcessor nodeProcessor = getNavigator().getNodeProcessor();
@@ -86,81 +82,66 @@ public class EntityEvilCreature extends EntityCreepBase implements IMob, IEntity
     }
 
     @Override
-    protected void updateTexture()
-    {
+    protected void updateTexture() {
         setTexture("textures/entity/evilcreature.png");
     }
 
     @Override
-    protected SoundEvent getAmbientSound()
-    {
+    protected SoundEvent getAmbientSound() {
         return CreepsSoundHandler.evilCreatureSound;
     }
 
     @Override
-    protected SoundEvent getHurtSound(DamageSource damageSource)
-    {
+    protected SoundEvent getHurtSound(DamageSource damageSource) {
         return CreepsSoundHandler.evilCreatureHurtSound;
     }
 
     @Override
-    protected SoundEvent getDeathSound()
-    {
+    protected SoundEvent getDeathSound() {
         return CreepsSoundHandler.evilCreatureDeathSound;
     }
 
     @Override
-    protected void dropItemsOnDeath()
-    {
-        if (rand.nextInt(5) == 0)
-        {
+    protected void dropItemsOnDeath() {
+        if (rand.nextInt(5) == 0) {
             dropItem(Items.BREAD, rand.nextInt(3) + 1);
-        }
-        else
-        {
+        } else {
             dropItem(Items.FISH, rand.nextInt(3) + 1);
         }
     }
 
     @Override
-    protected boolean shouldJumpWhileAttacking(Entity entity)
-    {
+    protected boolean shouldJumpWhileAttacking(Entity entity) {
         return true;
     }
 
     @Override
-    protected float getSoundVolume()
-    {
+    protected float getSoundVolume() {
         return (1.0f * (getModelSize() / 3.0f));
     }
 
     @Override
-    protected float getSoundPitch()
-    {
+    protected float getSoundPitch() {
         return ((rand.nextFloat() - rand.nextFloat()) * 0.2f + 1.0f + (3.0f - getModelSize()) * 2.0f);
     }
 
     @Override
-    protected void doAttackJump(Entity entity)
-    {
-        if (getJumping())
-        {
+    protected void doAttackJump(Entity entity) {
+        if (getJumping()) {
             dataManager.set(jumping, false);
 
             playSound(CreepsSoundHandler.evilCreatureJumpSound, getSoundVolume(), getSoundPitch());
 
-            for (Entity ent : world.getEntitiesWithinAABBExcludingEntity(this, getEntityBoundingBox().expand(18.0d, 18.0d, 18.0d)))
-            {
-                if (ent instanceof EntityLiving && !ent.handleWaterMovement() && ent.onGround)
-                {
+            for (Entity ent : world.getEntitiesWithinAABBExcludingEntity(this, getEntityBoundingBox().expand(18.0d, 18.0d, 18.0d))) {
+                if (ent instanceof EntityLiving && !ent.handleWaterMovement() && ent.onGround) {
                     double dist = getDistance(ent);
 
-                    ent.motionY += (17.0d - dist) * 0.067057996988296509 * (double)(getModelSize() / 3.0f);
+                    ent.motionY += (17.0d - dist) * 0.067057996988296509 * (double) (getModelSize() / 3.0f);
                 }
             }
         }
 
-        rotationYaw = ((float)Math.toDegrees(Math.atan2(entity.posZ - posZ, entity.posX - posX))) - 90.0f;
+        rotationYaw = ((float) Math.toDegrees(Math.atan2(entity.posZ - posZ, entity.posX - posX))) - 90.0f;
 
         double d0 = entity.posX - posX;
 
@@ -180,57 +161,56 @@ public class EntityEvilCreature extends EntityCreepBase implements IMob, IEntity
     }
 
     @Override
-    public boolean attackEntityAsMob(@Nonnull Entity entity)
-    {
+    public boolean attackEntityAsMob(@Nonnull Entity entity) {
         AxisAlignedBB myBB = getEntityBoundingBox();
 
         AxisAlignedBB theirBB = entity.getEntityBoundingBox();
 
-        if (theirBB.maxY > myBB.minY && theirBB.minY < myBB.maxY)
-        {
+        if (theirBB.maxY > myBB.minY && theirBB.minY < myBB.maxY) {
             entity.motionY += 0.76999998092651367d;
         }
 
         return super.attackEntityAsMob(entity);
     }
 
+    public boolean getJumping() {
+        return ((Boolean) dataManager.get(jumping)).booleanValue();
+    }
+
     @Override
-    public void setJumping(boolean b)
-    {
+    public void setJumping(boolean b) {
         super.setJumping(b);
 
         dataManager.set(jumping, Boolean.valueOf(b));
     }
 
-    public boolean getJumping()
-    {
-        return ((Boolean)dataManager.get(jumping)).booleanValue();
-    }
-
     @Override
-    public boolean isImmuneToExplosions()
-    {
+    public boolean isImmuneToExplosions() {
         return true;
     }
 
     @Override
-    public float maxShrink() { return 0.7f; }
+    public float maxShrink() {
+        return 0.7f;
+    }
 
     @Override
-    public float getShrinkRayAmount() { return 0.2f; }
+    public float getShrinkRayAmount() {
+        return 0.2f;
+    }
 
     @Override
     public void onShrink(EntityShrink source) {
 
     }
+
     @Override
     public float maxGrowth() {
         return 7.0f;
     }
 
     @Override
-    public float getGrowRayAmount()
-    {
+    public float getGrowRayAmount() {
         return 0.2F;
     }
 

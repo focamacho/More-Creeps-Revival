@@ -5,8 +5,7 @@ import net.minecraft.client.model.ModelRenderer;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.math.MathHelper;
 
-public class ModelG extends ModelBase
-{
+public class ModelG extends ModelBase {
     public ModelRenderer bipedRightArm;
     public ModelRenderer bipedLeftArm;
     public ModelRenderer bipedRightLeg;
@@ -22,18 +21,15 @@ public class ModelG extends ModelBase
     public ModelRenderer g4;
     public ModelRenderer eyeR;
 
-    public ModelG()
-    {
+    public ModelG() {
         this(0.0f);
     }
 
-    public ModelG(float f)
-    {
+    public ModelG(float f) {
         this(f, 0.0f);
     }
 
-    public ModelG(float f, float f1)
-    {
+    public ModelG(float f, float f1) {
         heldItemLeft = false;
         heldItemRight = false;
         isSneak = false;
@@ -74,8 +70,7 @@ public class ModelG extends ModelBase
     }
 
     @Override
-    public void render(Entity entity, float f, float f1, float f2, float f3, float f4, float f5)
-    {
+    public void render(Entity entity, float f, float f1, float f2, float f3, float f4, float f5) {
         setRotationAngles(f, f1, f2, f3, f4, f5, entity);
         eyeL.render(f5);
         g3.render(f5);
@@ -91,47 +86,41 @@ public class ModelG extends ModelBase
     }
 
     @Override
-    public void setRotationAngles(float f, float f1, float f2, float f3, float f4, float f5, Entity entity)
-    {
-        bipedRightArm.rotateAngleX = MathHelper.cos(f * 0.6662F + (float)Math.PI) * 2.0F * f1 * 0.5F;
+    public void setRotationAngles(float f, float f1, float f2, float f3, float f4, float f5, Entity entity) {
+        bipedRightArm.rotateAngleX = MathHelper.cos(f * 0.6662F + (float) Math.PI) * 2.0F * f1 * 0.5F;
         bipedLeftArm.rotateAngleX = MathHelper.cos(f * 0.6662F) * 2.0F * f1 * 0.5F;
         bipedRightArm.rotateAngleZ = 0.0F;
         bipedLeftArm.rotateAngleZ = 0.0F;
         bipedRightLeg.rotateAngleX = MathHelper.cos(f * 0.6662F) * 1.4F * f1;
-        bipedLeftLeg.rotateAngleX = MathHelper.cos(f * 0.6662F + (float)Math.PI) * 1.4F * f1;
+        bipedLeftLeg.rotateAngleX = MathHelper.cos(f * 0.6662F + (float) Math.PI) * 1.4F * f1;
         bipedRightLeg.rotateAngleY = 0.0F;
         bipedLeftLeg.rotateAngleY = 0.0F;
 
-        if (isRiding)
-        {
-            bipedRightArm.rotateAngleX += -((float)Math.PI / 5F);
-            bipedLeftArm.rotateAngleX += -((float)Math.PI / 5F);
-            bipedRightLeg.rotateAngleX = -((float)Math.PI * 2F / 5F);
-            bipedLeftLeg.rotateAngleX = -((float)Math.PI * 2F / 5F);
-            bipedRightLeg.rotateAngleY = ((float)Math.PI / 10F);
-            bipedLeftLeg.rotateAngleY = -((float)Math.PI / 10F);
+        if (isRiding) {
+            bipedRightArm.rotateAngleX += -((float) Math.PI / 5F);
+            bipedLeftArm.rotateAngleX += -((float) Math.PI / 5F);
+            bipedRightLeg.rotateAngleX = -((float) Math.PI * 2F / 5F);
+            bipedLeftLeg.rotateAngleX = -((float) Math.PI * 2F / 5F);
+            bipedRightLeg.rotateAngleY = ((float) Math.PI / 10F);
+            bipedLeftLeg.rotateAngleY = -((float) Math.PI / 10F);
         }
 
-        if (heldItemLeft)
-        {
-            bipedLeftArm.rotateAngleX = bipedLeftArm.rotateAngleX * 0.5F - ((float)Math.PI / 10F);
+        if (heldItemLeft) {
+            bipedLeftArm.rotateAngleX = bipedLeftArm.rotateAngleX * 0.5F - ((float) Math.PI / 10F);
         }
 
-        if (heldItemRight)
-        {
-            bipedRightArm.rotateAngleX = bipedRightArm.rotateAngleX * 0.5F - ((float)Math.PI / 10F);
+        if (heldItemRight) {
+            bipedRightArm.rotateAngleX = bipedRightArm.rotateAngleX * 0.5F - ((float) Math.PI / 10F);
         }
 
         bipedRightArm.rotateAngleY = 0.0F;
         bipedLeftArm.rotateAngleY = 0.0F;
 
-        if (swingProgress > -9990F)
-        {
-            bipedRightArm.rotateAngleZ = MathHelper.sin(swingProgress * (float)Math.PI) * -0.4F;
+        if (swingProgress > -9990F) {
+            bipedRightArm.rotateAngleZ = MathHelper.sin(swingProgress * (float) Math.PI) * -0.4F;
         }
 
-        if (isSneak)
-        {
+        if (isSneak) {
             bipedRightLeg.rotateAngleX -= 0.0F;
             bipedLeftLeg.rotateAngleX -= 0.0F;
             bipedRightArm.rotateAngleX += 0.4F;
@@ -140,9 +129,7 @@ public class ModelG extends ModelBase
             bipedLeftLeg.rotationPointZ = 4F;
             bipedRightLeg.rotationPointY = 9F;
             bipedLeftLeg.rotationPointY = 9F;
-        }
-        else
-        {
+        } else {
             bipedRightLeg.rotationPointZ = 0.0F;
             bipedLeftLeg.rotationPointZ = 0.0F;
             bipedRightLeg.rotationPointY = 12F;

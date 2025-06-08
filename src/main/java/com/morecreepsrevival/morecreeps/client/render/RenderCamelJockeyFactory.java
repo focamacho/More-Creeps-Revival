@@ -5,11 +5,9 @@ import net.minecraft.client.renderer.entity.Render;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraftforge.fml.client.registry.IRenderFactory;
 
-public class RenderCamelJockeyFactory implements IRenderFactory<EntityCamelJockey>
-{
+public class RenderCamelJockeyFactory implements IRenderFactory<EntityCamelJockey> {
     @Override
-    public Render<? super EntityCamelJockey> createRenderFor(RenderManager renderManager)
-    {
+    public Render<? super EntityCamelJockey> createRenderFor(RenderManager renderManager) {
         return new RenderCamelJockey<>(renderManager);
     }
 }

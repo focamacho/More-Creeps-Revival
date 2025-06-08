@@ -22,34 +22,30 @@ import net.minecraft.world.World;
 
 import javax.annotation.Nonnull;
 
-public class EntityHunchback extends EntityCreepBase implements IEntityCanChangeSize
-{
+public class EntityHunchback extends EntityCreepBase implements IEntityCanChangeSize {
     private static final DataParameter<Integer> cakeTimer = EntityDataManager.createKey(EntityHunchback.class, DataSerializers.VARINT);
 
-    public EntityHunchback(World world)
-    {
+    public EntityHunchback(World world) {
         super(world);
 
         setCreepTypeName("Hunchback");
 
         baseSpeed = 0.3f;
 
-        baseHealth = (float)rand.nextInt(30) + 10.0f;
+        baseHealth = (float) rand.nextInt(30) + 10.0f;
 
         updateAttributes();
     }
 
     @Override
-    protected void entityInit()
-    {
+    protected void entityInit() {
         super.entityInit();
 
         dataManager.register(cakeTimer, 0);
     }
 
     @Override
-    protected void initEntityAI()
-    {
+    protected void initEntityAI() {
         clearAITasks();
 
         NodeProcessor nodeProcessor = getNavigator().getNodeProcessor();
@@ -64,12 +60,9 @@ public class EntityHunchback extends EntityCreepBase implements IEntityCanChange
 
         tasks.addTask(3, new EntityAIAttackMelee(this, 1.0d, true));
 
-        if (isTamed())
-        {
+        if (isTamed()) {
             tasks.addTask(4, new EntityCreepAIFollowOwner(this, 1.0d, 6.0f, 2.0f));
-        }
-        else
-        {
+        } else {
             tasks.addTask(4, new EntityAIMoveTowardsRestriction(this, 0.5d));
         }
 
@@ -83,50 +76,38 @@ public class EntityHunchback extends EntityCreepBase implements IEntityCanChange
     }
 
     @Override
-    public int getMaxSpawnedInChunk()
-    {
+    public int getMaxSpawnedInChunk() {
         return 1;
     }
 
     @Override
-    protected void updateTexture()
-    {
-        if (isTamed())
-        {
+    protected void updateTexture() {
+        if (isTamed()) {
             setTexture("textures/entity/hunchbackcake.png");
-        }
-        else
-        {
+        } else {
             setTexture("textures/entity/hunchback.png");
         }
     }
 
-    private void setCakeTimer(int i)
-    {
-        dataManager.set(cakeTimer, i);
-    }
-
-    public int getCakeTimer()
-    {
+    public int getCakeTimer() {
         return dataManager.get(cakeTimer);
     }
 
+    private void setCakeTimer(int i) {
+        dataManager.set(cakeTimer, i);
+    }
+
     @Override
-    public boolean processInteract(EntityPlayer player, EnumHand hand)
-    {
-        if (hand == EnumHand.OFF_HAND)
-        {
+    public boolean processInteract(EntityPlayer player, EnumHand hand) {
+        if (hand == EnumHand.OFF_HAND) {
             return super.processInteract(player, hand);
         }
 
         ItemStack itemStack = player.getHeldItem(hand);
 
-        if (isEntityAlive())
-        {
-            if (isTamed())
-            {
-                if (itemStack.getItem() == Items.BONE)
-                {
+        if (isEntityAlive()) {
+            if (isTamed()) {
+                if (itemStack.getItem() == Items.BONE) {
                     smoke();
 
                     smoke();
@@ -135,11 +116,10 @@ public class EntityHunchback extends EntityCreepBase implements IEntityCanChange
 
                     playSound(CreepsSoundHandler.hunchArmySound, 2.0f, getSoundPitch());
 
-                    for (int i = 0; i < 5; i++)
-                    {
+                    for (int i = 0; i < 5; i++) {
                         EntityHunchbackSkeleton skeleton = new EntityHunchbackSkeleton(world);
 
-                        skeleton.setLocationAndAngles(posX + 3.0d, posY, posZ + (double)i, rotationYaw, 0.0f);
+                        skeleton.setLocationAndAngles(posX + 3.0d, posY, posZ + (double) i, rotationYaw, 0.0f);
 
                         skeleton.setModelSize(getModelSize());
 
@@ -149,8 +129,7 @@ public class EntityHunchback extends EntityCreepBase implements IEntityCanChange
 
                         skeleton.tame(player);
 
-                        if (!world.isRemote)
-                        {
+                        if (!world.isRemote) {
                             world.spawnEntity(skeleton);
                         }
                     }
@@ -159,15 +138,12 @@ public class EntityHunchback extends EntityCreepBase implements IEntityCanChange
 
                     return true;
                 }
-            }
-            else if (itemStack.getItem() == Items.CAKE || Item.getIdFromItem(itemStack.getItem()) == 92)
-            {
+            } else if (itemStack.getItem() == Items.CAKE || Item.getIdFromItem(itemStack.getItem()) == 92) {
                 smoke();
 
                 tame(player);
 
-                if (getCakeTimer() < 4000)
-                {
+                if (getCakeTimer() < 4000) {
                     setCakeTimer(getCakeTimer() + rand.nextInt(500) + 250);
                 }
 
@@ -181,18 +157,15 @@ public class EntityHunchback extends EntityCreepBase implements IEntityCanChange
     }
 
     @Override
-    public boolean attackEntityFrom(@Nonnull DamageSource source, float amount)
-    {
+    public boolean attackEntityFrom(@Nonnull DamageSource source, float amount) {
         Entity entity = source.getTrueSource();
 
-        if (entity != null)
-        {
-            double d = -MathHelper.sin((entity.rotationYaw * (float)Math.PI) / 180.0f);
+        if (entity != null) {
+            double d = -MathHelper.sin((entity.rotationYaw * (float) Math.PI) / 180.0f);
 
-            double d1 = MathHelper.cos((entity.rotationYaw * (float)Math.PI) / 180.0f);
+            double d1 = MathHelper.cos((entity.rotationYaw * (float) Math.PI) / 180.0f);
 
-            if (entity instanceof EntityPlayer && isTamed())
-            {
+            if (entity instanceof EntityPlayer && isTamed()) {
                 motionY = rand.nextFloat() * 0.9f;
 
                 motionZ = d1 * 0.40000000596046448d;
@@ -202,9 +175,7 @@ public class EntityHunchback extends EntityCreepBase implements IEntityCanChange
                 playSound(CreepsSoundHandler.hunchThankYouSound, 2.0f, getSoundPitch());
 
                 return super.attackEntityFrom(source, amount / 6);
-            }
-            else if (amount > 0 && entity instanceof EntityLivingBase)
-            {
+            } else if (amount > 0 && entity instanceof EntityLivingBase) {
                 motionY = (rand.nextFloat() - rand.nextFloat()) * 0.3f;
 
                 motionZ = d1 * 0.40000000596046448d;
@@ -213,7 +184,7 @@ public class EntityHunchback extends EntityCreepBase implements IEntityCanChange
 
                 playSound(CreepsSoundHandler.hunchHurtSound, 2.0f, getSoundPitch());
 
-                setAttackTarget((EntityLivingBase)entity);
+                setAttackTarget((EntityLivingBase) entity);
             }
         }
 
@@ -221,21 +192,17 @@ public class EntityHunchback extends EntityCreepBase implements IEntityCanChange
     }
 
     @Override
-    public void onLivingUpdate()
-    {
+    public void onLivingUpdate() {
         super.onLivingUpdate();
 
-        if (getAttackTarget() instanceof EntityHunchbackSkeleton)
-        {
+        if (getAttackTarget() instanceof EntityHunchbackSkeleton) {
             setAttackTarget(null);
         }
 
-        if (isTamed() && getCakeTimer() > 0 && rand.nextInt(10) == 0)
-        {
+        if (isTamed() && getCakeTimer() > 0 && rand.nextInt(10) == 0) {
             setCakeTimer(getCakeTimer() - 1);
 
-            if (getCakeTimer() == 0)
-            {
+            if (getCakeTimer() == 0) {
                 clearOwner();
 
                 updateTexture();
@@ -246,30 +213,21 @@ public class EntityHunchback extends EntityCreepBase implements IEntityCanChange
     }
 
     @Override
-    protected void dropItemsOnDeath()
-    {
-        if (!isTamed())
-        {
-            if (rand.nextInt(5) == 0)
-            {
+    protected void dropItemsOnDeath() {
+        if (!isTamed()) {
+            if (rand.nextInt(5) == 0) {
                 dropItem(Items.PORKCHOP, rand.nextInt(3) + 1);
-            }
-            else
-            {
+            } else {
                 dropItem(Item.getItemFromBlock(Blocks.SAND), rand.nextInt(3) + 1);
             }
         }
     }
 
     @Override
-    protected SoundEvent getAmbientSound()
-    {
-        if (isTamed())
-        {
+    protected SoundEvent getAmbientSound() {
+        if (isTamed()) {
             return CreepsSoundHandler.hunchQuietSound;
-        }
-        else if (rand.nextInt(3) == 0)
-        {
+        } else if (rand.nextInt(3) == 0) {
             return CreepsSoundHandler.hunchCakeSound;
         }
 
@@ -277,64 +235,62 @@ public class EntityHunchback extends EntityCreepBase implements IEntityCanChange
     }
 
     @Override
-    protected SoundEvent getHurtSound(DamageSource damageSource)
-    {
+    protected SoundEvent getHurtSound(DamageSource damageSource) {
         return CreepsSoundHandler.hunchHurtSound;
     }
 
     @Override
-    protected SoundEvent getDeathSound()
-    {
+    protected SoundEvent getDeathSound() {
         return CreepsSoundHandler.hunchDeathSound;
     }
 
     @Override
-    protected SoundEvent getTamedSound()
-    {
+    protected SoundEvent getTamedSound() {
         return CreepsSoundHandler.hunchThankYouSound;
     }
 
     @Override
-    protected float getBaseHealth()
-    {
+    protected float getBaseHealth() {
         float health = super.getBaseHealth();
 
-        if (isTamed())
-        {
+        if (isTamed()) {
             health += 2.0f;
         }
 
         return health;
     }
 
-    private void setUntamed()
-    {
+    private void setUntamed() {
         //TODO: implement this.
     }
 
     @Override
-    public float maxShrink() { return 0.5f; }
+    public float maxShrink() {
+        return 0.5f;
+    }
 
     @Override
-    public float getShrinkRayAmount() { return 0.2f; }
+    public float getShrinkRayAmount() {
+        return 0.2f;
+    }
 
     @Override
     public void onShrink(EntityShrink source) {
 
     }
+
     @Override
     public float maxGrowth() {
         return 5.0f;
     }
 
     @Override
-    public float getGrowRayAmount()
-    {
+    public float getGrowRayAmount() {
         return 0.2F;
     }
 
     @Override
     public void onGrow(EntityGrow source) {
-        if(this.isTamed()) this.setUntamed();
+        if (this.isTamed()) this.setUntamed();
     }
 }

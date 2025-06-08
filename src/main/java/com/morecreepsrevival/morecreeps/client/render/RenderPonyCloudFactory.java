@@ -5,11 +5,9 @@ import net.minecraft.client.renderer.entity.Render;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraftforge.fml.client.registry.IRenderFactory;
 
-public class RenderPonyCloudFactory implements IRenderFactory<EntityPonyCloud>
-{
+public class RenderPonyCloudFactory implements IRenderFactory<EntityPonyCloud> {
     @Override
-    public Render<? super EntityPonyCloud> createRenderFor(RenderManager renderManager)
-    {
+    public Render<? super EntityPonyCloud> createRenderFor(RenderManager renderManager) {
         return new RenderPonyCloud<>(renderManager);
     }
 }

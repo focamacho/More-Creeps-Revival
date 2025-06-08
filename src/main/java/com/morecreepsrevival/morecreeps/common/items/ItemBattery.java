@@ -10,18 +10,16 @@ import net.minecraft.world.World;
 
 import javax.annotation.Nonnull;
 
-public class ItemBattery extends CreepsItem
-{
-    public ItemBattery()
-    {
+public class ItemBattery extends CreepsItem {
+    public ItemBattery() {
         super("battery");
 
         setMaxStackSize(16);
     }
 
-    @Override @Nonnull
-    public ActionResult<ItemStack> onItemRightClick(World world, EntityPlayer player, @Nonnull EnumHand hand)
-    {
+    @Override
+    @Nonnull
+    public ActionResult<ItemStack> onItemRightClick(World world, EntityPlayer player, @Nonnull EnumHand hand) {
         player.playSound(CreepsSoundHandler.sparkSound, 1.0f, 1.0f);
 
         player.attackEntityFrom(DamageSource.IN_FIRE, 1.0f);

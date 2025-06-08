@@ -9,12 +9,10 @@ import net.minecraft.util.DamageSource;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.world.World;
 
-public class EntityEvilLight extends EntityCreepBase
-{
+public class EntityEvilLight extends EntityCreepBase {
     private int lifespan;
 
-    public EntityEvilLight(World worldIn)
-    {
+    public EntityEvilLight(World worldIn) {
         super(worldIn);
 
         setCreepTypeName("Evil Light");
@@ -37,23 +35,18 @@ public class EntityEvilLight extends EntityCreepBase
     }
 
     @Override
-    protected void updateTexture()
-    {
+    protected void updateTexture() {
         setTexture("textures/entity/evillight1.png");
     }
 
     @Override
-    public void onLivingUpdate()
-    {
-        if (lifespan-- < 1 || handleWaterMovement())
-        {
+    public void onLivingUpdate() {
+        if (lifespan-- < 1 || handleWaterMovement()) {
             setDead();
         }
 
-        for (Entity entity : world.getEntitiesWithinAABBExcludingEntity(this, getEntityBoundingBox().expand(motionX, motionY, motionZ).grow(1.0d, 1.0d, 1.0d)))
-        {
-            if (entity.canBeCollidedWith() && entity instanceof EntityLivingBase && !(entity instanceof EntityEvilLight) && !(entity instanceof EntityEvilScientist) && !(entity instanceof EntityEvilChicken) && !(entity instanceof EntityEvilCreature) && !(entity instanceof EntityEvilPig))
-            {
+        for (Entity entity : world.getEntitiesWithinAABBExcludingEntity(this, getEntityBoundingBox().expand(motionX, motionY, motionZ).grow(1.0d, 1.0d, 1.0d))) {
+            if (entity.canBeCollidedWith() && entity instanceof EntityLivingBase && !(entity instanceof EntityEvilLight) && !(entity instanceof EntityEvilScientist) && !(entity instanceof EntityEvilChicken) && !(entity instanceof EntityEvilCreature) && !(entity instanceof EntityEvilPig)) {
                 entity.setFire(3);
 
                 entity.motionX = rand.nextFloat() * 0.7f;
@@ -70,32 +63,27 @@ public class EntityEvilLight extends EntityCreepBase
     }
 
     @Override
-    public void onCollideWithPlayer(EntityPlayer player)
-    {
+    public void onCollideWithPlayer(EntityPlayer player) {
         player.attackEntityFrom(DamageSource.causeMobDamage(this), 3.0f);
     }
 
     @Override
-    protected SoundEvent getAmbientSound()
-    {
+    protected SoundEvent getAmbientSound() {
         return CreepsSoundHandler.evilLightSound;
     }
 
     @Override
-    protected SoundEvent getHurtSound(DamageSource damageSource)
-    {
+    protected SoundEvent getHurtSound(DamageSource damageSource) {
         return CreepsSoundHandler.evilLightSound;
     }
 
     @Override
-    protected SoundEvent getDeathSound()
-    {
+    protected SoundEvent getDeathSound() {
         return CreepsSoundHandler.evilLightSound;
     }
 
     @Override
-    public boolean getCanSpawnHere()
-    {
+    public boolean getCanSpawnHere() {
         return true;
     }
 }

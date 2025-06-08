@@ -5,11 +5,9 @@ import net.minecraft.client.renderer.entity.Render;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraftforge.fml.client.registry.IRenderFactory;
 
-public class RenderDogHouseFactory implements IRenderFactory<EntityDogHouse>
-{
+public class RenderDogHouseFactory implements IRenderFactory<EntityDogHouse> {
     @Override
-    public Render<? super EntityDogHouse> createRenderFor(RenderManager renderManager)
-    {
+    public Render<? super EntityDogHouse> createRenderFor(RenderManager renderManager) {
         return new RenderDogHouse<>(renderManager);
     }
 }

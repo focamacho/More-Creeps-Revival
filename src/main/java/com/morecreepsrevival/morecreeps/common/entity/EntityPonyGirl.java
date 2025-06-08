@@ -3,10 +3,7 @@ package com.morecreepsrevival.morecreeps.common.entity;
 import com.morecreepsrevival.morecreeps.common.helpers.InventoryHelper;
 import com.morecreepsrevival.morecreeps.common.items.CreepsItemHandler;
 import com.morecreepsrevival.morecreeps.common.sounds.CreepsSoundHandler;
-import net.minecraft.client.model.ModelSlime;
-import net.minecraft.client.renderer.entity.RenderSlime;
 import net.minecraft.entity.ai.*;
-import net.minecraft.entity.monster.EntitySlime;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -25,12 +22,10 @@ import net.minecraft.world.World;
 
 import javax.annotation.Nonnull;
 
-public class EntityPonyGirl extends EntityCreepBase
-{
+public class EntityPonyGirl extends EntityCreepBase {
     private static final DataParameter<Boolean> cellPhone = EntityDataManager.<Boolean>createKey(EntityPonyGirl.class, DataSerializers.BOOLEAN);
 
-    public EntityPonyGirl(World worldIn)
-    {
+    public EntityPonyGirl(World worldIn) {
         super(worldIn);
 
         setCreepTypeName("Pony Girl");
@@ -47,22 +42,19 @@ public class EntityPonyGirl extends EntityCreepBase
     }
 
     @Override
-    protected void entityInit()
-    {
+    protected void entityInit() {
         super.entityInit();
 
         dataManager.register(cellPhone, Boolean.valueOf(false));
     }
 
     @Override
-    protected void updateTexture()
-    {
+    protected void updateTexture() {
         setTexture("textures/entity/ponygirl.png");
     }
 
     @Override
-    public void initEntityAI()
-    {
+    public void initEntityAI() {
         clearAITasks();
 
         NodeProcessor nodeProcessor = getNavigator().getNodeProcessor();
@@ -85,10 +77,8 @@ public class EntityPonyGirl extends EntityCreepBase
     }
 
     @Override
-    protected SoundEvent getAmbientSound()
-    {
-        if (getCellPhone())
-        {
+    protected SoundEvent getAmbientSound() {
+        if (getCellPhone()) {
             return CreepsSoundHandler.ponyGirlBuySound;
         }
 
@@ -96,51 +86,41 @@ public class EntityPonyGirl extends EntityCreepBase
     }
 
     @Override
-    protected SoundEvent getHurtSound(@Nonnull DamageSource damageSource)
-    {
+    protected SoundEvent getHurtSound(@Nonnull DamageSource damageSource) {
         return CreepsSoundHandler.ponyGirlHurtSound;
     }
 
     @Override
-    protected SoundEvent getDeathSound()
-    {
+    protected SoundEvent getDeathSound() {
         return CreepsSoundHandler.ponyGirlDeathSound;
     }
 
     @Override
-    public int getMaxSpawnedInChunk()
-    {
+    public int getMaxSpawnedInChunk() {
         return 1;
     }
 
-    private void setCellPhone(boolean b)
-    {
+    public boolean getCellPhone() {
+        return ((Boolean) dataManager.get(cellPhone)).booleanValue();
+    }
+
+    private void setCellPhone(boolean b) {
         dataManager.set(cellPhone, Boolean.valueOf(b));
     }
 
-    public boolean getCellPhone()
-    {
-        return ((Boolean)dataManager.get(cellPhone)).booleanValue();
-    }
-
     @Override
-    public boolean processInteract(@Nonnull EntityPlayer player, @Nonnull EnumHand hand)
-    {
-        if (hand == EnumHand.OFF_HAND)
-        {
+    public boolean processInteract(@Nonnull EntityPlayer player, @Nonnull EnumHand hand) {
+        if (hand == EnumHand.OFF_HAND) {
             return super.processInteract(player, hand);
         }
 
         ItemStack itemStack = player.getHeldItem(hand);
 
-        if (!itemStack.isEmpty())
-        {
+        if (!itemStack.isEmpty()) {
             Item item = itemStack.getItem();
 
-            if (item == CreepsItemHandler.mobilePhone)
-            {
-                if (!getCellPhone())
-                {
+            if (item == CreepsItemHandler.mobilePhone) {
+                if (!getCellPhone()) {
                     InventoryHelper.takeItem(player.inventory, CreepsItemHandler.mobilePhone, 1);
 
                     setHeldItem(hand, new ItemStack(CreepsItemHandler.mobilePhone, 1));
@@ -148,17 +128,12 @@ public class EntityPonyGirl extends EntityCreepBase
                     setCellPhone(true);
                 }
                 return true;
-            }
-            else if (item == CreepsItemHandler.money && getCellPhone())
-            {
-                if (world.canBlockSeeSky(new BlockPos(posX, posY, posZ)))
-                {
+            } else if (item == CreepsItemHandler.money && getCellPhone()) {
+                if (world.canBlockSeeSky(new BlockPos(posX, posY, posZ))) {
                     int cash = InventoryHelper.getItemCount(player.inventory, CreepsItemHandler.money);
 
-                    if (cash < 50)
-                    {
-                        if (!world.isRemote)
-                        {
+                    if (cash < 50) {
+                        if (!world.isRemote) {
                             player.sendMessage(new TextComponentString("You need $50 for a Pony!"));
                         }
 
@@ -167,22 +142,20 @@ public class EntityPonyGirl extends EntityCreepBase
 
                     playSound(CreepsSoundHandler.ponyGirlWaitHereSound, getSoundVolume(), getSoundPitch());
 
-                    if (!world.isRemote)
-                    {
+                    if (!world.isRemote) {
                         InventoryHelper.takeItem(player.inventory, CreepsItemHandler.money, 50);
 
                         player.sendMessage(new TextComponentString("LOOK UP! Your new Pony is being delivered by a PonyCloud!"));
                     }
 
-                    double xHeading = -MathHelper.sin(player.rotationYaw * (float)Math.PI / 180.0f);
-                    double zHeading = MathHelper.cos(player.rotationYaw * (float)Math.PI / 180.0f);
+                    double xHeading = -MathHelper.sin(player.rotationYaw * (float) Math.PI / 180.0f);
+                    double zHeading = MathHelper.cos(player.rotationYaw * (float) Math.PI / 180.0f);
                     EntityPonyCloud ponyCloud = new EntityPonyCloud(world);
                     ponyCloud.setInitialHealth();
                     ponyCloud.determineBaseTexture();
                     ponyCloud.setLocationAndAngles(player.posX + xHeading * 2.0d, 150.0d, player.posZ + zHeading * 2.0d, player.rotationYaw, 0.0f);
 
-                    if (!world.isRemote)
-                    {
+                    if (!world.isRemote) {
                         world.spawnEntity(ponyCloud);
                     }
 
@@ -195,25 +168,19 @@ public class EntityPonyGirl extends EntityCreepBase
 
                     // TODO: figure out this part
 
-                    if (!world.isRemote)
-                    {
+                    if (!world.isRemote) {
                         world.spawnEntity(pony);
                     }
 
                     playSound(CreepsSoundHandler.ponyCloudSound, getSoundVolume(), getSoundPitch());
-                }
-                else
-                {
-                    if (!world.isRemote)
-                    {
+                } else {
+                    if (!world.isRemote) {
                         player.sendMessage(new TextComponentString("I have to get better reception to order a pony!"));
                     }
                 }
 
                 return true;
-            }
-            else
-            {
+            } else {
                 playSound(CreepsSoundHandler.ponyGirlMoneySound, getSoundVolume(), getSoundPitch());
 
                 return true;
@@ -224,8 +191,7 @@ public class EntityPonyGirl extends EntityCreepBase
     }
 
     @Override
-    public void writeEntityToNBT(@Nonnull NBTTagCompound compound)
-    {
+    public void writeEntityToNBT(@Nonnull NBTTagCompound compound) {
         super.writeEntityToNBT(compound);
 
         NBTTagCompound props = compound.getCompoundTag("MoreCreepsPonyGirl");
@@ -236,14 +202,12 @@ public class EntityPonyGirl extends EntityCreepBase
     }
 
     @Override
-    public void readEntityFromNBT(NBTTagCompound compound)
-    {
+    public void readEntityFromNBT(NBTTagCompound compound) {
         super.readEntityFromNBT(compound);
 
         NBTTagCompound props = compound.getCompoundTag("MoreCreepsPonyGirl");
 
-        if (props.hasKey("CellPhone"))
-        {
+        if (props.hasKey("CellPhone")) {
             setCellPhone(props.getBoolean("CellPhone"));
         }
     }

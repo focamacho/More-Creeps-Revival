@@ -6,8 +6,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.pathfinding.PathNavigate;
 import net.minecraft.pathfinding.PathNodeType;
 
-public class EntityCreepAIFollowOwner extends EntityAIBase
-{
+public class EntityCreepAIFollowOwner extends EntityAIBase {
     private final EntityCreepBase tamable;
 
     private final double followSpeed;
@@ -20,8 +19,7 @@ public class EntityCreepAIFollowOwner extends EntityAIBase
 
     private float oldWaterCost = 0.0f;
 
-    public EntityCreepAIFollowOwner(EntityCreepBase tamableIn, double followSpeedIn, float minDistIn, float maxDistIn)
-    {
+    public EntityCreepAIFollowOwner(EntityCreepBase tamableIn, double followSpeedIn, float minDistIn, float maxDistIn) {
         tamable = tamableIn;
 
         followSpeed = followSpeedIn;
@@ -34,12 +32,10 @@ public class EntityCreepAIFollowOwner extends EntityAIBase
     }
 
     @Override
-    public boolean shouldExecute()
-    {
+    public boolean shouldExecute() {
         EntityPlayer owner = tamable.getOwner();
 
-        if (owner == null || owner.isSpectator() || tamable.getDistanceSq(owner) < (double)(minDist * minDist))
-        {
+        if (owner == null || owner.isSpectator() || tamable.getDistanceSq(owner) < (double) (minDist * minDist)) {
             return false;
         }
 
@@ -47,16 +43,14 @@ public class EntityCreepAIFollowOwner extends EntityAIBase
     }
 
     @Override
-    public boolean shouldContinueExecuting()
-    {
+    public boolean shouldContinueExecuting() {
         EntityPlayer owner = tamable.getOwner();
 
-        return (!tamable.getNavigator().noPath() && owner != null && tamable.getDistanceSq(owner) > (double)(maxDist * maxDist));
+        return (!tamable.getNavigator().noPath() && owner != null && tamable.getDistanceSq(owner) > (double) (maxDist * maxDist));
     }
 
     @Override
-    public void startExecuting()
-    {
+    public void startExecuting() {
         timeToRecalcPath = 0;
 
         oldWaterCost = tamable.getPathPriority(PathNodeType.WATER);
@@ -65,20 +59,17 @@ public class EntityCreepAIFollowOwner extends EntityAIBase
     }
 
     @Override
-    public void resetTask()
-    {
+    public void resetTask() {
         tamable.getNavigator().clearPath();
 
         tamable.setPathPriority(PathNodeType.WATER, oldWaterCost);
     }
 
     @Override
-    public void updateTask()
-    {
-        tamable.getLookHelper().setLookPositionWithEntity(tamable.getOwner(), 10.f, (float)tamable.getVerticalFaceSpeed());
+    public void updateTask() {
+        tamable.getLookHelper().setLookPositionWithEntity(tamable.getOwner(), 10.f, (float) tamable.getVerticalFaceSpeed());
 
-        if (--timeToRecalcPath <= 0)
-        {
+        if (--timeToRecalcPath <= 0) {
             timeToRecalcPath = 10;
 
             PathNavigate navigator = tamable.getNavigator();

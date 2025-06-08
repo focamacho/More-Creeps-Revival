@@ -9,18 +9,16 @@ import net.minecraft.world.World;
 
 import javax.annotation.Nonnull;
 
-public class ItemMobilePhone extends CreepsItem
-{
-    public ItemMobilePhone()
-    {
+public class ItemMobilePhone extends CreepsItem {
+    public ItemMobilePhone() {
         super("mobile_phone");
 
         setMaxStackSize(1);
     }
 
-    @Override @Nonnull
-    public ActionResult<ItemStack> onItemRightClick(World world, EntityPlayer player, @Nonnull EnumHand hand)
-    {
+    @Override
+    @Nonnull
+    public ActionResult<ItemStack> onItemRightClick(World world, EntityPlayer player, @Nonnull EnumHand hand) {
         player.swingArm(hand);
 
         player.playSound(CreepsSoundHandler.mobileSound, 1.0f, (itemRand.nextFloat() - itemRand.nextFloat()) * 0.2f + 1.0f);

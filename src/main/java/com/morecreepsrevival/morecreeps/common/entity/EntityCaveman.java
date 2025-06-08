@@ -26,8 +26,7 @@ import net.minecraft.world.World;
 
 import javax.annotation.Nonnull;
 
-public class EntityCaveman extends EntityCreepBase implements IEntityCanChangeSize
-{
+public class EntityCaveman extends EntityCreepBase implements IEntityCanChangeSize {
     private static final DataParameter<Boolean> caveGirl = EntityDataManager.<Boolean>createKey(EntityCaveman.class, DataSerializers.BOOLEAN);
 
     private static final DataParameter<Boolean> evil = EntityDataManager.<Boolean>createKey(EntityCaveman.class, DataSerializers.BOOLEAN);
@@ -40,8 +39,7 @@ public class EntityCaveman extends EntityCreepBase implements IEntityCanChangeSi
 
     private int talkDelay = 0;
 
-    public EntityCaveman(World worldIn)
-    {
+    public EntityCaveman(World worldIn) {
         super(worldIn);
 
         setCreepTypeName("Caveman");
@@ -60,8 +58,7 @@ public class EntityCaveman extends EntityCreepBase implements IEntityCanChangeSi
     }
 
     @Override
-    protected void initEntityAI()
-    {
+    protected void initEntityAI() {
         clearAITasks();
 
         NodeProcessor nodeProcessor = getNavigator().getNodeProcessor();
@@ -86,15 +83,13 @@ public class EntityCaveman extends EntityCreepBase implements IEntityCanChangeSi
 
         targetTasks.addTask(1, new EntityAIHurtByTarget(this, false));
 
-        if (getEvil())
-        {
+        if (getEvil()) {
             targetTasks.addTask(2, new EntityAINearestAttackableTarget<>(this, EntityPlayer.class, true));
         }
     }
 
     @Override
-    protected void entityInit()
-    {
+    protected void entityInit() {
         super.entityInit();
 
         dataManager.register(caveGirl, Boolean.valueOf(rand.nextInt(100) > 50));
@@ -108,65 +103,53 @@ public class EntityCaveman extends EntityCreepBase implements IEntityCanChangeSi
         dataManager.register(housePos, new BlockPos(0, 0, 0));
     }
 
-    protected void setCaveGirl(boolean b)
-    {
+    public boolean getCaveGirl() {
+        return ((Boolean) dataManager.get(caveGirl)).booleanValue();
+    }
+
+    protected void setCaveGirl(boolean b) {
         dataManager.set(caveGirl, Boolean.valueOf(b));
     }
 
-    public boolean getCaveGirl()
-    {
-        return ((Boolean)dataManager.get(caveGirl)).booleanValue();
+    public boolean getEvil() {
+        return ((Boolean) dataManager.get(evil)).booleanValue();
     }
 
-    protected void setEvil(boolean b)
-    {
+    protected void setEvil(boolean b) {
         dataManager.set(evil, Boolean.valueOf(b));
     }
 
-    public boolean getEvil()
-    {
-        return ((Boolean)dataManager.get(evil)).booleanValue();
-    }
-
-    protected void setFrozenLevel(int i)
-    {
-        dataManager.set(frozenLevel, i);
-    }
-
-    public int getFrozenLevel()
-    {
+    public int getFrozenLevel() {
         return dataManager.get(frozenLevel);
     }
 
-    public void onLivingUpdate()
-    {
+    protected void setFrozenLevel(int i) {
+        dataManager.set(frozenLevel, i);
+    }
+
+    public void onLivingUpdate() {
         super.onLivingUpdate();
 
-        if (getFrozenLevel() > 0 && world.isAirBlock(new BlockPos(MathHelper.floor(posX), MathHelper.floor(posY), MathHelper.floor(posZ))))
-        {
+        if (getFrozenLevel() > 0 && world.isAirBlock(new BlockPos(MathHelper.floor(posX), MathHelper.floor(posY), MathHelper.floor(posZ)))) {
             posY--;
         }
 
-        if (handleWaterMovement() || isWet())
-        {
+        if (handleWaterMovement() || isWet()) {
             setFrozenLevel(0);
         }
 
         updateMoveSpeed();
 
-        if (getWanderState() == 0 && getFrozenLevel() < 1 && !getEvil() && rand.nextInt(100) == 0)
-        {
+        if (getWanderState() == 0 && getFrozenLevel() < 1 && !getEvil() && rand.nextInt(100) == 0) {
             setWanderState(1);
         }
 
-        if (getWanderState() == 1 && rand.nextInt(201) == 200 && !getEvil() && checkArea())
-        {
+        if (getWanderState() == 1 && rand.nextInt(201) == 200 && !getEvil() && checkArea()) {
             setWanderState(2);
 
             setHouseChunk(0);
 
-            for (int i = 0; i < 4; i++)
-            {
+            for (int i = 0; i < 4; i++) {
                 BlockPos blockPos = getHousePos();
 
                 int houseX = blockPos.getX();
@@ -175,15 +158,13 @@ public class EntityCaveman extends EntityCreepBase implements IEntityCanChangeSi
 
                 int houseZ = blockPos.getZ();
 
-                if (world.isAirBlock(new BlockPos(houseX, houseY, houseZ)) || world.isAirBlock(new BlockPos(houseX + 1, houseY, houseZ)) || world.isAirBlock(new BlockPos(houseX + 2, houseY, houseZ + 4)) || world.isAirBlock(new BlockPos(houseX, houseY, houseZ + 2)))
-                {
+                if (world.isAirBlock(new BlockPos(houseX, houseY, houseZ)) || world.isAirBlock(new BlockPos(houseX + 1, houseY, houseZ)) || world.isAirBlock(new BlockPos(houseX + 2, houseY, houseZ + 4)) || world.isAirBlock(new BlockPos(houseX, houseY, houseZ + 2))) {
                     setHousePos(new BlockPos(houseX, houseY - 1, houseZ));
                 }
             }
         }
 
-        if (getWanderState() == 2)
-        {
+        if (getWanderState() == 2) {
             BlockPos blockPos = getHousePos();
 
             int houseX = blockPos.getX();
@@ -196,10 +177,8 @@ public class EntityCaveman extends EntityCreepBase implements IEntityCanChangeSi
 
             setRotation(45.0f, rotationPitch);
 
-            if (rand.nextInt(50) == 0)
-            {
-                switch (getHouseChunk())
-                {
+            if (rand.nextInt(50) == 0) {
+                switch (getHouseChunk()) {
                     case 0:
                         world.setBlockState(new BlockPos(houseX + 1, houseY, houseZ), Blocks.SNOW.getDefaultState());
 
@@ -233,8 +212,7 @@ public class EntityCaveman extends EntityCreepBase implements IEntityCanChangeSi
 
                         break;
                     case 4:
-                        for (int i = 1; i < 4; i++)
-                        {
+                        for (int i = 1; i < 4; i++) {
                             world.setBlockState(new BlockPos(houseX, houseY, houseZ + i), Blocks.SNOW.getDefaultState());
 
                             snowFX(houseX, houseY, houseZ + i);
@@ -244,8 +222,7 @@ public class EntityCaveman extends EntityCreepBase implements IEntityCanChangeSi
 
                         break;
                     case 5:
-                        for (int i = 1; i < 4; i++)
-                        {
+                        for (int i = 1; i < 4; i++) {
                             world.setBlockState(new BlockPos(houseX, houseY + 1, houseZ + i), Blocks.SNOW.getDefaultState());
 
                             snowFX(houseX, houseY + 1, houseZ + i);
@@ -255,8 +232,7 @@ public class EntityCaveman extends EntityCreepBase implements IEntityCanChangeSi
 
                         break;
                     case 6:
-                        for (int i = 1; i < 4; i++)
-                        {
+                        for (int i = 1; i < 4; i++) {
                             world.setBlockState(new BlockPos(houseX + 4, houseY, houseZ + i), Blocks.SNOW.getDefaultState());
 
                             snowFX(houseX + 4, houseY, houseZ + i);
@@ -266,8 +242,7 @@ public class EntityCaveman extends EntityCreepBase implements IEntityCanChangeSi
 
                         break;
                     case 7:
-                        for (int i = 1; i < 4; i++)
-                        {
+                        for (int i = 1; i < 4; i++) {
                             world.setBlockState(new BlockPos(houseX + 4, houseY + 1, houseZ + i), Blocks.SNOW.getDefaultState());
 
                             snowFX(houseX + 4, houseY + 1, houseZ + i);
@@ -277,8 +252,7 @@ public class EntityCaveman extends EntityCreepBase implements IEntityCanChangeSi
 
                         break;
                     case 8:
-                        for (int i = 1; i < 4; i++)
-                        {
+                        for (int i = 1; i < 4; i++) {
                             world.setBlockState(new BlockPos(houseX + i, houseY, houseZ + 4), Blocks.SNOW.getDefaultState());
 
                             snowFX(houseX + i, houseY, houseZ + 4);
@@ -288,8 +262,7 @@ public class EntityCaveman extends EntityCreepBase implements IEntityCanChangeSi
 
                         break;
                     case 9:
-                        for (int i = 1; i < 4; i++)
-                        {
+                        for (int i = 1; i < 4; i++) {
                             world.setBlockState(new BlockPos(houseX + i, houseY + 1, houseZ + 4), Blocks.SNOW.getDefaultState());
 
                             snowFX(houseX + i, houseY + 1, houseZ + 4);
@@ -299,10 +272,8 @@ public class EntityCaveman extends EntityCreepBase implements IEntityCanChangeSi
 
                         break;
                     case 10:
-                        for (int i = 1; i < 4; i++)
-                        {
-                            for (int k = 1; k < 4; k++)
-                            {
+                        for (int i = 1; i < 4; i++) {
+                            for (int k = 1; k < 4; k++) {
                                 world.setBlockState(new BlockPos(houseX + k, houseY + 2, houseZ + i), Blocks.SNOW.getDefaultState());
 
                                 snowFX(houseX + k, houseY + 2, houseZ + i);
@@ -323,15 +294,13 @@ public class EntityCaveman extends EntityCreepBase implements IEntityCanChangeSi
                     case 12:
                         Item itemToGive = CreepsItemHandler.popsicle;
 
-                        if (rand.nextInt(5) == 0)
-                        {
+                        if (rand.nextInt(5) == 0) {
                             itemToGive = Items.FISH;
                         }
 
                         EntityItem entityItem = new EntityItem(world, houseX + 3, houseY, houseZ + 3, new ItemStack(itemToGive, rand.nextInt(4) + 1));
 
-                        if (!world.isRemote)
-                        {
+                        if (!world.isRemote) {
                             world.spawnEntity(entityItem);
                         }
 
@@ -343,8 +312,7 @@ public class EntityCaveman extends EntityCreepBase implements IEntityCanChangeSi
                 }
             }
 
-            if (rand.nextInt(10) == 0)
-            {
+            if (rand.nextInt(10) == 0) {
                 setHammerSwing(-2.8f);
 
                 playSound(CreepsSoundHandler.cavemanBuildSound, 1.0f, getSoundPitch());
@@ -353,10 +321,8 @@ public class EntityCaveman extends EntityCreepBase implements IEntityCanChangeSi
     }
 
     @Override
-    protected boolean isMovementBlocked()
-    {
-        if (getFrozenLevel() >= 1 || getWanderState() == 2)
-        {
+    protected boolean isMovementBlocked() {
+        if (getFrozenLevel() >= 1 || getWanderState() == 2) {
             return true;
         }
 
@@ -364,26 +330,22 @@ public class EntityCaveman extends EntityCreepBase implements IEntityCanChangeSi
     }
 
     @Override
-    protected double getMoveSpeed()
-    {
-        if (getFrozenLevel() >= 1)
-        {
+    protected double getMoveSpeed() {
+        if (getFrozenLevel() >= 1) {
             return 0.0d;
         }
 
         return super.getMoveSpeed();
     }
 
-    private boolean checkArea()
-    {
+    private boolean checkArea() {
         int houseX = MathHelper.floor(posX);
 
         int houseY = MathHelper.floor(posY);
 
         int houseZ = MathHelper.floor(posZ);
 
-        if (world.isAirBlock(new BlockPos(houseX, houseY - 1, houseZ)))
-        {
+        if (world.isAirBlock(new BlockPos(houseX, houseY - 1, houseZ))) {
             houseY--;
         }
 
@@ -391,40 +353,31 @@ public class EntityCaveman extends EntityCreepBase implements IEntityCanChangeSi
 
         int area = 0;
 
-        for (int a = -3; a < 7; a++)
-        {
-            for (int b = -3; b < 7; b++)
-            {
-                for (int c = 0; c < 3; c++)
-                {
-                    if (world.isAirBlock(new BlockPos(houseX + b, houseY + c, houseZ + a)))
-                    {
+        for (int a = -3; a < 7; a++) {
+            for (int b = -3; b < 7; b++) {
+                for (int c = 0; c < 3; c++) {
+                    if (world.isAirBlock(new BlockPos(houseX + b, houseY + c, houseZ + a))) {
                         area++;
                     }
                 }
             }
         }
 
-        if (area < 220)
-        {
+        if (area < 220) {
             return false;
         }
 
-        for (int a = -2; a < 7; a++)
-        {
-            for (int b = -2; b < 7; b++)
-            {
+        for (int a = -2; a < 7; a++) {
+            for (int b = -2; b < 7; b++) {
                 Block block1 = world.getBlockState(new BlockPos(houseX + b, houseY, houseZ + a)).getBlock();
 
                 Block block2 = world.getBlockState(new BlockPos(houseX + b, houseY - 1, houseZ + a)).getBlock();
 
-                if (block1 == Blocks.SNOW || block1 == Blocks.ICE)
-                {
+                if (block1 == Blocks.SNOW || block1 == Blocks.ICE) {
                     area++;
                 }
 
-                if (block2 == Blocks.SNOW || block2 == Blocks.ICE)
-                {
+                if (block2 == Blocks.SNOW || block2 == Blocks.ICE) {
                     area++;
                 }
             }
@@ -434,10 +387,8 @@ public class EntityCaveman extends EntityCreepBase implements IEntityCanChangeSi
     }
 
     @Override
-    public void knockBack(@Nonnull Entity entity, float strength, double xRatio, double zRatio)
-    {
-        if (getFrozenLevel() >= 1)
-        {
+    public void knockBack(@Nonnull Entity entity, float strength, double xRatio, double zRatio) {
+        if (getFrozenLevel() >= 1) {
             return;
         }
 
@@ -445,12 +396,10 @@ public class EntityCaveman extends EntityCreepBase implements IEntityCanChangeSi
     }
 
     @Override
-    public float getBlockPathWeight(BlockPos blockPos)
-    {
+    public float getBlockPathWeight(BlockPos blockPos) {
         Block block = world.getBlockState(blockPos).getBlock();
 
-        if (block == Blocks.GRAVEL || block == Blocks.STONE)
-        {
+        if (block == Blocks.GRAVEL || block == Blocks.STONE) {
             return 10.0f;
         }
 
@@ -458,34 +407,23 @@ public class EntityCaveman extends EntityCreepBase implements IEntityCanChangeSi
     }
 
     @Override
-    protected void updateTexture()
-    {
-        if (getEvil())
-        {
-            if (getCaveGirl())
-            {
+    protected void updateTexture() {
+        if (getEvil()) {
+            if (getCaveGirl()) {
                 setTexture("textures/entity/cavemanladyevil.png");
-            }
-            else
-            {
+            } else {
                 setTexture("textures/entity/cavemanevil.png");
             }
-        }
-        else if (getCaveGirl())
-        {
+        } else if (getCaveGirl()) {
             setTexture("textures/entity/cavemanlady.png");
-        }
-        else
-        {
+        } else {
             setTexture("textures/entity/caveman.png");
         }
     }
 
     @Override
-    public int getTalkInterval()
-    {
-        if (getEvil())
-        {
+    public int getTalkInterval() {
+        if (getEvil()) {
             return 120;
         }
 
@@ -493,42 +431,27 @@ public class EntityCaveman extends EntityCreepBase implements IEntityCanChangeSi
     }
 
     @Override
-    public int getMaxSpawnedInChunk()
-    {
+    public int getMaxSpawnedInChunk() {
         return 2;
     }
 
     @Override
-    protected SoundEvent getAmbientSound()
-    {
-        if (getEvil())
-        {
+    protected SoundEvent getAmbientSound() {
+        if (getEvil()) {
             return CreepsSoundHandler.cavemanEvilSound;
-        }
-        else if (getAttackTarget() != null)
-        {
-            if (getCaveGirl())
-            {
+        } else if (getAttackTarget() != null) {
+            if (getCaveGirl()) {
                 return CreepsSoundHandler.cavewomanFreeSound;
-            }
-            else
-            {
+            } else {
                 return CreepsSoundHandler.cavemanFreeSound;
             }
-        }
-        else if (getCaveGirl())
-        {
-            if (getFrozenLevel() < 1)
-            {
+        } else if (getCaveGirl()) {
+            if (getFrozenLevel() < 1) {
                 return CreepsSoundHandler.cavewomanFreeSound;
-            }
-            else
-            {
+            } else {
                 return CreepsSoundHandler.cavewomanFrozenSound;
             }
-        }
-        else if (getFrozenLevel() < 1)
-        {
+        } else if (getFrozenLevel() < 1) {
             return CreepsSoundHandler.cavemanFreeSound;
         }
 
@@ -536,14 +459,10 @@ public class EntityCaveman extends EntityCreepBase implements IEntityCanChangeSi
     }
 
     @Override
-    protected SoundEvent getHurtSound(DamageSource damageSource)
-    {
-        if (getFrozenLevel() > 0)
-        {
+    protected SoundEvent getHurtSound(DamageSource damageSource) {
+        if (getFrozenLevel() > 0) {
             return null;
-        }
-        else if (getCaveGirl())
-        {
+        } else if (getCaveGirl()) {
             return CreepsSoundHandler.cavewomanHurtSound;
         }
 
@@ -551,10 +470,8 @@ public class EntityCaveman extends EntityCreepBase implements IEntityCanChangeSi
     }
 
     @Override
-    protected SoundEvent getDeathSound()
-    {
-        if (getCaveGirl())
-        {
+    protected SoundEvent getDeathSound() {
+        if (getCaveGirl()) {
             return CreepsSoundHandler.cavewomanDeadSound;
         }
 
@@ -562,29 +479,23 @@ public class EntityCaveman extends EntityCreepBase implements IEntityCanChangeSi
     }
 
     @Override
-    protected void dropItemsOnDeath()
-    {
-        if (rand.nextInt(10) == 0)
-        {
+    protected void dropItemsOnDeath() {
+        if (rand.nextInt(10) == 0) {
             dropItem(Items.PORKCHOP, rand.nextInt(3) + 1);
         }
 
-        if (rand.nextInt(10) == 0)
-        {
+        if (rand.nextInt(10) == 0) {
             dropItem(CreepsItemHandler.popsicle, rand.nextInt(3) + 1);
         }
 
-        if (rand.nextInt(8) == 0)
-        {
+        if (rand.nextInt(8) == 0) {
             dropItem(CreepsItemHandler.cavemanClub, 1);
         }
     }
 
     @Override
-    public boolean attackEntityFrom(@Nonnull DamageSource source, float amount)
-    {
-        if (getFrozenLevel() < 1)
-        {
+    public boolean attackEntityFrom(@Nonnull DamageSource source, float amount) {
+        if (getFrozenLevel() < 1) {
             setEvil(true);
 
             updateTexture();
@@ -592,19 +503,14 @@ public class EntityCaveman extends EntityCreepBase implements IEntityCanChangeSi
             initEntityAI();
 
             return super.attackEntityFrom(source, amount);
-        }
-        else
-        {
-            if (source.getTrueSource() instanceof EntityPlayer)
-            {
+        } else {
+            if (source.getTrueSource() instanceof EntityPlayer) {
                 playSound(CreepsSoundHandler.cavemanNiceSound, 0.5f, getSoundPitch());
 
-                if (!world.isRemote && rand.nextInt(100) > 65)
-                {
+                if (!world.isRemote && rand.nextInt(100) > 65) {
                     setFrozenLevel(getFrozenLevel() - 1);
 
-                    for (int i = 0; i < 35; i++)
-                    {
+                    for (int i = 0; i < 35; i++) {
                         world.spawnParticle(EnumParticleTypes.SNOWBALL, posX, posY + 1.0d, posZ, 0.0d, 0.0d, 0.0d);
                     }
                 }
@@ -617,8 +523,7 @@ public class EntityCaveman extends EntityCreepBase implements IEntityCanChangeSi
     }
 
     @Override
-    public void writeEntityToNBT(NBTTagCompound compound)
-    {
+    public void writeEntityToNBT(NBTTagCompound compound) {
         super.writeEntityToNBT(compound);
 
         NBTTagCompound props = compound.getCompoundTag("MoreCreepsCaveman");
@@ -643,34 +548,28 @@ public class EntityCaveman extends EntityCreepBase implements IEntityCanChangeSi
     }
 
     @Override
-    public void readEntityFromNBT(NBTTagCompound compound)
-    {
+    public void readEntityFromNBT(NBTTagCompound compound) {
         super.readEntityFromNBT(compound);
 
         NBTTagCompound props = compound.getCompoundTag("MoreCreepsCaveman");
 
-        if (props.hasKey("FrozenLevel"))
-        {
+        if (props.hasKey("FrozenLevel")) {
             setFrozenLevel(props.getInteger("FrozenLevel"));
         }
 
-        if (props.hasKey("CaveGirl"))
-        {
+        if (props.hasKey("CaveGirl")) {
             setCaveGirl(props.getBoolean("CaveGirl"));
         }
 
-        if (props.hasKey("Evil"))
-        {
+        if (props.hasKey("Evil")) {
             setEvil(props.getBoolean("Evil"));
         }
 
-        if (props.hasKey("HouseChunk"))
-        {
+        if (props.hasKey("HouseChunk")) {
             setHouseChunk(props.getInteger("HouseChunk"));
         }
 
-        if (props.hasKey("HouseX") && props.hasKey("HouseY") && props.hasKey("HouseZ"))
-        {
+        if (props.hasKey("HouseX") && props.hasKey("HouseY") && props.hasKey("HouseZ")) {
             setHousePos(new BlockPos(props.getInteger("HouseX"), props.getInteger("HouseY"), props.getInteger("HouseZ")));
         }
 
@@ -680,19 +579,15 @@ public class EntityCaveman extends EntityCreepBase implements IEntityCanChangeSi
     }
 
     @Override
-    public boolean attackEntityAsMob(@Nonnull Entity entity)
-    {
-        float f = (float)getEntityAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).getAttributeValue();
+    public boolean attackEntityAsMob(@Nonnull Entity entity) {
+        float f = (float) getEntityAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).getAttributeValue();
 
-        if (f < 2.9d && entity.getEntityBoundingBox().maxY > getEntityBoundingBox().minY && entity.getEntityBoundingBox().minY < getEntityBoundingBox().maxY)
-        {
-            if (getHammerSwing() == 0.0f)
-            {
+        if (f < 2.9d && entity.getEntityBoundingBox().maxY > getEntityBoundingBox().minY && entity.getEntityBoundingBox().minY < getEntityBoundingBox().maxY) {
+            if (getHammerSwing() == 0.0f) {
                 setHammerSwing(-2.8f);
             }
 
-            if (talkDelay-- < 0)
-            {
+            if (talkDelay-- < 0) {
                 playSound(CreepsSoundHandler.cavemanEvilSound, 0.5f, getSoundPitch());
 
                 talkDelay = 2;
@@ -702,16 +597,13 @@ public class EntityCaveman extends EntityCreepBase implements IEntityCanChangeSi
         return super.attackEntityAsMob(entity);
     }
 
-    private void snowFX(int x, int y, int z)
-    {
-        for (int i = 0; i < 40; i++)
-        {
+    private void snowFX(int x, int y, int z) {
+        for (int i = 0; i < 40; i++) {
             world.spawnParticle(EnumParticleTypes.SNOW_SHOVEL, x, y + 0.5d, z, 1.0d, 1.0d, 1.0d);
         }
     }
 
-    private void moveNextStage()
-    {
+    private void moveNextStage() {
         setHammerSwing(-2.8f);
 
         playSound(CreepsSoundHandler.cavemanBuildSound, 1.0f, getSoundPitch());
@@ -719,46 +611,46 @@ public class EntityCaveman extends EntityCreepBase implements IEntityCanChangeSi
         setHouseChunk(getHouseChunk() + 1);
     }
 
-    protected void setHouseChunk(int i)
-    {
-        dataManager.set(houseChunk, i);
-    }
-
-    public int getHouseChunk()
-    {
+    public int getHouseChunk() {
         return dataManager.get(houseChunk);
     }
 
-    protected void setHousePos(BlockPos pos)
-    {
+    protected void setHouseChunk(int i) {
+        dataManager.set(houseChunk, i);
+    }
+
+    public BlockPos getHousePos() {
+        return dataManager.get(housePos);
+    }
+
+    protected void setHousePos(BlockPos pos) {
         dataManager.set(housePos, new BlockPos(pos.getX(), pos.getY(), pos.getZ()));
 
         dataManager.setDirty(housePos);
     }
 
-    public BlockPos getHousePos()
-    {
-        return dataManager.get(housePos);
+    @Override
+    public float maxShrink() {
+        return 0.4f;
     }
 
     @Override
-    public float maxShrink() { return 0.4f; }
-
-    @Override
-    public float getShrinkRayAmount() { return 0.2f; }
+    public float getShrinkRayAmount() {
+        return 0.2f;
+    }
 
     @Override
     public void onShrink(EntityShrink source) {
 
     }
+
     @Override
     public float maxGrowth() {
         return 4.0f;
     }
 
     @Override
-    public float getGrowRayAmount()
-    {
+    public float getGrowRayAmount() {
         return 0.2F;
     }
 

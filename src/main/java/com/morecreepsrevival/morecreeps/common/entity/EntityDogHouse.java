@@ -12,10 +12,8 @@ import net.minecraft.world.World;
 
 import javax.annotation.Nonnull;
 
-public class EntityDogHouse extends EntityCreepBase
-{
-    public EntityDogHouse(World worldIn)
-    {
+public class EntityDogHouse extends EntityCreepBase {
+    public EntityDogHouse(World worldIn) {
         super(worldIn);
 
         setCreepTypeName("Dog House");
@@ -34,20 +32,17 @@ public class EntityDogHouse extends EntityCreepBase
     }
 
     @Override
-    protected void updateTexture()
-    {
+    protected void updateTexture() {
         setTexture("textures/entity/doghouse.png");
     }
 
     @Override
-    protected void initEntityAI()
-    {
+    protected void initEntityAI() {
         clearAITasks();
     }
 
     @Override
-    public void onLivingUpdate()
-    {
+    public void onLivingUpdate() {
         motionX = 0.0d;
 
         motionY = 0.0d;
@@ -56,95 +51,79 @@ public class EntityDogHouse extends EntityCreepBase
 
         super.onLivingUpdate();
 
-        if (inWater)
-        {
+        if (inWater) {
             setDead();
         }
     }
 
     @Override
-    public void onUpdate()
-    {
+    public void onUpdate() {
         ignoreFrustumCheck = true;
 
         super.onUpdate();
     }
 
     @Override
-    protected boolean canDespawn()
-    {
+    protected boolean canDespawn() {
         return (getHealth() < 1);
     }
 
     @Override
-    public boolean isEntityInsideOpaqueBlock()
-    {
+    public boolean isEntityInsideOpaqueBlock() {
         return (getHealth() <= 0);
     }
 
     @Override
-    public int getMaxSpawnedInChunk()
-    {
+    public int getMaxSpawnedInChunk() {
         return 1;
     }
 
     @Override
-    protected SoundEvent getAmbientSound()
-    {
+    protected SoundEvent getAmbientSound() {
         return null;
     }
 
     @Override
-    protected SoundEvent getHurtSound(DamageSource damageSource)
-    {
+    protected SoundEvent getHurtSound(DamageSource damageSource) {
         return null;
     }
 
     @Override
-    protected SoundEvent getDeathSound()
-    {
+    protected SoundEvent getDeathSound() {
         return null;
     }
 
     @Override
-    public void setDead()
-    {
+    public void setDead() {
         smoke();
 
         super.setDead();
     }
 
-    private void loadHouse()
-    {
-        for (Entity entity : world.getEntitiesWithinAABBExcludingEntity(this, getEntityBoundingBox().grow(16.0d, 16.0d, 16.0d)))
-        {
-            if (entity instanceof EntityHotdog && ((EntityHotdog)entity).isTamed() && entity.startRiding(this, true))
-            {
+    private void loadHouse() {
+        for (Entity entity : world.getEntitiesWithinAABBExcludingEntity(this, getEntityBoundingBox().grow(16.0d, 16.0d, 16.0d))) {
+            if (entity instanceof EntityHotdog && ((EntityHotdog) entity).isTamed() && entity.startRiding(this, true)) {
                 break;
             }
         }
     }
 
     @Override
-    public void readEntityFromNBT(NBTTagCompound compound)
-    {
+    public void readEntityFromNBT(NBTTagCompound compound) {
         super.readEntityFromNBT(compound);
 
         loadHouse();
     }
 
     @Override
-    public boolean attackEntityFrom(@Nonnull DamageSource damageSource, float amt)
-    {
-        if (amt < 1.0f)
-        {
+    public boolean attackEntityFrom(@Nonnull DamageSource damageSource, float amt) {
+        if (amt < 1.0f) {
             amt = 1.0f;
         }
 
         boolean flag = super.attackEntityFrom(damageSource, amt);
 
-        if (flag)
-        {
+        if (flag) {
             hurtTime = maxHurtTime = 10;
 
             smoke();
@@ -154,44 +133,34 @@ public class EntityDogHouse extends EntityCreepBase
     }
 
     @Override
-    public void smoke()
-    {
-        for (int i = 0; i < 5; i++)
-        {
-            for (int j = 0; j < 2; j++)
-            {
+    public void smoke() {
+        for (int i = 0; i < 5; i++) {
+            for (int j = 0; j < 2; j++) {
                 double d = rand.nextGaussian() * 0.02D;
                 double d1 = rand.nextGaussian() * 0.02D;
                 double d2 = rand.nextGaussian() * 0.02D;
-                world.spawnParticle(EnumParticleTypes.EXPLOSION_NORMAL, ((posX + (double)(rand.nextFloat() * width * 2.0F)) - (double)width) + (double)i, posY + (double)(rand.nextFloat() * height), (posZ + (double)(rand.nextFloat() * width * 2.0F)) - (double)width, d, d1, d2);
-                world.spawnParticle(EnumParticleTypes.EXPLOSION_NORMAL, (posX + (double)(rand.nextFloat() * width * 2.0F)) - (double)width - (double)i, posY + (double)(rand.nextFloat() * height), (posZ + (double)(rand.nextFloat() * width * 2.0F)) - (double)width, d, d1, d2);
-                world.spawnParticle(EnumParticleTypes.EXPLOSION_NORMAL, (posX + (double)(rand.nextFloat() * width * 2.0F)) - (double)width, posY + (double)(rand.nextFloat() * height), (posZ + (double)(rand.nextFloat() * width * 2.0F) + (double)i) - (double)width, d, d1, d2);
-                world.spawnParticle(EnumParticleTypes.EXPLOSION_NORMAL, (posX + (double)(rand.nextFloat() * width * 2.0F)) - (double)width, posY + (double)(rand.nextFloat() * height), (posZ + (double)(rand.nextFloat() * width * 2.0F)) - (double)i - (double)width, d, d1, d2);
-                world.spawnParticle(EnumParticleTypes.EXPLOSION_NORMAL, ((posX + (double)(rand.nextFloat() * width * 2.0F)) - (double)width) + (double)i, posY + (double)(rand.nextFloat() * height), (posZ + (double)(rand.nextFloat() * width * 2.0F) + (double)i) - (double)width, d, d1, d2);
-                world.spawnParticle(EnumParticleTypes.EXPLOSION_NORMAL, (posX + (double)(rand.nextFloat() * width * 2.0F)) - (double)width - (double)i, posY + (double)(rand.nextFloat() * height), (posZ + (double)(rand.nextFloat() * width * 2.0F)) - (double)i - (double)width, d, d1, d2);
-                world.spawnParticle(EnumParticleTypes.EXPLOSION_NORMAL, ((posX + (double)(rand.nextFloat() * width * 2.0F)) - (double)width) + (double)i, posY + (double)(rand.nextFloat() * height), (posZ + (double)(rand.nextFloat() * width * 2.0F) + (double)i) - (double)width, d, d1, d2);
-                world.spawnParticle(EnumParticleTypes.EXPLOSION_NORMAL, (posX + (double)(rand.nextFloat() * width * 2.0F)) - (double)width - (double)i, posY + (double)(rand.nextFloat() * height), (posZ + (double)(rand.nextFloat() * width * 2.0F)) - (double)i - (double)width, d, d1, d2);
+                world.spawnParticle(EnumParticleTypes.EXPLOSION_NORMAL, ((posX + (double) (rand.nextFloat() * width * 2.0F)) - (double) width) + (double) i, posY + (double) (rand.nextFloat() * height), (posZ + (double) (rand.nextFloat() * width * 2.0F)) - (double) width, d, d1, d2);
+                world.spawnParticle(EnumParticleTypes.EXPLOSION_NORMAL, (posX + (double) (rand.nextFloat() * width * 2.0F)) - (double) width - (double) i, posY + (double) (rand.nextFloat() * height), (posZ + (double) (rand.nextFloat() * width * 2.0F)) - (double) width, d, d1, d2);
+                world.spawnParticle(EnumParticleTypes.EXPLOSION_NORMAL, (posX + (double) (rand.nextFloat() * width * 2.0F)) - (double) width, posY + (double) (rand.nextFloat() * height), (posZ + (double) (rand.nextFloat() * width * 2.0F) + (double) i) - (double) width, d, d1, d2);
+                world.spawnParticle(EnumParticleTypes.EXPLOSION_NORMAL, (posX + (double) (rand.nextFloat() * width * 2.0F)) - (double) width, posY + (double) (rand.nextFloat() * height), (posZ + (double) (rand.nextFloat() * width * 2.0F)) - (double) i - (double) width, d, d1, d2);
+                world.spawnParticle(EnumParticleTypes.EXPLOSION_NORMAL, ((posX + (double) (rand.nextFloat() * width * 2.0F)) - (double) width) + (double) i, posY + (double) (rand.nextFloat() * height), (posZ + (double) (rand.nextFloat() * width * 2.0F) + (double) i) - (double) width, d, d1, d2);
+                world.spawnParticle(EnumParticleTypes.EXPLOSION_NORMAL, (posX + (double) (rand.nextFloat() * width * 2.0F)) - (double) width - (double) i, posY + (double) (rand.nextFloat() * height), (posZ + (double) (rand.nextFloat() * width * 2.0F)) - (double) i - (double) width, d, d1, d2);
+                world.spawnParticle(EnumParticleTypes.EXPLOSION_NORMAL, ((posX + (double) (rand.nextFloat() * width * 2.0F)) - (double) width) + (double) i, posY + (double) (rand.nextFloat() * height), (posZ + (double) (rand.nextFloat() * width * 2.0F) + (double) i) - (double) width, d, d1, d2);
+                world.spawnParticle(EnumParticleTypes.EXPLOSION_NORMAL, (posX + (double) (rand.nextFloat() * width * 2.0F)) - (double) width - (double) i, posY + (double) (rand.nextFloat() * height), (posZ + (double) (rand.nextFloat() * width * 2.0F)) - (double) i - (double) width, d, d1, d2);
             }
         }
     }
 
     @Override
-    public boolean processInteract(EntityPlayer player, EnumHand hand)
-    {
-        if (hand == EnumHand.OFF_HAND)
-        {
+    public boolean processInteract(EntityPlayer player, EnumHand hand) {
+        if (hand == EnumHand.OFF_HAND) {
             return super.processInteract(player, hand);
-        }
-        else if (player.getHeldItem(hand).isEmpty())
-        {
-            if (isBeingRidden())
-            {
+        } else if (player.getHeldItem(hand).isEmpty()) {
+            if (isBeingRidden()) {
                 Entity entity = getFirstPassenger();
 
-                if (entity instanceof EntityHotdog && ((EntityHotdog)entity).isPlayerOwner(player))
-                {
-                    if (entity.startRiding(player, true))
-                    {
+                if (entity instanceof EntityHotdog && ((EntityHotdog) entity).isPlayerOwner(player)) {
+                    if (entity.startRiding(player, true)) {
                         return true;
                     }
 
@@ -199,13 +168,9 @@ public class EntityDogHouse extends EntityCreepBase
 
                     return true;
                 }
-            }
-            else
-            {
-                for (Entity entity : world.getEntitiesWithinAABBExcludingEntity(this, getEntityBoundingBox().grow(16.0d, 16.0d, 16.0d)))
-                {
-                    if (entity instanceof EntityHotdog && ((EntityHotdog)entity).isTamed() && entity.startRiding(this, true))
-                    {
+            } else {
+                for (Entity entity : world.getEntitiesWithinAABBExcludingEntity(this, getEntityBoundingBox().grow(16.0d, 16.0d, 16.0d))) {
+                    if (entity instanceof EntityHotdog && ((EntityHotdog) entity).isTamed() && entity.startRiding(this, true)) {
                         return true;
                     }
                 }
@@ -216,10 +181,8 @@ public class EntityDogHouse extends EntityCreepBase
     }
 
     @Override
-    public void updatePassenger(@Nonnull Entity passenger)
-    {
-        if (passenger instanceof EntityHotdog && isPassenger(passenger))
-        {
+    public void updatePassenger(@Nonnull Entity passenger) {
+        if (passenger instanceof EntityHotdog && isPassenger(passenger)) {
             passenger.setPosition(posX, posY, posZ);
 
             return;

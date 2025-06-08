@@ -9,20 +9,18 @@ import net.minecraft.world.World;
 
 import javax.annotation.Nonnull;
 
-public class ItemBlorpCola extends CreepsItem
-{
+public class ItemBlorpCola extends CreepsItem {
     private static final int healAmount = 2;
 
-    public ItemBlorpCola()
-    {
+    public ItemBlorpCola() {
         super("blorp_cola");
 
         setMaxStackSize(24);
     }
 
-    @Override @Nonnull
-    public ActionResult<ItemStack> onItemRightClick(World world, EntityPlayer player, @Nonnull EnumHand hand)
-    {
+    @Override
+    @Nonnull
+    public ActionResult<ItemStack> onItemRightClick(World world, EntityPlayer player, @Nonnull EnumHand hand) {
         player.swingArm(hand);
 
         player.playSound(CreepsSoundHandler.blorpColaSound, 1.0f, 1.0f);

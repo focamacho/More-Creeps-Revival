@@ -11,7 +11,7 @@ public class FxFoam extends Particle {
     private int bounceCount;
 
 
-    public FxFoam(World world,double xCoordIn, double yCoordIn, double zCoordIn, double xSpeedIn, double ySpeedIn, double zSpeedIn,double d, double d1,double d2) {
+    public FxFoam(World world, double xCoordIn, double yCoordIn, double zCoordIn, double xSpeedIn, double ySpeedIn, double zSpeedIn, double d, double d1, double d2) {
         super(world, xCoordIn, yCoordIn, zCoordIn, xSpeedIn, ySpeedIn, zSpeedIn);
         setSize(0.5F, 0.5F);
 
@@ -34,41 +34,36 @@ public class FxFoam extends Particle {
     //even then it does not work. I am just going to leave this entire block commented out. If someone else can figure this out please be my guest.
     //I reverted the entire block back to how I found it.
 
-    public void renderParticle(BufferBuilder buffer, Entity entityIn, float partialTicks, float rotationX, float rotationZ, float rotationYZ, float rotationXY, float rotationXZ)
-    {
-        float f = ((float)this.particleAge + partialTicks) / (float)this.particleMaxAge * 32.0F;
+    public void renderParticle(BufferBuilder buffer, Entity entityIn, float partialTicks, float rotationX, float rotationZ, float rotationYZ, float rotationXY, float rotationXZ) {
+        float f = ((float) this.particleAge + partialTicks) / (float) this.particleMaxAge * 32.0F;
         f = MathHelper.clamp(f, 0.0F, 1.0F);
         super.renderParticle(buffer, entityIn, partialTicks, rotationX, rotationZ, rotationYZ, rotationXY, rotationXZ);
     }
 
-    public void onUpdate()
-    {
+    public void onUpdate() {
         this.prevPosX = this.posX;
         this.prevPosY = this.posY;
         this.prevPosZ = this.posZ;
 
-        if (this.particleAge++ >= this.particleMaxAge)
-        {
+        if (this.particleAge++ >= this.particleMaxAge) {
             this.setExpired();
         }
-        if (onGround){
-            if (bounceCount < 3){
+        if (onGround) {
+            if (bounceCount < 3) {
                 this.motionY += 0.1D;
-                bounceCount +=1;
+                bounceCount += 1;
             }
         }
-        if (bounceCount > 2){
+        if (bounceCount > 2) {
             this.motionY = 0.004D;
-        }
-        else {
+        } else {
             this.motionY -= 0.04D;
         }
         this.move(this.motionX, this.motionY, this.motionZ);
         this.particleScale += 0.25F;
         this.setParticleTextureIndex(7 - this.particleAge * 8 / this.particleMaxAge);
 
-        if (this.posY == this.prevPosY)
-        {
+        if (this.posY == this.prevPosY) {
             this.motionX /= 2.0D;
             this.motionZ /= 2.0D;
         }

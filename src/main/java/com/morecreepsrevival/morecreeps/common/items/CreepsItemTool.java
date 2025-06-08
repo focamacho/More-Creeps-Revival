@@ -23,13 +23,11 @@ public class CreepsItemTool extends ItemTool {
         setCreativeTab(MoreCreepsAndWeirdos.creativeTab);
     }
 
-    public float getSoundVolume()
-    {
+    public float getSoundVolume() {
         return 0.5f;
     }
 
-    public float getSoundPitch()
-    {
+    public float getSoundPitch() {
         return (0.4f / ((itemRand.nextFloat() * 0.4f) + 0.8f));
     }
 }

@@ -10,43 +10,35 @@ import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-public class MessageOpenGuiTamableEntityTraining implements IMessage
-{
+public class MessageOpenGuiTamableEntityTraining implements IMessage {
     private int entityId;
 
-    public MessageOpenGuiTamableEntityTraining()
-    {
+    public MessageOpenGuiTamableEntityTraining() {
     }
 
-    public MessageOpenGuiTamableEntityTraining(int entityIdIn)
-    {
+    public MessageOpenGuiTamableEntityTraining(int entityIdIn) {
         entityId = entityIdIn;
     }
 
     @Override
-    public void toBytes(ByteBuf buf)
-    {
+    public void toBytes(ByteBuf buf) {
         buf.writeInt(entityId);
     }
 
     @Override
-    public void fromBytes(ByteBuf buf)
-    {
+    public void fromBytes(ByteBuf buf) {
         entityId = buf.readInt();
     }
 
-    public static class MessageHandler implements IMessageHandler<MessageOpenGuiTamableEntityTraining, IMessage>
-    {
+    public static class MessageHandler implements IMessageHandler<MessageOpenGuiTamableEntityTraining, IMessage> {
         @SideOnly(Side.CLIENT)
-        public IMessage onMessage(MessageOpenGuiTamableEntityTraining message, MessageContext context)
-        {
+        public IMessage onMessage(MessageOpenGuiTamableEntityTraining message, MessageContext context) {
             Minecraft minecraft = Minecraft.getMinecraft();
 
             minecraft.addScheduledTask(() -> {
-                EntityCreepBase entity = (EntityCreepBase)minecraft.world.getEntityByID(message.entityId);
+                EntityCreepBase entity = (EntityCreepBase) minecraft.world.getEntityByID(message.entityId);
 
-                if (entity != null)
-                {
+                if (entity != null) {
                     minecraft.displayGuiScreen(new GuiTamableEntityTraining(entity));
                 }
             });

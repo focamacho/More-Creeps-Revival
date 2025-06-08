@@ -25,39 +25,41 @@ public class ModelDesertLizard extends ModelBase {
         this.taildirection = 1;
     }
 
-    public ModelDesertLizard(float f) { this(6, f); }
+    public ModelDesertLizard(float f) {
+        this(6, f);
+    }
 
     public ModelDesertLizard(int i, float f) {
         fin = new ModelRenderer(this, 16, 9);
         fin.addBox(0.0F, -8.0F, -2.0F, 1, 16, 7, f);
-        fin.setRotationPoint(0.0F, (float)(17 - i), 2.0F);
+        fin.setRotationPoint(0.0F, (float) (17 - i), 2.0F);
         tail0 = new ModelRenderer(this, 32, 64);
         tail0.addBox(-4.0F, 12.0F, -7.0F, 8, 12, 3, f);
-        tail0.setRotationPoint(0.0F, (float)(15 - i), 2.0F);
+        tail0.setRotationPoint(0.0F, (float) (15 - i), 2.0F);
         tail1 = new ModelRenderer(this, 30, 64);
         tail1.addBox(-3.0F, 24.0F, -7.0F, 6, 10, 2, f);
-        tail1.setRotationPoint(0.0F, (float)(14 - i), 2.0F);
+        tail1.setRotationPoint(0.0F, (float) (14 - i), 2.0F);
         mouth = new ModelRenderer(this, 16, 0);
         mouth.addBox(-2.0F, 4.0F, -14.0F, 4, 2, 6, f);
-        mouth.setRotationPoint(0.0F, (float)(18 - i), -6.0F);
+        mouth.setRotationPoint(0.0F, (float) (18 - i), -6.0F);
         headDesertlizard = new ModelRenderer(this, 0, 0);
         headDesertlizard.addBox(-3.0F, 2.0F, -9.0F, 6, 3, 8, f);
-        headDesertlizard.setRotationPoint(0.0F, (float)(18 - i), -6.0F);
+        headDesertlizard.setRotationPoint(0.0F, (float) (18 - i), -6.0F);
         body = new ModelRenderer(this, 32, 64);
         body.addBox(-5.0F, -10.0F, -7.0F, 10, 22, 5, f);
-        body.setRotationPoint(0.0F, (float)(17 - i), 2.0F);
+        body.setRotationPoint(0.0F, (float) (17 - i), 2.0F);
         leg1 = new ModelRenderer(this, 0, 16);
         leg1.addBox(-2.0F, 0.0F, -2.0F, 4, i, 4, f);
-        leg1.setRotationPoint(-3.0F, (float)(24 - i), 11.0F);
+        leg1.setRotationPoint(-3.0F, (float) (24 - i), 11.0F);
         leg2 = new ModelRenderer(this, 0, 16);
         leg2.addBox(-2.0F, 0.0F, -2.0F, 4, i, 4, f);
-        leg2.setRotationPoint(3.0F, (float)(24 - i), 11.0F);
+        leg2.setRotationPoint(3.0F, (float) (24 - i), 11.0F);
         leg3 = new ModelRenderer(this, 0, 16);
         leg3.addBox(-2.0F, 0.0F, -2.0F, 4, i, 4, f);
-        leg3.setRotationPoint(-3.0F, (float)(24 - i), -5.0F);
+        leg3.setRotationPoint(-3.0F, (float) (24 - i), -5.0F);
         leg4 = new ModelRenderer(this, 0, 16);
         leg4.addBox(-2.0F, 0.0F, -2.0F, 4, i, 4, f);
-        leg4.setRotationPoint(3.0F, (float)(24 - i), -5.0F);
+        leg4.setRotationPoint(3.0F, (float) (24 - i), -5.0F);
     }
 
     public void render(Entity entity, float f, float f1, float f2, float f3, float f4, float f5) {
@@ -88,7 +90,7 @@ public class ModelDesertLizard extends ModelBase {
             }
         } else {
             tailwag -= 8.0E-4F;
-            if ((double)tailwag < -0.2) {
+            if ((double) tailwag < -0.2) {
                 taildirection *= -1;
             }
         }

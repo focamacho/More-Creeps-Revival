@@ -3,7 +3,6 @@ package com.morecreepsrevival.morecreeps.common.entity;
 import com.morecreepsrevival.morecreeps.common.config.MoreCreepsConfig;
 import com.morecreepsrevival.morecreeps.common.items.CreepsItemHandler;
 import com.morecreepsrevival.morecreeps.common.sounds.CreepsSoundHandler;
-import net.minecraft.client.renderer.entity.RenderCreeper;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.EnumCreatureType;
 import net.minecraft.entity.IRangedAttackMob;
@@ -20,17 +19,15 @@ import net.minecraft.world.World;
 
 import javax.annotation.Nonnull;
 
-public class EntityFloob extends EntityCreepBase implements IRangedAttackMob, IMob, IEntityCanChangeSize
-{
-    public EntityFloob(World worldIn)
-    {
+public class EntityFloob extends EntityCreepBase implements IRangedAttackMob, IMob, IEntityCanChangeSize {
+    public EntityFloob(World worldIn) {
         super(worldIn);
 
         setCreepTypeName("Floob");
 
         creatureType = EnumCreatureType.MONSTER;
 
-        baseHealth = (float)rand.nextInt(15) + 10.0f;
+        baseHealth = (float) rand.nextInt(15) + 10.0f;
 
         baseSpeed = 0.3d;
 
@@ -40,14 +37,12 @@ public class EntityFloob extends EntityCreepBase implements IRangedAttackMob, IM
     }
 
     @Override
-    protected void updateTexture()
-    {
+    protected void updateTexture() {
         setTexture("textures/entity/floob.png");
     }
 
     @Override
-    protected void initEntityAI()
-    {
+    protected void initEntityAI() {
         clearAITasks();
 
         NodeProcessor nodeProcessor = getNavigator().getNodeProcessor();
@@ -74,7 +69,7 @@ public class EntityFloob extends EntityCreepBase implements IRangedAttackMob, IM
 
         targetTasks.addTask(2, new EntityAINearestAttackableTarget<>(this, EntityPlayer.class, true));
 
-        if(MoreCreepsConfig.floobTargetVillagers) {
+        if (MoreCreepsConfig.floobTargetVillagers) {
             targetTasks.addTask(2, new EntityAINearestAttackableTarget<>(this, EntityVillager.class, true));
         }
     }
@@ -85,48 +80,41 @@ public class EntityFloob extends EntityCreepBase implements IRangedAttackMob, IM
     }
 
     @Override
-    public int getMaxSpawnedInChunk()
-    {
+    public int getMaxSpawnedInChunk() {
         return 1;
     }
 
     @Override
-    protected SoundEvent getAmbientSound()
-    {
+    protected SoundEvent getAmbientSound() {
         return CreepsSoundHandler.floobSound;
     }
 
     @Override
-    protected SoundEvent getHurtSound(DamageSource damageSource)
-    {
+    protected SoundEvent getHurtSound(DamageSource damageSource) {
         return CreepsSoundHandler.floobHurtSound;
     }
 
     @Override
-    protected SoundEvent getDeathSound()
-    {
+    protected SoundEvent getDeathSound() {
         return CreepsSoundHandler.floobDeathSound;
     }
 
     @Override
-    protected void dropItemsOnDeath()
-    {
-        if (rand.nextInt(6) == 0)
-        {
+    protected void dropItemsOnDeath() {
+        if (rand.nextInt(6) == 0) {
             dropItem(CreepsItemHandler.raygun, 1);
         }
     }
 
     @Override
-    public void attackEntityWithRangedAttack(@Nonnull EntityLivingBase target, float distanceFactor)
-    {
+    public void attackEntityWithRangedAttack(@Nonnull EntityLivingBase target, float distanceFactor) {
         EntityRay ray = new EntityRay(world, this);
 
         double d0 = target.posX - this.posX;
-        double d1 = target.getEntityBoundingBox().minY + (double)(target.height / 3.0F) - ray.posY;
+        double d1 = target.getEntityBoundingBox().minY + (double) (target.height / 3.0F) - ray.posY;
         double d2 = target.posZ - this.posZ;
 
-        ray.shoot(d0, d1, d2, 1.6F, (float)(14 - world.getDifficulty().getDifficultyId() * 4));
+        ray.shoot(d0, d1, d2, 1.6F, (float) (14 - world.getDifficulty().getDifficultyId() * 4));
 
         world.spawnEntity(ray);
 
@@ -134,28 +122,31 @@ public class EntityFloob extends EntityCreepBase implements IRangedAttackMob, IM
     }
 
     @Override
-    public void setSwingingArms(boolean swingingArms)
-    {
+    public void setSwingingArms(boolean swingingArms) {
     }
 
     @Override
-    public float maxShrink() { return 0.5f; }
+    public float maxShrink() {
+        return 0.5f;
+    }
 
     @Override
-    public float getShrinkRayAmount() { return 0.2f; }
+    public float getShrinkRayAmount() {
+        return 0.2f;
+    }
 
     @Override
     public void onShrink(EntityShrink source) {
 
     }
+
     @Override
     public float maxGrowth() {
         return 5.0f;
     }
 
     @Override
-    public float getGrowRayAmount()
-    {
+    public float getGrowRayAmount() {
         return 0.2F;
     }
 

@@ -21,8 +21,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
 
-public class EntityDigBug extends EntityCreepBase implements IEntityCanChangeSize
-{
+public class EntityDigBug extends EntityCreepBase implements IEntityCanChangeSize {
     private static final DataParameter<Integer> lifespan = EntityDataManager.createKey(EntityDigBug.class, DataSerializers.VARINT);
 
     private static final DataParameter<Integer> holeDepth = EntityDataManager.createKey(EntityDigBug.class, DataSerializers.VARINT);
@@ -36,9 +35,6 @@ public class EntityDigBug extends EntityCreepBase implements IEntityCanChangeSiz
     private static final DataParameter<BlockPos> holePos = EntityDataManager.createKey(EntityDigBug.class, DataSerializers.BLOCK_POS);
 
     private static final DataParameter<Integer> hunger = EntityDataManager.createKey(EntityDigBug.class, DataSerializers.VARINT);
-
-    private int skinFrame = 0;
-
     private static final Item[] dropItems = {
             Item.getItemFromBlock(Blocks.COBBLESTONE),
             Item.getItemFromBlock(Blocks.GRAVEL),
@@ -47,9 +43,9 @@ public class EntityDigBug extends EntityCreepBase implements IEntityCanChangeSiz
             Item.getItemFromBlock(Blocks.IRON_ORE),
             Item.getItemFromBlock(Blocks.MOSSY_COBBLESTONE)
     };
+    private int skinFrame = 0;
 
-    public EntityDigBug(World worldIn)
-    {
+    public EntityDigBug(World worldIn) {
         super(worldIn);
 
         setCreepTypeName("Dig Bug");
@@ -66,8 +62,7 @@ public class EntityDigBug extends EntityCreepBase implements IEntityCanChangeSiz
     }
 
     @Override
-    protected void entityInit()
-    {
+    protected void entityInit() {
         super.entityInit();
 
         dataManager.register(lifespan, 5000);
@@ -86,8 +81,7 @@ public class EntityDigBug extends EntityCreepBase implements IEntityCanChangeSiz
     }
 
     @Override
-    public void initEntityAI()
-    {
+    public void initEntityAI() {
         clearAITasks();
 
         NodeProcessor nodeProcessor = getNavigator().getNodeProcessor();
@@ -114,28 +108,23 @@ public class EntityDigBug extends EntityCreepBase implements IEntityCanChangeSiz
     }
 
     @Override
-    protected void updateTexture()
-    {
+    protected void updateTexture() {
         setTexture("textures/entity/digbug" + skinFrame + ".png");
     }
 
     @Override
-    protected boolean canDespawn()
-    {
+    protected boolean canDespawn() {
         return (dataManager.get(lifespan) < 0);
     }
 
     @Override
-    public void onUpdate()
-    {
+    public void onUpdate() {
         super.onUpdate();
 
-        if (dataManager.get(lifespan) >= 0 && dataManager.get(holeDepth) > 0)
-        {
+        if (dataManager.get(lifespan) >= 0 && dataManager.get(holeDepth) > 0) {
             dataManager.set(lifespan, dataManager.get(lifespan) - 1);
 
-            if (dataManager.get(lifespan) < 1)
-            {
+            if (dataManager.get(lifespan) < 1) {
                 dataManager.set(digTimer, rand.nextInt(20));
 
                 dataManager.set(digPosition, new BlockPos(-1, dataManager.get(holeDepth), -1));
@@ -146,28 +135,23 @@ public class EntityDigBug extends EntityCreepBase implements IEntityCanChangeSiz
     }
 
     @Override
-    public void onLivingUpdate()
-    {
+    public void onLivingUpdate() {
         super.onLivingUpdate();
 
-        if (prevPosX != posX || prevPosY != posY)
-        {
+        if (prevPosX != posX || prevPosY != posY) {
             updateTexture();
 
             skinFrame++;
 
-            if (skinFrame > 3)
-            {
+            if (skinFrame > 3) {
                 skinFrame = 0;
             }
         }
 
-        if (dataManager.get(digStage) == 0 && posY < 90.0d)
-        {
+        if (dataManager.get(digStage) == 0 && posY < 90.0d) {
             dataManager.set(digTimer, dataManager.get(digTimer) - 1);
 
-            if (dataManager.get(digTimer) < 1)
-            {
+            if (dataManager.get(digTimer) < 1) {
                 int x = MathHelper.floor(posX);
 
                 int y = MathHelper.floor(getEntityBoundingBox().minY);
@@ -176,26 +160,21 @@ public class EntityDigBug extends EntityCreepBase implements IEntityCanChangeSiz
 
                 dataManager.set(holeDepth, rand.nextInt(2) + 3);
 
-                if (world.getBlockState(new BlockPos(x, y - 1, z)).getBlock() == Blocks.GRASS)
-                {
-                    if (checkHole(new BlockPos(x, y, z), dataManager.get(holeDepth)))
-                    {
+                if (world.getBlockState(new BlockPos(x, y - 1, z)).getBlock() == Blocks.GRASS) {
+                    if (checkHole(new BlockPos(x, y, z), dataManager.get(holeDepth))) {
                         dataManager.set(digStage, 1);
 
                         dataManager.set(digPosition, new BlockPos(0.0d, 1.0d, 0.0d));
 
                         dataManager.set(holePos, new BlockPos(x, y, z));
-                    }
-                    else
-                    {
+                    } else {
                         dataManager.set(digTimer, rand.nextInt(200));
                     }
                 }
             }
         }
 
-        if (dataManager.get(digStage) == 1)
-        {
+        if (dataManager.get(digStage) == 1) {
             int x = MathHelper.floor(posX);
 
             int y = MathHelper.floor(getEntityBoundingBox().minY);
@@ -206,49 +185,38 @@ public class EntityDigBug extends EntityCreepBase implements IEntityCanChangeSiz
 
             world.setBlockToAir(new BlockPos(x, y + 1, z));
 
-            if (posX < (dataManager.get(holePos).getX() + dataManager.get(digPosition).getX()))
-            {
+            if (posX < (dataManager.get(holePos).getX() + dataManager.get(digPosition).getX())) {
                 motionX += 0.20000000298023224d;
-            }
-            else
-            {
+            } else {
                 motionX -= 0.20000000298023224d;
             }
 
-            if (posZ < (dataManager.get(holePos).getZ() + dataManager.get(digPosition).getZ()))
-            {
+            if (posZ < (dataManager.get(holePos).getZ() + dataManager.get(digPosition).getZ())) {
                 motionZ += 0.20000000298023224d;
-            }
-            else
-            {
+            } else {
                 motionZ -= 0.20000000298023224d;
             }
 
             dataManager.set(digTimer, dataManager.get(digTimer) - 1);
 
-            if (dataManager.get(digTimer) < 1)
-            {
+            if (dataManager.get(digTimer) < 1) {
                 dataManager.set(digTimer, rand.nextInt(20));
 
                 setPosition(dataManager.get(holePos).getX() + dataManager.get(digPosition).getX(), dataManager.get(holePos).getY() - dataManager.get(digPosition).getY(), dataManager.get(holePos).getZ() + dataManager.get(digPosition).getZ());
 
                 Block block = world.getBlockState(getPosition()).getBlock();
 
-                if (rand.nextInt(50) == 0)
-                {
+                if (rand.nextInt(50) == 0) {
                     block = Blocks.COAL_ORE;
                 }
 
-                if (block != Blocks.SAND && block != Blocks.LOG)
-                {
+                if (block != Blocks.SAND && block != Blocks.LOG) {
                     int randInt = rand.nextInt(2) + 1;
 
-                    for (int i = 0; i < randInt; i++)
-                    {
+                    for (int i = 0; i < randInt; i++) {
                         EntityItem entityItem = new EntityItem(world, dataManager.get(holePos).getX() + dataManager.get(digPosition).getX(), (dataManager.get(holePos).getY() - dataManager.get(digPosition).getY()) + 1.0d, dataManager.get(holePos).getZ() + dataManager.get(digPosition).getZ(), new ItemStack(block, 1));
 
-                        if (!world.isRemote)
-                        {
+                        if (!world.isRemote) {
                             world.spawnEntity(entityItem);
                         }
                     }
@@ -258,45 +226,39 @@ public class EntityDigBug extends EntityCreepBase implements IEntityCanChangeSiz
 
                 dataManager.set(digPosition, new BlockPos(dataManager.get(digPosition).getX(), dataManager.get(digPosition).getY(), dataManager.get(digPosition).getZ() + 1.0d));
 
-                if (dataManager.get(digPosition).getZ() > 1.0d)
-                {
+                if (dataManager.get(digPosition).getZ() > 1.0d) {
                     dataManager.set(digPosition, new BlockPos(dataManager.get(digPosition).getX(), dataManager.get(digPosition).getY(), 0.0d));
 
                     setPosition(dataManager.get(holePos).getX() + dataManager.get(digPosition).getX(), dataManager.get(holePos).getY() - dataManager.get(digPosition).getY(), dataManager.get(holePos).getZ() + dataManager.get(digPosition).getZ());
 
                     dataManager.set(digPosition, new BlockPos(dataManager.get(digPosition).getX() + 1.0d, dataManager.get(digPosition).getY(), dataManager.get(digPosition).getZ()));
 
-                    if (dataManager.get(digPosition).getX() > 1.0d)
-                    {
+                    if (dataManager.get(digPosition).getX() > 1.0d) {
                         dataManager.set(digPosition, new BlockPos(0.0d, dataManager.get(digPosition).getY(), dataManager.get(digPosition).getZ()));
 
                         setPosition(dataManager.get(holePos).getX() + dataManager.get(digPosition).getX(), dataManager.get(holePos).getY() - dataManager.get(digPosition).getY(), dataManager.get(holePos).getZ() + dataManager.get(digPosition).getZ());
 
                         dataManager.set(digPosition, new BlockPos(dataManager.get(digPosition).getX(), dataManager.get(digPosition).getY() + 1.0d, dataManager.get(digPosition).getZ()));
 
-                        if (dataManager.get(digPosition).getY() > (double)dataManager.get(holeDepth))
-                        {
+                        if (dataManager.get(digPosition).getY() > (double) dataManager.get(holeDepth)) {
                             int randInt = rand.nextInt(8) + 5;
 
-                            for (int i = 0; i < randInt; i++)
-                            {
+                            for (int i = 0; i < randInt; i++) {
                                 int l = rand.nextInt(40) + 40;
 
                                 int k = rand.nextInt(40) + 40;
 
-                                if (rand.nextInt(1) == 0)
-                                {
+                                if (rand.nextInt(1) == 0) {
                                     l *= -1;
                                 }
 
-                                if (rand.nextInt(1) == 0)
-                                {
+                                if (rand.nextInt(1) == 0) {
                                     k *= -1;
                                 }
 
                                 EntityBubbleScum bubbleScum = new EntityBubbleScum(world);
 
-                                bubbleScum.setPositionAndRotation(posX + (double)l, posY + (double)dataManager.get(holeDepth) + 2.0d, posZ + (double)k, rotationYaw, 0.0f);
+                                bubbleScum.setPositionAndRotation(posX + (double) l, posY + (double) dataManager.get(holeDepth) + 2.0d, posZ + (double) k, rotationYaw, 0.0f);
 
                                 bubbleScum.determineBaseTexture();
 
@@ -310,8 +272,7 @@ public class EntityDigBug extends EntityCreepBase implements IEntityCanChangeSiz
 
                                 bubbleScum.fallDistance = -25.0f;
 
-                                if (!world.isRemote)
-                                {
+                                if (!world.isRemote) {
                                     world.spawnEntity(bubbleScum);
                                 }
                             }
@@ -335,12 +296,10 @@ public class EntityDigBug extends EntityCreepBase implements IEntityCanChangeSiz
             }
         }
 
-        if (dataManager.get(digStage) == 2)
-        {
+        if (dataManager.get(digStage) == 2) {
             dataManager.set(digTimer, dataManager.get(digTimer) - 1);
 
-            if (dataManager.get(digTimer) < 1)
-            {
+            if (dataManager.get(digTimer) < 1) {
                 dataManager.set(digTimer, rand.nextInt(20));
 
                 int max = 20 + dataManager.get(digTimer);
@@ -352,10 +311,8 @@ public class EntityDigBug extends EntityCreepBase implements IEntityCanChangeSiz
 
                 dataManager.set(digTimer, 50);
 
-                for (Entity entity : world.getEntitiesWithinAABBExcludingEntity(this, getEntityBoundingBox().grow(5.0d, 1.0d, 5.0d)))
-                {
-                    if (entity instanceof EntityBubbleScum)
-                    {
+                for (Entity entity : world.getEntitiesWithinAABBExcludingEntity(this, getEntityBoundingBox().grow(5.0d, 1.0d, 5.0d))) {
+                    if (entity instanceof EntityBubbleScum) {
                         entity.setDead();
 
                         baseSpeed = 0.4d;
@@ -370,20 +327,16 @@ public class EntityDigBug extends EntityCreepBase implements IEntityCanChangeSiz
             }
         }
 
-        if (dataManager.get(digStage) == 3)
-        {
+        if (dataManager.get(digStage) == 3) {
             int l = rand.nextInt(25) + 15;
 
             playSound(CreepsSoundHandler.digBugEatSound, 1.0f, getSoundPitch());
 
-            for (int i = 0; i < l; i++)
-            {
-                if (!world.isRemote)
-                {
+            for (int i = 0; i < l; i++) {
+                if (!world.isRemote) {
                     EntityItem item = entityDropItem(new ItemStack(Items.COOKIE, 1), 1.0f);
 
-                    if (item != null)
-                    {
+                    if (item != null) {
                         item.motionY += rand.nextFloat() * 2.0f + 3.0f;
 
                         item.motionX += (rand.nextFloat() - rand.nextFloat()) * 0.33f;
@@ -395,77 +348,62 @@ public class EntityDigBug extends EntityCreepBase implements IEntityCanChangeSiz
 
             dataManager.set(hunger, dataManager.get(hunger) - 1);
 
-            if (dataManager.get(hunger) < 1)
-            {
+            if (dataManager.get(hunger) < 1) {
                 dataManager.set(digTimer, rand.nextInt(20));
 
-                dataManager.set(digPosition, new BlockPos(-1.0d, (double)dataManager.get(holeDepth), -1.0d));
+                dataManager.set(digPosition, new BlockPos(-1.0d, (double) dataManager.get(holeDepth), -1.0d));
 
                 dataManager.set(digStage, 4);
 
                 playSound(CreepsSoundHandler.digBugFullSound, 1.0f, getSoundPitch());
-            }
-            else
-            {
+            } else {
                 dataManager.set(digStage, 2);
 
                 dataManager.set(digTimer, 50);
             }
         }
 
-        if (dataManager.get(digStage) == 4)
-        {
-            if (posX < (dataManager.get(holePos).getX() + dataManager.get(digPosition).getX()))
-            {
+        if (dataManager.get(digStage) == 4) {
+            if (posX < (dataManager.get(holePos).getX() + dataManager.get(digPosition).getX())) {
                 motionX += 0.20000000298023224d;
-            }
-            else
-            {
+            } else {
                 motionX -= 0.20000000298023224d;
             }
 
-            if (posZ < (dataManager.get(holePos).getZ() + dataManager.get(digPosition).getZ()))
-            {
+            if (posZ < (dataManager.get(holePos).getZ() + dataManager.get(digPosition).getZ())) {
                 motionZ += 0.20000000298023224d;
-            }
-            else
-            {
+            } else {
                 motionZ -= 0.20000000298023224d;
             }
 
             dataManager.set(digTimer, dataManager.get(digTimer) - 1);
 
-            if (dataManager.get(digTimer) < 1)
-            {
+            if (dataManager.get(digTimer) < 1) {
                 dataManager.set(digTimer, rand.nextInt(10));
 
                 BlockPos blockPos = new BlockPos(dataManager.get(holePos).getX() + dataManager.get(digPosition).getX(), dataManager.get(holePos).getY() - dataManager.get(digPosition).getY(), dataManager.get(holePos).getZ() + dataManager.get(digPosition).getZ());
 
-                if (world.isAirBlock(blockPos))
-                {
+                if (world.isAirBlock(blockPos)) {
                     world.setBlockState(blockPos, Blocks.DIRT.getDefaultState());
                 }
 
                 dataManager.set(digPosition, new BlockPos(dataManager.get(digPosition).getX(), dataManager.get(digPosition).getY(), dataManager.get(digPosition).getZ() + 1.0d));
 
-                if (dataManager.get(digPosition).getZ() > 2.0d)
-                {
+                if (dataManager.get(digPosition).getZ() > 2.0d) {
                     dataManager.set(digPosition, new BlockPos(dataManager.get(digPosition).getX(), dataManager.get(digPosition).getY(), -1.0d));
 
                     setPosition(dataManager.get(holePos).getX() + dataManager.get(digPosition).getX(), (dataManager.get(holePos).getY() - dataManager.get(digPosition).getY()) + 1.0d, dataManager.get(holePos).getZ() + dataManager.get(digPosition).getZ());
 
                     dataManager.set(digPosition, new BlockPos(dataManager.get(digPosition).getX() + 1.0d, dataManager.get(digPosition).getY(), dataManager.get(digPosition).getZ()));
 
-                    if (dataManager.get(digPosition).getX() > 2.0d)
-                    {
+                    if (dataManager.get(digPosition).getX() > 2.0d) {
                         dataManager.set(digPosition, new BlockPos(-1.0d, dataManager.get(digPosition).getY(), dataManager.get(digPosition).getZ()));
 
                         setPosition(dataManager.get(holePos).getX() + dataManager.get(digPosition).getX(), (dataManager.get(holePos).getY() - dataManager.get(digPosition).getY()) + 1.0d, dataManager.get(holePos).getZ() + dataManager.get(digPosition).getZ());
 
                         dataManager.set(digPosition, new BlockPos(dataManager.get(digPosition).getX(), dataManager.get(digPosition).getY() - 1.0d, dataManager.get(digPosition).getZ()));
 
-                        if (dataManager.get(digPosition).getY() == 1.0d)
-                        {
+                        if (dataManager.get(digPosition).getY() == 1.0d) {
                             dataManager.set(digStage, 0);
 
                             dataManager.set(digTimer, rand.nextInt(8000) + 1000);
@@ -479,26 +417,19 @@ public class EntityDigBug extends EntityCreepBase implements IEntityCanChangeSiz
     }
 
     @Override
-    public boolean isEntityInsideOpaqueBlock()
-    {
-        if (dataManager.get(digStage) == 1 || dataManager.get(digStage) == 4)
-        {
+    public boolean isEntityInsideOpaqueBlock() {
+        if (dataManager.get(digStage) == 1 || dataManager.get(digStage) == 4) {
             return false;
         }
 
         return super.isEntityInsideOpaqueBlock();
     }
 
-    public boolean checkHole(BlockPos blockPos, int l)
-    {
-        for (int i = 0; i < l; i++)
-        {
-            for (int j = 0; j < 3; j++)
-            {
-                for (int k = 0; k < 3; k++)
-                {
-                    if (world.isAirBlock(new BlockPos(blockPos.getX() + j, blockPos.getY() - i - 1, blockPos.getZ() + k)))
-                    {
+    public boolean checkHole(BlockPos blockPos, int l) {
+        for (int i = 0; i < l; i++) {
+            for (int j = 0; j < 3; j++) {
+                for (int k = 0; k < 3; k++) {
+                    if (world.isAirBlock(new BlockPos(blockPos.getX() + j, blockPos.getY() - i - 1, blockPos.getZ() + k))) {
                         return false;
                     }
                 }
@@ -509,16 +440,13 @@ public class EntityDigBug extends EntityCreepBase implements IEntityCanChangeSiz
     }
 
     @Override
-    public int getMaxSpawnedInChunk()
-    {
+    public int getMaxSpawnedInChunk() {
         return 1;
     }
 
     @Override
-    protected SoundEvent getAmbientSound()
-    {
-        switch (dataManager.get(digStage))
-        {
+    protected SoundEvent getAmbientSound() {
+        switch (dataManager.get(digStage)) {
             case 1:
             case 4:
                 return CreepsSoundHandler.digBugDigSound;
@@ -532,26 +460,22 @@ public class EntityDigBug extends EntityCreepBase implements IEntityCanChangeSiz
     }
 
     @Override
-    protected SoundEvent getHurtSound(DamageSource damageSource)
-    {
+    protected SoundEvent getHurtSound(DamageSource damageSource) {
         return CreepsSoundHandler.digBugHurtSound;
     }
 
     @Override
-    protected SoundEvent getDeathSound()
-    {
+    protected SoundEvent getDeathSound() {
         return CreepsSoundHandler.digBugDeathSound;
     }
 
     @Override
-    protected void dropItemsOnDeath()
-    {
+    protected void dropItemsOnDeath() {
         dropItem(dropItems[rand.nextInt(dropItems.length)], 1);
     }
 
     @Override
-    public void writeEntityToNBT(NBTTagCompound compound)
-    {
+    public void writeEntityToNBT(NBTTagCompound compound) {
         super.writeEntityToNBT(compound);
 
         NBTTagCompound props = compound.getCompoundTag("MoreCreepsDigBug");
@@ -580,48 +504,45 @@ public class EntityDigBug extends EntityCreepBase implements IEntityCanChangeSiz
     }
 
     @Override
-    public void readEntityFromNBT(NBTTagCompound compound)
-    {
+    public void readEntityFromNBT(NBTTagCompound compound) {
         super.readEntityFromNBT(compound);
 
         NBTTagCompound props = compound.getCompoundTag("MoreCreepsDigBug");
 
-        if (props.hasKey("DigStage"))
-        {
+        if (props.hasKey("DigStage")) {
             dataManager.set(digStage, props.getInteger("DigStage"));
         }
 
-        if (props.hasKey("DigTimer"))
-        {
+        if (props.hasKey("DigTimer")) {
             dataManager.set(digTimer, props.getInteger("DigTimer"));
         }
 
-        if (props.hasKey("LifeSpan"))
-        {
+        if (props.hasKey("LifeSpan")) {
             dataManager.set(lifespan, props.getInteger("LifeSpan"));
         }
 
-        if (props.hasKey("HoleDepth"))
-        {
+        if (props.hasKey("HoleDepth")) {
             dataManager.set(holeDepth, props.getInteger("HoleDepth"));
         }
 
-        if (props.hasKey("DigPositionX") && props.hasKey("DigPositionY") && props.hasKey("DigPositionZ"))
-        {
+        if (props.hasKey("DigPositionX") && props.hasKey("DigPositionY") && props.hasKey("DigPositionZ")) {
             dataManager.set(digPosition, new BlockPos(props.getDouble("DigPositionX"), props.getDouble("DigPositionY"), props.getDouble("DigPositionZ")));
         }
 
-        if (props.hasKey("HolePosX") && props.hasKey("HolePosY") && props.hasKey("HolePosZ"))
-        {
+        if (props.hasKey("HolePosX") && props.hasKey("HolePosY") && props.hasKey("HolePosZ")) {
             dataManager.set(holePos, new BlockPos(props.getDouble("HolePosX"), props.getDouble("HolePosY"), props.getDouble("HolePosZ")));
         }
     }
 
     @Override
-    public float maxShrink() { return 0.4f; }
+    public float maxShrink() {
+        return 0.4f;
+    }
 
     @Override
-    public float getShrinkRayAmount() { return 0.2f; }
+    public float getShrinkRayAmount() {
+        return 0.2f;
+    }
 
     @Override
     public void onShrink(EntityShrink source) {
@@ -634,8 +555,7 @@ public class EntityDigBug extends EntityCreepBase implements IEntityCanChangeSiz
     }
 
     @Override
-    public float getGrowRayAmount()
-    {
+    public float getGrowRayAmount() {
         return 0.2F;
     }
 

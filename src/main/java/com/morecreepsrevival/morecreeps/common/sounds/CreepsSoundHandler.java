@@ -1,7 +1,6 @@
 package com.morecreepsrevival.morecreeps.common.sounds;
 
 import com.morecreepsrevival.morecreeps.common.MoreCreepsAndWeirdos;
-import net.minecraft.client.audio.Sound;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
 import net.minecraftforge.event.RegistryEvent;
@@ -9,8 +8,7 @@ import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 @EventBusSubscriber(modid = MoreCreepsAndWeirdos.modid)
-public class CreepsSoundHandler
-{
+public class CreepsSoundHandler {
     public static final SoundEvent achievementSound = createSound("achievement");
 
     public static final SoundEvent welcomeSound = createSound("welcome");
@@ -605,14 +603,12 @@ public class CreepsSoundHandler
     public static final SoundEvent desertLizardFireball = createSound("desertlizardfireball");
 
 
-    private static SoundEvent createSound(String soundName)
-    {
+    private static SoundEvent createSound(String soundName) {
         return (new SoundEvent(new ResourceLocation(MoreCreepsAndWeirdos.modid, soundName))).setRegistryName(soundName);
     }
 
     @SubscribeEvent
-    public static void registerSounds(RegistryEvent.Register<SoundEvent> event)
-    {
+    public static void registerSounds(RegistryEvent.Register<SoundEvent> event) {
         event.getRegistry().registerAll(
                 achievementSound,
                 welcomeSound,

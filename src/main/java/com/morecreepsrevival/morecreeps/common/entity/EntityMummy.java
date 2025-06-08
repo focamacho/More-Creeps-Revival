@@ -1,7 +1,7 @@
 package com.morecreepsrevival.morecreeps.common.entity;
 
-import com.morecreepsrevival.morecreeps.common.sounds.CreepsSoundHandler;
 import com.morecreepsrevival.morecreeps.common.items.CreepsItemHandler;
+import com.morecreepsrevival.morecreeps.common.sounds.CreepsSoundHandler;
 import net.minecraft.entity.EnumCreatureType;
 import net.minecraft.entity.ai.*;
 import net.minecraft.entity.monster.IMob;
@@ -13,10 +13,8 @@ import net.minecraft.util.DamageSource;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.world.World;
 
-public class EntityMummy extends EntityCreepBase implements IMob
-{
-    public EntityMummy(World world)
-    {
+public class EntityMummy extends EntityCreepBase implements IMob {
+    public EntityMummy(World world) {
         super(world);
 
         setCreepTypeName("Mummy");
@@ -25,7 +23,7 @@ public class EntityMummy extends EntityCreepBase implements IMob
 
         spawnOnlyAtNight = true;
 
-        baseHealth = (float)rand.nextInt(10) + 20.0f;
+        baseHealth = (float) rand.nextInt(10) + 20.0f;
 
         baseSpeed = 0.25d;
 
@@ -35,8 +33,7 @@ public class EntityMummy extends EntityCreepBase implements IMob
     }
 
     @Override
-    protected void initEntityAI()
-    {
+    protected void initEntityAI() {
         clearAITasks();
 
         NodeProcessor nodeProcessor = getNavigator().getNodeProcessor();
@@ -65,57 +62,45 @@ public class EntityMummy extends EntityCreepBase implements IMob
     }
 
     @Override
-    protected SoundEvent getHurtSound(DamageSource damageSource)
-    {
+    protected SoundEvent getHurtSound(DamageSource damageSource) {
         return CreepsSoundHandler.mummyHurtSound;
     }
 
     @Override
-    protected SoundEvent getDeathSound()
-    {
+    protected SoundEvent getDeathSound() {
         return CreepsSoundHandler.mummyDeathSound;
     }
 
     @Override
-    protected SoundEvent getAmbientSound()
-    {
+    protected SoundEvent getAmbientSound() {
         return CreepsSoundHandler.mummySound;
     }
 
     @Override
-    protected boolean shouldBurnInDay()
-    {
+    protected boolean shouldBurnInDay() {
         return true;
     }
 
     @Override
-    protected void dropItemsOnDeath()
-    {
-        if (rand.nextInt(5) == 0)
-        {
+    protected void dropItemsOnDeath() {
+        if (rand.nextInt(5) == 0) {
             dropItem(Item.getItemFromBlock(Blocks.SAND), rand.nextInt(6) + 1);
 
             dropItem(Item.getItemFromBlock(Blocks.SANDSTONE), rand.nextInt(3) + 1);
-        }
-        else if (rand.nextInt(5) == 0)
-        {
+        } else if (rand.nextInt(5) == 0) {
             dropItem(CreepsItemHandler.bandaid, rand.nextInt(8) + 1);
-        }
-        else
-        {
+        } else {
             dropItem(Item.getItemFromBlock(Blocks.SAND), rand.nextInt(2) + 1);
         }
     }
 
     @Override
-    protected void updateTexture()
-    {
+    protected void updateTexture() {
         setTexture("textures/entity/mummy.png");
     }
 
     @Override
-    protected float getSoundPitch()
-    {
+    protected float getSoundPitch() {
         return ((rand.nextFloat() - rand.nextFloat()) * 0.2f + 1.0f + (1.6f - getModelSize()) * 2.0f);
     }
 }

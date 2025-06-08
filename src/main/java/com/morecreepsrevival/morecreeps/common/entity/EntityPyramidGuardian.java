@@ -16,10 +16,8 @@ import net.minecraft.world.World;
 
 import javax.annotation.Nonnull;
 
-public class EntityPyramidGuardian extends EntityCreepBase
-{
-    public EntityPyramidGuardian(World world)
-    {
+public class EntityPyramidGuardian extends EntityCreepBase {
+    public EntityPyramidGuardian(World world) {
         super(world);
 
         setCreepTypeName("Pyramid Guardian");
@@ -34,8 +32,7 @@ public class EntityPyramidGuardian extends EntityCreepBase
     }
 
     @Override
-    public void initEntityAI()
-    {
+    public void initEntityAI() {
         clearAITasks();
 
         NodeProcessor nodeProcessor = getNavigator().getNodeProcessor();
@@ -50,28 +47,23 @@ public class EntityPyramidGuardian extends EntityCreepBase
     }
 
     @Override
-    protected SoundEvent getAmbientSound()
-    {
+    protected SoundEvent getAmbientSound() {
         return CreepsSoundHandler.pyramidSound;
     }
 
     @Override
-    protected SoundEvent getHurtSound(DamageSource damageSource)
-    {
+    protected SoundEvent getHurtSound(DamageSource damageSource) {
         return CreepsSoundHandler.pyramidHurtSound;
     }
 
     @Override
-    protected SoundEvent getDeathSound()
-    {
+    protected SoundEvent getDeathSound() {
         return CreepsSoundHandler.pyramidDeathSound;
     }
 
     @Override
-    public void onDeath(@Nonnull DamageSource cause)
-    {
-        if (!dead && !world.isRemote)
-        {
+    public void onDeath(@Nonnull DamageSource cause) {
+        if (!dead && !world.isRemote) {
             int x = MathHelper.floor(posX);
 
             int y = MathHelper.floor(getEntityBoundingBox().minY);
@@ -82,18 +74,13 @@ public class EntityPyramidGuardian extends EntityCreepBase
 
             int alternate = 1;
 
-            if (posY > 60.0d)
-            {
-                for (int i = -4; i < 6; i++)
-                {
-                    for (int j = -40; j < 40; j++)
-                    {
-                        for (int q = -40; q < 40; q++)
-                        {
+            if (posY > 60.0d) {
+                for (int i = -4; i < 6; i++) {
+                    for (int j = -40; j < 40; j++) {
+                        for (int q = -40; q < 40; q++) {
                             BlockPos blockPos = new BlockPos(x + j, y + i, z + q);
 
-                            if (world.getBlockState(blockPos).getBlock() == Blocks.BEDROCK)
-                            {
+                            if (world.getBlockState(blockPos).getBlock() == Blocks.BEDROCK) {
                                 bedrockCounter++;
 
                                 world.setBlockState(blockPos, Blocks.SANDSTONE.getDefaultState());
@@ -103,14 +90,10 @@ public class EntityPyramidGuardian extends EntityCreepBase
                 }
             }
 
-            if (bedrockCounter > 50)
-            {
-                for (int i = 3; i < 11; i++)
-                {
-                    for (int j = 9; j < 24; j++)
-                    {
-                        for (int q = 9; q < 25; q++)
-                        {
+            if (bedrockCounter > 50) {
+                for (int i = 3; i < 11; i++) {
+                    for (int j = 9; j < 24; j++) {
+                        for (int q = 9; q < 25; q++) {
                             world.setBlockToAir(new BlockPos(x - j, y + i, z - q));
                         }
                     }
@@ -134,35 +117,28 @@ public class EntityPyramidGuardian extends EntityCreepBase
 
                 world.setBlockToAir(new BlockPos(x - 2, y + 3, z - 4));
 
-                for (int i = 2; i < 18; i++)
-                {
+                for (int i = 2; i < 18; i++) {
                     world.setBlockToAir(new BlockPos(x - 2, y + 3, z - i));
 
                     alternate *= -1;
 
-                    if (alternate > 0)
-                    {
+                    if (alternate > 0) {
                         world.setBlockState(new BlockPos(x - 2, y + 4, z - i), Blocks.TORCH.getDefaultState());
-                    }
-                    else
-                    {
+                    } else {
                         world.setBlockToAir(new BlockPos(x - 2, y + 4, z - i));
                     }
                 }
 
-                for (int i = 2; i < 20; i++)
-                {
+                for (int i = 2; i < 20; i++) {
                     world.setBlockToAir(new BlockPos(x - i, y + 3, z - 17));
 
                     world.setBlockToAir(new BlockPos(x - i, y + 4, z - 17));
                 }
 
-                for (int i = 9; i < 24; i++)
-                {
+                for (int i = 9; i < 24; i++) {
                     alternate *= -1;
 
-                    if (alternate > 0)
-                    {
+                    if (alternate > 0) {
                         world.setBlockState(new BlockPos(x - 8, y + 8, z - i), Blocks.TORCH.getDefaultState());
 
                         world.setBlockState(new BlockPos(x - 24, y + 8, z - i), Blocks.TORCH.getDefaultState());
@@ -175,8 +151,7 @@ public class EntityPyramidGuardian extends EntityCreepBase
 
                 int randInt = rand.nextInt(2) + 2;
 
-                for (int i = 0; i < randInt; i++)
-                {
+                for (int i = 0; i < randInt; i++) {
                     EntityEvilCreature evilCreature = new EntityEvilCreature(world);
 
                     evilCreature.setLocationAndAngles(x - 15, y + 8, z - 10 - i, rotationYaw, 0.0f);
@@ -192,8 +167,7 @@ public class EntityPyramidGuardian extends EntityCreepBase
 
                 randInt = rand.nextInt(7) + 2;
 
-                for (int i = 0; i < randInt; i++)
-                {
+                for (int i = 0; i < randInt; i++) {
                     EntityMummy mummy = new EntityMummy(world);
 
                     mummy.setLocationAndAngles(x - 15, y + 8, z - 13 - i, rotationYaw, 0.0f);
@@ -225,8 +199,7 @@ public class EntityPyramidGuardian extends EntityCreepBase
     }
 
     @Override
-    public void onLivingUpdate()
-    {
+    public void onLivingUpdate() {
         motionX = 0.0d;
 
         motionY = 0.0d;
@@ -237,16 +210,14 @@ public class EntityPyramidGuardian extends EntityCreepBase
     }
 
     @Override
-    public boolean processInteract(EntityPlayer player, EnumHand hand)
-    {
+    public boolean processInteract(EntityPlayer player, EnumHand hand) {
         playSound(CreepsSoundHandler.pyramidCurseSound, getSoundVolume(), getSoundPitch());
 
         return true;
     }
 
     @Override
-    protected void updateTexture()
-    {
+    protected void updateTexture() {
         setTexture("textures/entity/pyramidguardian.png");
     }
 }

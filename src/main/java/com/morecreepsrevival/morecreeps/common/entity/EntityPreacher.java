@@ -23,8 +23,7 @@ import net.minecraft.world.World;
 
 import javax.annotation.Nonnull;
 
-public class EntityPreacher extends EntityCreepBase implements IMob
-{
+public class EntityPreacher extends EntityCreepBase implements IMob {
     private static final DataParameter<Integer> raise = EntityDataManager.createKey(EntityPreacher.class, DataSerializers.VARINT);
 
     private static final DataParameter<Integer> raiseLevel = EntityDataManager.createKey(EntityPreacher.class, DataSerializers.VARINT);
@@ -37,8 +36,7 @@ public class EntityPreacher extends EntityCreepBase implements IMob
 
     private static final DataParameter<Integer> victimId = EntityDataManager.createKey(EntityPreacher.class, DataSerializers.VARINT);
 
-    public EntityPreacher(World world)
-    {
+    public EntityPreacher(World world) {
         super(world);
 
         setCreepTypeName("Preacher");
@@ -55,8 +53,7 @@ public class EntityPreacher extends EntityCreepBase implements IMob
     }
 
     @Override
-    public void initEntityAI()
-    {
+    public void initEntityAI() {
         clearAITasks();
 
         NodeProcessor nodeProcessor = getNavigator().getNodeProcessor();
@@ -79,8 +76,7 @@ public class EntityPreacher extends EntityCreepBase implements IMob
     }
 
     @Override
-    protected void entityInit()
-    {
+    protected void entityInit() {
         super.entityInit();
 
         dataManager.register(raise, 0);
@@ -97,25 +93,20 @@ public class EntityPreacher extends EntityCreepBase implements IMob
     }
 
     @Override
-    protected void updateTexture()
-    {
+    protected void updateTexture() {
         setTexture("textures/entity/preacher" + rand.nextInt(3) + ".png");
     }
 
     @Override
-    public void onUpdate()
-    {
+    public void onUpdate() {
         super.onUpdate();
 
-        if (rand.nextInt(4) == 0)
-        {
+        if (rand.nextInt(4) == 0) {
             updateTexture();
         }
 
-        if (isInLava())
-        {
-            if (rand.nextInt(25) == 0)
-            {
+        if (isInLava()) {
+            if (rand.nextInt(25) == 0) {
                 playSound(CreepsSoundHandler.preacherBurnSound, getSoundVolume(), getSoundPitch());
             }
 
@@ -124,16 +115,13 @@ public class EntityPreacher extends EntityCreepBase implements IMob
     }
 
     @Override
-    public void onLivingUpdate()
-    {
+    public void onLivingUpdate() {
         super.onLivingUpdate();
 
-        if (inWater || isEntityInsideOpaqueBlock())
-        {
+        if (inWater || isEntityInsideOpaqueBlock()) {
             BlockPos pos = new BlockPos(MathHelper.floor(posX), MathHelper.floor(getEntityBoundingBox().minY), MathHelper.floor(posZ));
 
-            if (!world.isAirBlock(pos))
-            {
+            if (!world.isAirBlock(pos)) {
                 world.setBlockToAir(pos);
 
                 motionY += 0.5d;
@@ -142,8 +130,7 @@ public class EntityPreacher extends EntityCreepBase implements IMob
 
         Entity victim = getVictim();
 
-        if (getHasVictim() && victim != null)
-        {
+        if (getHasVictim() && victim != null) {
             motionX = 0.0d;
 
             motionY = 0.0d;
@@ -152,8 +139,7 @@ public class EntityPreacher extends EntityCreepBase implements IMob
 
             setRaise(getRaise() + 1);
 
-            if (getRaise() > getRaiseLevel())
-            {
+            if (getRaise() > getRaiseLevel()) {
                 setHasVictim(false);
 
                 setRitual(false);
@@ -163,13 +149,10 @@ public class EntityPreacher extends EntityCreepBase implements IMob
                 setRaise(0);
 
                 setWaitTime(rand.nextInt(500) + 500);
-            }
-            else
-            {
+            } else {
                 BlockPos blockPos = new BlockPos(posX, getEntityBoundingBox().minY + 2, posZ);
 
-                if (!world.isAirBlock(blockPos) && victim instanceof EntityPlayer)
-                {
+                if (!world.isAirBlock(blockPos) && victim instanceof EntityPlayer) {
                     world.setBlockToAir(blockPos);
                 }
 
@@ -181,23 +164,17 @@ public class EntityPreacher extends EntityCreepBase implements IMob
 
                 smoke();
 
-                if (rand.nextInt(10) == 0)
-                {
+                if (rand.nextInt(10) == 0) {
                     victim.motionX = rand.nextFloat() * 0.85f - 0.5f;
-                }
-                else if (rand.nextInt(10) == 0)
-                {
+                } else if (rand.nextInt(10) == 0) {
                     victim.motionZ = rand.nextFloat() * 0.8f - 0.5f;
                 }
             }
         }
 
-        if (getRitual() && victim == null)
-        {
-            for (Entity entity : world.loadedEntityList)
-            {
-                if (entity instanceof EntitySheep || entity instanceof EntityPig)
-                {
+        if (getRitual() && victim == null) {
+            for (Entity entity : world.loadedEntityList) {
+                if (entity instanceof EntitySheep || entity instanceof EntityPig) {
                     setHasVictim(true);
 
                     setVictim(entity);
@@ -210,17 +187,13 @@ public class EntityPreacher extends EntityCreepBase implements IMob
                 }
             }
 
-            if (getVictim() == null)
-            {
+            if (getVictim() == null) {
                 setRitual(false);
             }
-        }
-        else if (rand.nextInt(2) == 0)
-        {
+        } else if (rand.nextInt(2) == 0) {
             setWaitTime(getWaitTime() - 1);
 
-            if (getWaitTime() < 1)
-            {
+            if (getWaitTime() < 1) {
                 setRitual(true);
 
                 setWaitTime(1000);
@@ -228,126 +201,101 @@ public class EntityPreacher extends EntityCreepBase implements IMob
         }
     }
 
-    private void setRaise(int i)
-    {
-        dataManager.set(raise, i);
-    }
-
-    public int getRaise()
-    {
+    public int getRaise() {
         return dataManager.get(raise);
     }
 
-    private void setRaiseLevel(int i)
-    {
-        dataManager.set(raiseLevel, i);
+    private void setRaise(int i) {
+        dataManager.set(raise, i);
     }
 
-    public int getRaiseLevel()
-    {
+    public int getRaiseLevel() {
         return dataManager.get(raiseLevel);
     }
 
-    private void setRitual(boolean b)
-    {
+    private void setRaiseLevel(int i) {
+        dataManager.set(raiseLevel, i);
+    }
+
+    public boolean getRitual() {
+        return ((Boolean) dataManager.get(ritual)).booleanValue();
+    }
+
+    private void setRitual(boolean b) {
         dataManager.set(ritual, Boolean.valueOf(b));
     }
 
-    public boolean getRitual()
-    {
-        return ((Boolean)dataManager.get(ritual)).booleanValue();
-    }
-
-    private void setWaitTime(int i)
-    {
-        dataManager.set(waitTime, i);
-    }
-
-    public int getWaitTime()
-    {
+    public int getWaitTime() {
         return dataManager.get(waitTime);
     }
 
-    private void setHasVictim(boolean b)
-    {
+    private void setWaitTime(int i) {
+        dataManager.set(waitTime, i);
+    }
+
+    public boolean getHasVictim() {
+        return ((Boolean) dataManager.get(hasVictim)).booleanValue();
+    }
+
+    private void setHasVictim(boolean b) {
         dataManager.set(hasVictim, Boolean.valueOf(b));
     }
 
-    public boolean getHasVictim()
-    {
-        return ((Boolean)dataManager.get(hasVictim)).booleanValue();
-    }
-
-    private void setVictim(Entity entity)
-    {
-        dataManager.set(victimId, entity.getEntityId());
-    }
-
-    public Entity getVictim()
-    {
+    public Entity getVictim() {
         int entityId = dataManager.get(victimId);
 
-        if (entityId == 0)
-        {
+        if (entityId == 0) {
             return null;
         }
 
         return world.getEntityByID(entityId);
     }
 
+    private void setVictim(Entity entity) {
+        dataManager.set(victimId, entity.getEntityId());
+    }
+
     @Override
-    public int getMaxSpawnedInChunk()
-    {
+    public int getMaxSpawnedInChunk() {
         return 1;
     }
 
     @Override
-    protected SoundEvent getAmbientSound()
-    {
+    protected SoundEvent getAmbientSound() {
         return CreepsSoundHandler.preacherSound;
     }
 
     @Override
-    protected SoundEvent getHurtSound(DamageSource damageSource)
-    {
+    protected SoundEvent getHurtSound(DamageSource damageSource) {
         return CreepsSoundHandler.preacherHurtSound;
     }
 
     @Override
-    protected SoundEvent getDeathSound()
-    {
+    protected SoundEvent getDeathSound() {
         return CreepsSoundHandler.preacherDeathSound;
     }
 
     @Override
-    protected void dropItemsOnDeath()
-    {
-        if (rand.nextInt(50) == 0)
-        {
+    protected void dropItemsOnDeath() {
+        if (rand.nextInt(50) == 0) {
             dropItem(Items.DIAMOND, rand.nextInt(2) + 1);
         }
 
-        if (rand.nextInt(50) == 0)
-        {
+        if (rand.nextInt(50) == 0) {
             entityDropItem(new ItemStack(Items.DYE, 1, 4), 1.0f);
         }
 
-        if (rand.nextInt(50) == 0)
-        {
+        if (rand.nextInt(50) == 0) {
             entityDropItem(new ItemStack(Items.DYE, 1, 3), 1.0f);
         }
 
-        if (rand.nextInt(50) == 0)
-        {
+        if (rand.nextInt(50) == 0) {
             entityDropItem(new ItemStack(Items.DYE, 1, 1), 1.0f);
         }
 
-        if (rand.nextInt(2) == 0)
-        {
+        if (rand.nextInt(2) == 0) {
             dropItem(Items.GOLD_INGOT, rand.nextInt(5) + 2);
-        }
-        else
-        {
+        } else {
             dropItem(Items.BOOK, 1);
 
             dropItem(Items.APPLE, 1);
@@ -355,8 +303,7 @@ public class EntityPreacher extends EntityCreepBase implements IMob
     }
 
     @Override
-    public void knockBack(@Nonnull Entity entity, float strength, double xRatio, double zRatio)
-    {
+    public void knockBack(@Nonnull Entity entity, float strength, double xRatio, double zRatio) {
         motionX *= 1.5d;
 
         motionZ *= 1.5d;
@@ -365,52 +312,43 @@ public class EntityPreacher extends EntityCreepBase implements IMob
     }
 
     @Override
-    public void smoke()
-    {
-        for (int i = 0; i < 5; i++)
-        {
-            for (int j = 0; j < 2; j++)
-            {
+    public void smoke() {
+        for (int i = 0; i < 5; i++) {
+            for (int j = 0; j < 2; j++) {
                 double d = rand.nextGaussian() * 0.02D;
                 double d1 = rand.nextGaussian() * 0.02D;
                 double d2 = rand.nextGaussian() * 0.02D;
-                world.spawnParticle(EnumParticleTypes.EXPLOSION_NORMAL, ((posX + (double)(rand.nextFloat() * width * 2.0F)) - (double)width) + (double)i, posY + (double)(rand.nextFloat() * height), (posZ + (double)(rand.nextFloat() * width * 2.0F)) - (double)width, d, d1, d2);
-                world.spawnParticle(EnumParticleTypes.EXPLOSION_NORMAL, (posX + (double)(rand.nextFloat() * width * 2.0F)) - (double)width - (double)i, posY + (double)(rand.nextFloat() * height), (posZ + (double)(rand.nextFloat() * width * 2.0F)) - (double)width, d, d1, d2);
-                world.spawnParticle(EnumParticleTypes.EXPLOSION_NORMAL, (posX + (double)(rand.nextFloat() * width * 2.0F)) - (double)width, posY + (double)(rand.nextFloat() * height), (posZ + (double)(rand.nextFloat() * width * 2.0F) + (double)i) - (double)width, d, d1, d2);
-                world.spawnParticle(EnumParticleTypes.EXPLOSION_NORMAL, (posX + (double)(rand.nextFloat() * width * 2.0F)) - (double)width, posY + (double)(rand.nextFloat() * height), (posZ + (double)(rand.nextFloat() * width * 2.0F)) - (double)i - (double)width, d, d1, d2);
-                world.spawnParticle(EnumParticleTypes.EXPLOSION_NORMAL, ((posX + (double)(rand.nextFloat() * width * 2.0F)) - (double)width) + (double)i, posY + (double)(rand.nextFloat() * height), (posZ + (double)(rand.nextFloat() * width * 2.0F) + (double)i) - (double)width, d, d1, d2);
-                world.spawnParticle(EnumParticleTypes.EXPLOSION_NORMAL, (posX + (double)(rand.nextFloat() * width * 2.0F)) - (double)width - (double)i, posY + (double)(rand.nextFloat() * height), (posZ + (double)(rand.nextFloat() * width * 2.0F)) - (double)i - (double)width, d, d1, d2);
-                world.spawnParticle(EnumParticleTypes.EXPLOSION_NORMAL, ((posX + (double)(rand.nextFloat() * width * 2.0F)) - (double)width) + (double)i, posY + (double)(rand.nextFloat() * height), (posZ + (double)(rand.nextFloat() * width * 2.0F) + (double)i) - (double)width, d, d1, d2);
-                world.spawnParticle(EnumParticleTypes.EXPLOSION_NORMAL, (posX + (double)(rand.nextFloat() * width * 2.0F)) - (double)width - (double)i, posY + (double)(rand.nextFloat() * height), (posZ + (double)(rand.nextFloat() * width * 2.0F)) - (double)i - (double)width, d, d1, d2);
+                world.spawnParticle(EnumParticleTypes.EXPLOSION_NORMAL, ((posX + (double) (rand.nextFloat() * width * 2.0F)) - (double) width) + (double) i, posY + (double) (rand.nextFloat() * height), (posZ + (double) (rand.nextFloat() * width * 2.0F)) - (double) width, d, d1, d2);
+                world.spawnParticle(EnumParticleTypes.EXPLOSION_NORMAL, (posX + (double) (rand.nextFloat() * width * 2.0F)) - (double) width - (double) i, posY + (double) (rand.nextFloat() * height), (posZ + (double) (rand.nextFloat() * width * 2.0F)) - (double) width, d, d1, d2);
+                world.spawnParticle(EnumParticleTypes.EXPLOSION_NORMAL, (posX + (double) (rand.nextFloat() * width * 2.0F)) - (double) width, posY + (double) (rand.nextFloat() * height), (posZ + (double) (rand.nextFloat() * width * 2.0F) + (double) i) - (double) width, d, d1, d2);
+                world.spawnParticle(EnumParticleTypes.EXPLOSION_NORMAL, (posX + (double) (rand.nextFloat() * width * 2.0F)) - (double) width, posY + (double) (rand.nextFloat() * height), (posZ + (double) (rand.nextFloat() * width * 2.0F)) - (double) i - (double) width, d, d1, d2);
+                world.spawnParticle(EnumParticleTypes.EXPLOSION_NORMAL, ((posX + (double) (rand.nextFloat() * width * 2.0F)) - (double) width) + (double) i, posY + (double) (rand.nextFloat() * height), (posZ + (double) (rand.nextFloat() * width * 2.0F) + (double) i) - (double) width, d, d1, d2);
+                world.spawnParticle(EnumParticleTypes.EXPLOSION_NORMAL, (posX + (double) (rand.nextFloat() * width * 2.0F)) - (double) width - (double) i, posY + (double) (rand.nextFloat() * height), (posZ + (double) (rand.nextFloat() * width * 2.0F)) - (double) i - (double) width, d, d1, d2);
+                world.spawnParticle(EnumParticleTypes.EXPLOSION_NORMAL, ((posX + (double) (rand.nextFloat() * width * 2.0F)) - (double) width) + (double) i, posY + (double) (rand.nextFloat() * height), (posZ + (double) (rand.nextFloat() * width * 2.0F) + (double) i) - (double) width, d, d1, d2);
+                world.spawnParticle(EnumParticleTypes.EXPLOSION_NORMAL, (posX + (double) (rand.nextFloat() * width * 2.0F)) - (double) width - (double) i, posY + (double) (rand.nextFloat() * height), (posZ + (double) (rand.nextFloat() * width * 2.0F)) - (double) i - (double) width, d, d1, d2);
             }
         }
     }
 
-    private void smokeVictim(Entity entity)
-    {
-        for (int i = 0; i < 4; i++)
-        {
-            for (int j = 0; j < 5; j++)
-            {
+    private void smokeVictim(Entity entity) {
+        for (int i = 0; i < 4; i++) {
+            for (int j = 0; j < 5; j++) {
                 double d = rand.nextGaussian() * 0.02D;
                 double d1 = rand.nextGaussian() * 0.02D;
                 double d2 = rand.nextGaussian() * 0.02D;
-                world.spawnParticle(EnumParticleTypes.EXPLOSION_NORMAL, (entity.posX + (double)(rand.nextFloat() * width * 2.0F)) - (double)width, (entity.posY + (double)(rand.nextFloat() * height) + (double)i) - 2D, (entity.posZ + (double)(rand.nextFloat() * width * 2.0F)) - (double)width, d, d1, d2);
+                world.spawnParticle(EnumParticleTypes.EXPLOSION_NORMAL, (entity.posX + (double) (rand.nextFloat() * width * 2.0F)) - (double) width, (entity.posY + (double) (rand.nextFloat() * height) + (double) i) - 2D, (entity.posZ + (double) (rand.nextFloat() * width * 2.0F)) - (double) width, d, d1, d2);
             }
         }
     }
 
     @Override
-    public boolean attackEntityFrom(@Nonnull DamageSource source, float amount)
-    {
+    public boolean attackEntityFrom(@Nonnull DamageSource source, float amount) {
         boolean flag = super.attackEntityFrom(source, amount);
 
-        if (flag)
-        {
+        if (flag) {
             Entity attacker = source.getTrueSource();
 
-            if (getHasVictim() && attacker != null && !(attacker instanceof EntityRocket))
-            {
+            if (getHasVictim() && attacker != null && !(attacker instanceof EntityRocket)) {
                 attacker.motionX += rand.nextFloat() * 1.98F;
 
                 attacker.motionY += rand.nextFloat() * 1.98F;
@@ -418,13 +356,10 @@ public class EntityPreacher extends EntityCreepBase implements IMob
                 attacker.motionZ += rand.nextFloat() * 1.98F;
 
                 return true;
-            }
-            else if (attacker instanceof EntityRocket)
-            {
+            } else if (attacker instanceof EntityRocket) {
                 attacker = world.getClosestPlayerToEntity(this, 30.0d);
 
-                if (attacker != null)
-                {
+                if (attacker != null) {
                     attacker.dismountRidingEntity();
 
                     setVictim(attacker);
@@ -443,8 +378,7 @@ public class EntityPreacher extends EntityCreepBase implements IMob
                 }
             }
 
-            if (attacker != null)
-            {
+            if (attacker != null) {
                 setRaise(1);
 
                 setWaitTime(0);

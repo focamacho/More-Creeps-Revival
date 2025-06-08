@@ -17,8 +17,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
 
-public class EntityEvilChicken extends EntityCreepBase implements IMob, IEntityCanChangeSize
-{
+public class EntityEvilChicken extends EntityCreepBase implements IMob, IEntityCanChangeSize {
     public float wingRotation;
     public float destPos;
     public float oFlapSpeed;
@@ -26,8 +25,7 @@ public class EntityEvilChicken extends EntityCreepBase implements IMob, IEntityC
     public float wingRotDelta = 1.0F;
     public int timeUntilNextEgg;
 
-    public EntityEvilChicken(World worldIn)
-    {
+    public EntityEvilChicken(World worldIn) {
         super(worldIn);
 
         setCreepTypeName("Evil Chicken");
@@ -48,14 +46,12 @@ public class EntityEvilChicken extends EntityCreepBase implements IMob, IEntityC
     }
 
     @Override
-    protected void updateTexture()
-    {
+    protected void updateTexture() {
         setTexture("textures/entity/evilchicken.png");
     }
 
     @Override
-    public void initEntityAI()
-    {
+    public void initEntityAI() {
         clearAITasks();
 
         NodeProcessor nodeProcessor = getNavigator().getNodeProcessor();
@@ -82,54 +78,46 @@ public class EntityEvilChicken extends EntityCreepBase implements IMob, IEntityC
     }
 
     @Override
-    protected SoundEvent getAmbientSound()
-    {
+    protected SoundEvent getAmbientSound() {
         return SoundEvents.ENTITY_CHICKEN_AMBIENT;
     }
 
     @Override
-    protected SoundEvent getHurtSound(DamageSource damageSource)
-    {
+    protected SoundEvent getHurtSound(DamageSource damageSource) {
         return SoundEvents.ENTITY_CHICKEN_HURT;
     }
 
     @Override
-    protected SoundEvent getDeathSound()
-    {
+    protected SoundEvent getDeathSound() {
         return SoundEvents.ENTITY_CHICKEN_DEATH;
     }
 
     @Override
-    protected Item getDropItem()
-    {
+    protected Item getDropItem() {
         return Items.FEATHER;
     }
 
-    public void onLivingUpdate()
-    {
+    public void onLivingUpdate() {
         super.onLivingUpdate();
 
         this.oFlap = this.wingRotation;
         this.oFlapSpeed = this.destPos;
-        this.destPos = (float)((double)this.destPos + (double)(this.onGround ? -1 : 4) * 0.3D);
+        this.destPos = (float) ((double) this.destPos + (double) (this.onGround ? -1 : 4) * 0.3D);
         this.destPos = MathHelper.clamp(this.destPos, 0.0F, 1.0F);
 
-        if (!this.onGround && this.wingRotDelta < 1.0F)
-        {
+        if (!this.onGround && this.wingRotDelta < 1.0F) {
             this.wingRotDelta = 1.0F;
         }
 
-        this.wingRotDelta = (float)((double)this.wingRotDelta * 0.9D);
+        this.wingRotDelta = (float) ((double) this.wingRotDelta * 0.9D);
 
-        if (!this.onGround && this.motionY < 0.0D)
-        {
+        if (!this.onGround && this.motionY < 0.0D) {
             this.motionY *= 0.6D;
         }
 
         this.wingRotation += this.wingRotDelta * 2.0F;
 
-        if (!this.world.isRemote && !this.isChild() && --this.timeUntilNextEgg <= 0)
-        {
+        if (!this.world.isRemote && !this.isChild() && --this.timeUntilNextEgg <= 0) {
             playSound(CreepsSoundHandler.evilEggBirthSound, 1.0f, 1.0f);
 
             this.playSound(SoundEvents.ENTITY_CHICKEN_EGG, getSoundVolume(), getSoundPitch());
@@ -141,33 +129,35 @@ public class EntityEvilChicken extends EntityCreepBase implements IMob, IEntityC
     }
 
     @Override
-    public void fall(float distance, float damageMultiplier)
-    {
+    public void fall(float distance, float damageMultiplier) {
     }
 
-    protected void playStepSound(BlockPos pos, Block blockIn)
-    {
+    protected void playStepSound(BlockPos pos, Block blockIn) {
         this.playSound(SoundEvents.ENTITY_CHICKEN_STEP, 0.15F, 1.0F);
     }
 
     @Override
-    public float maxShrink() { return 0.5f; }
+    public float maxShrink() {
+        return 0.5f;
+    }
 
     @Override
-    public float getShrinkRayAmount() { return 0.2f; }
+    public float getShrinkRayAmount() {
+        return 0.2f;
+    }
 
     @Override
     public void onShrink(EntityShrink source) {
 
     }
+
     @Override
     public float maxGrowth() {
         return 5.0f;
     }
 
     @Override
-    public float getGrowRayAmount()
-    {
+    public float getGrowRayAmount() {
         return 0.2F;
     }
 

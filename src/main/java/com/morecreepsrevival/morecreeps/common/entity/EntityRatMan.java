@@ -11,10 +11,8 @@ import net.minecraft.util.DamageSource;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.world.World;
 
-public class EntityRatMan extends EntityCreepBase implements IMob, IEntityCanChangeSize
-{
-    public EntityRatMan(World worldIn)
-    {
+public class EntityRatMan extends EntityCreepBase implements IMob, IEntityCanChangeSize {
+    public EntityRatMan(World worldIn) {
         super(worldIn);
 
         setCreepTypeName("Rat Man");
@@ -33,8 +31,7 @@ public class EntityRatMan extends EntityCreepBase implements IMob, IEntityCanCha
     }
 
     @Override
-    public void initEntityAI()
-    {
+    public void initEntityAI() {
         clearAITasks();
 
         NodeProcessor nodeProcessor = getNavigator().getNodeProcessor();
@@ -65,36 +62,29 @@ public class EntityRatMan extends EntityCreepBase implements IMob, IEntityCanCha
     }
 
     @Override
-    public int getMaxSpawnedInChunk()
-    {
+    public int getMaxSpawnedInChunk() {
         return 2;
     }
 
     @Override
-    protected void updateTexture()
-    {
+    protected void updateTexture() {
         setTexture("textures/entity/ratman.png");
     }
 
     @Override
-    protected void dropItemsOnDeath()
-    {
-        if (rand.nextInt(10) == 0)
-        {
+    protected void dropItemsOnDeath() {
+        if (rand.nextInt(10) == 0) {
             dropItem(Items.PORKCHOP, rand.nextInt(3) + 1);
         }
 
-        if (rand.nextInt(10) == 0)
-        {
+        if (rand.nextInt(10) == 0) {
             dropItem(Items.WHEAT_SEEDS, rand.nextInt(3) + 1);
         }
     }
 
     @Override
-    protected SoundEvent getAmbientSound()
-    {
-        if (rand.nextInt(2) == 0)
-        {
+    protected SoundEvent getAmbientSound() {
+        if (rand.nextInt(2) == 0) {
             return CreepsSoundHandler.ratManSound;
         }
 
@@ -102,22 +92,24 @@ public class EntityRatMan extends EntityCreepBase implements IMob, IEntityCanCha
     }
 
     @Override
-    protected SoundEvent getHurtSound(DamageSource damageSource)
-    {
+    protected SoundEvent getHurtSound(DamageSource damageSource) {
         return CreepsSoundHandler.ratManHurtSound;
     }
 
     @Override
-    protected SoundEvent getDeathSound()
-    {
+    protected SoundEvent getDeathSound() {
         return CreepsSoundHandler.ratManHurtSound;
     }
 
     @Override
-    public float maxShrink() { return 0.3f; }
+    public float maxShrink() {
+        return 0.3f;
+    }
 
     @Override
-    public float getShrinkRayAmount() { return 0.2f; }
+    public float getShrinkRayAmount() {
+        return 0.2f;
+    }
 
     @Override
     public void onShrink(EntityShrink source) {
@@ -130,8 +122,7 @@ public class EntityRatMan extends EntityCreepBase implements IMob, IEntityCanCha
     }
 
     @Override
-    public float getGrowRayAmount()
-    {
+    public float getGrowRayAmount() {
         return 0.2F;
     }
 

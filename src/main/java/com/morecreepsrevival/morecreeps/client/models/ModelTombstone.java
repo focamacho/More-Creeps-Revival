@@ -4,23 +4,19 @@ import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.model.ModelRenderer;
 import net.minecraft.entity.Entity;
 
-public class ModelTombstone extends ModelBase
-{
+public class ModelTombstone extends ModelBase {
     public ModelRenderer cross1;
     public ModelRenderer cross2;
 
-    public ModelTombstone()
-    {
+    public ModelTombstone() {
         this(0.0f);
     }
 
-    public ModelTombstone(float f)
-    {
+    public ModelTombstone(float f) {
         this(f, 0.0f);
     }
 
-    public ModelTombstone(float f, float f1)
-    {
+    public ModelTombstone(float f, float f1) {
         cross1 = new ModelRenderer(this, 0, 0);
         cross1.addBox(-1.5F, -13F, -1.5F, 3, 13, 3, 0.0F);
         cross1.setRotationPoint(0.0F, 25F, 0.0F);
@@ -38,8 +34,7 @@ public class ModelTombstone extends ModelBase
     }
 
     @Override
-    public void render(Entity entity, float f, float f1, float f2, float f3, float f4, float f5)
-    {
+    public void render(Entity entity, float f, float f1, float f2, float f3, float f4, float f5) {
         setRotationAngles(f, f1, f2, f3, f4, f5, entity);
         cross1.render(f5);
         cross2.render(f5);

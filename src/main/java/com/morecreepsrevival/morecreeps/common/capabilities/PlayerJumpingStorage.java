@@ -7,17 +7,14 @@ import net.minecraft.util.EnumFacing;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.Capability.IStorage;
 
-public class PlayerJumpingStorage implements IStorage<IPlayerJumping>
-{
+public class PlayerJumpingStorage implements IStorage<IPlayerJumping> {
     @Override
-    public NBTBase writeNBT(Capability<IPlayerJumping> capability, IPlayerJumping instance, EnumFacing side)
-    {
-        return new NBTTagByte((byte)(instance.getJumping() ? 1 : 0));
+    public NBTBase writeNBT(Capability<IPlayerJumping> capability, IPlayerJumping instance, EnumFacing side) {
+        return new NBTTagByte((byte) (instance.getJumping() ? 1 : 0));
     }
 
     @Override
-    public void readNBT(Capability<IPlayerJumping> capability, IPlayerJumping instance, EnumFacing side, NBTBase nbtBase)
-    {
-        instance.setJumping(((NBTPrimitive)nbtBase).getByte() == 1);
+    public void readNBT(Capability<IPlayerJumping> capability, IPlayerJumping instance, EnumFacing side, NBTBase nbtBase) {
+        instance.setJumping(((NBTPrimitive) nbtBase).getByte() == 1);
     }
 }

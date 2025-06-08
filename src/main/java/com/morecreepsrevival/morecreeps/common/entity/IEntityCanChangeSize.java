@@ -4,15 +4,17 @@ public interface IEntityCanChangeSize {
     /**
      * The maximun size this entity can be.
      */
-    float maxGrowth ();
+    float maxGrowth();
+
     /**
      * The amount a grow ray grows this entity when it hits.
      */
-    float getGrowRayAmount ();
+    float getGrowRayAmount();
+
     /**
      * What happens when this entity grows.
      */
-    void onGrow (EntityGrow source);
+    void onGrow(EntityGrow source);
 
     /**
      * The smallest size this entity can be.

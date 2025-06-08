@@ -20,8 +20,7 @@ import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.world.World;
 
-public class EntityThief extends EntityCreepBase implements IMob, IEntityCanChangeSize
-{
+public class EntityThief extends EntityCreepBase implements IMob, IEntityCanChangeSize {
     private static final DataParameter<Boolean> stolen = EntityDataManager.<Boolean>createKey(EntityThief.class, DataSerializers.BOOLEAN);
 
     private static final DataParameter<ItemStack> ITEM = EntityDataManager.createKey(EntityThief.class, DataSerializers.ITEM_STACK);
@@ -30,15 +29,14 @@ public class EntityThief extends EntityCreepBase implements IMob, IEntityCanChan
 
     private double goZ;
 
-    public EntityThief(World worldIn)
-    {
+    public EntityThief(World worldIn) {
         super(worldIn);
 
         setCreepTypeName("Thief");
 
         creatureType = EnumCreatureType.MONSTER;
 
-        baseHealth = (float)rand.nextInt(20) + 10.0f;
+        baseHealth = (float) rand.nextInt(20) + 10.0f;
 
         baseSpeed = 0.35d;
 
@@ -46,14 +44,12 @@ public class EntityThief extends EntityCreepBase implements IMob, IEntityCanChan
     }
 
     @Override
-    public boolean canDespawn()
-    {
+    public boolean canDespawn() {
         return !getStolen();
     }
 
     @Override
-    protected void entityInit()
-    {
+    protected void entityInit() {
         super.entityInit();
 
         dataManager.register(stolen, Boolean.valueOf(false));
@@ -62,14 +58,12 @@ public class EntityThief extends EntityCreepBase implements IMob, IEntityCanChan
     }
 
     @Override
-    protected void updateTexture()
-    {
+    protected void updateTexture() {
         setTexture("textures/entity/thief.png");
     }
 
     @Override
-    protected void initEntityAI()
-    {
+    protected void initEntityAI() {
         clearAITasks();
 
         NodeProcessor nodeProcessor = getNavigator().getNodeProcessor();
@@ -96,126 +90,95 @@ public class EntityThief extends EntityCreepBase implements IMob, IEntityCanChan
     }
 
     @Override
-    public void onLivingUpdate()
-    {
+    public void onLivingUpdate() {
         super.onLivingUpdate();
 
-        if (getHeldItem(EnumHand.MAIN_HAND).getItem() != dataManager.get(ITEM).getItem())
-        {
+        if (getHeldItem(EnumHand.MAIN_HAND).getItem() != dataManager.get(ITEM).getItem()) {
             setHeldItem(EnumHand.MAIN_HAND, dataManager.get(ITEM).copy());
         }
 
-        if (world.getClosestPlayerToEntity(this, 25.0d) != null && !getStolen())
-        {
+        if (world.getClosestPlayerToEntity(this, 25.0d) != null && !getStolen()) {
             findPlayerToAttack();
-        }
-        else
-        {
+        } else {
             setAttackTarget(null);
         }
 
-        if (getStolen())
-        {
+        if (getStolen()) {
             setAttackTarget(null);
 
-            if (isJumping)
-            {
+            if (isJumping) {
                 motionX += goX * 0.30000001192092896d;
 
                 motionZ += goZ * 0.30000001192092896d;
-            }
-            else
-            {
+            } else {
                 motionX += goX;
 
                 motionZ += goZ;
             }
 
-            if (prevPosY / posY == 1.0d)
-            {
-                if (rand.nextInt(25) == 0)
-                {
+            if (prevPosY / posY == 1.0d) {
+                if (rand.nextInt(25) == 0) {
                     motionX -= goX;
-                }
-                else
-                {
+                } else {
                     motionX += goX;
                 }
 
-                if (rand.nextInt(25) == 0)
-                {
+                if (rand.nextInt(25) == 0) {
                     motionZ -= goZ;
-                }
-                else
-                {
+                } else {
                     motionZ += goZ;
                 }
             }
 
-            if (prevPosX == posX && rand.nextInt(50) == 0)
-            {
+            if (prevPosX == posX && rand.nextInt(50) == 0) {
                 goX *= -1.0d;
             }
 
-            if (prevPosZ == posZ && rand.nextInt(50) == 0)
-            {
+            if (prevPosZ == posZ && rand.nextInt(50) == 0) {
                 goZ *= -1.0d;
             }
 
-            if (rand.nextInt(500) == 0)
-            {
+            if (rand.nextInt(500) == 0) {
                 goX *= -1.0d;
             }
 
-            if (rand.nextInt(700) == 0)
-            {
+            if (rand.nextInt(700) == 0) {
                 goZ *= -1.0d;
             }
-        }
-        else
-        {
+        } else {
             EntityLivingBase target = getAttackTarget();
 
-            if (target instanceof EntityPlayer && getDistanceSq(target) < 16.0d && canEntityBeSeen(target) && getHealth() > 0)
-            {
-                EntityPlayer player = (EntityPlayer)target;
+            if (target instanceof EntityPlayer && getDistanceSq(target) < 16.0d && canEntityBeSeen(target) && getHealth() > 0) {
+                EntityPlayer player = (EntityPlayer) target;
 
                 ItemStack itemStack = null;
 
-                for (ItemStack itemStack1 : player.inventory.mainInventory)
-                {
-                    if (!itemStack1.isEmpty())
-                    {
+                for (ItemStack itemStack1 : player.inventory.mainInventory) {
+                    if (!itemStack1.isEmpty()) {
                         itemStack = itemStack1;
 
-                        if (rand.nextInt(4) == 0)
-                        {
+                        if (rand.nextInt(4) == 0) {
                             break;
                         }
                     }
                 }
 
-                if (itemStack == null)
-                {
+                if (itemStack == null) {
                     setAttackTarget(null);
-                }
-                else
-                {
+                } else {
                     playSound(SoundEvents.BLOCK_LAVA_POP, getSoundVolume(), (rand.nextFloat() - rand.nextFloat()) * 6.2f + 1.0f);
 
                     int count = itemStack.getCount();
 
                     int stolenAmount = rand.nextInt(count) + 1;
 
-                    if (stolenAmount > count)
-                    {
+                    if (stolenAmount > count) {
                         stolenAmount = count;
                     }
 
                     setStolen(true);
 
-                    if (!world.isRemote)
-                    {
+                    if (!world.isRemote) {
                         ItemStack copy = itemStack.copy();
 
                         copy.setCount(stolenAmount);
@@ -235,19 +198,16 @@ public class EntityThief extends EntityCreepBase implements IMob, IEntityCanChan
 
                     goZ = 0.044999999999999998d;
 
-                    if (rand.nextInt(5) == 0)
-                    {
+                    if (rand.nextInt(5) == 0) {
                         goX *= -1.0d;
                     }
 
-                    if (rand.nextInt(5) == 0)
-                    {
+                    if (rand.nextInt(5) == 0) {
                         goZ *= -1.0d;
                     }
 
-                    for (int i = 0; i < 10; i++)
-                    {
-                        world.spawnParticle(EnumParticleTypes.SMOKE_LARGE, (posX + (double)(rand.nextFloat() * width * 2.0f)) - (double)width, posY + (double)(rand.nextFloat() * height), (posZ + (double)(rand.nextFloat() * width * 2.0f)) - (double)width, rand.nextGaussian() * 0.02d, rand.nextGaussian() * 0.02d, rand.nextGaussian() * 0.02d);
+                    for (int i = 0; i < 10; i++) {
+                        world.spawnParticle(EnumParticleTypes.SMOKE_LARGE, (posX + (double) (rand.nextFloat() * width * 2.0f)) - (double) width, posY + (double) (rand.nextFloat() * height), (posZ + (double) (rand.nextFloat() * width * 2.0f)) - (double) width, rand.nextGaussian() * 0.02d, rand.nextGaussian() * 0.02d, rand.nextGaussian() * 0.02d);
                     }
                 }
             }
@@ -255,56 +215,44 @@ public class EntityThief extends EntityCreepBase implements IMob, IEntityCanChan
     }
 
     @Override
-    protected SoundEvent getAmbientSound()
-    {
+    protected SoundEvent getAmbientSound() {
         return CreepsSoundHandler.thiefSound;
     }
 
     @Override
-    protected SoundEvent getHurtSound(DamageSource damageSource)
-    {
+    protected SoundEvent getHurtSound(DamageSource damageSource) {
         return CreepsSoundHandler.thiefHurtSound;
     }
 
     @Override
-    protected SoundEvent getDeathSound()
-    {
+    protected SoundEvent getDeathSound() {
         return CreepsSoundHandler.thiefDeathSound;
     }
 
     @Override
-    public int getMaxSpawnedInChunk()
-    {
+    public int getMaxSpawnedInChunk() {
         return 1;
     }
 
-    public void setStolen(boolean b)
-    {
+    public boolean getStolen() {
+        return ((Boolean) dataManager.get(stolen)).booleanValue();
+    }
+
+    public void setStolen(boolean b) {
         dataManager.set(stolen, Boolean.valueOf(b));
     }
 
-    public boolean getStolen()
-    {
-        return ((Boolean)dataManager.get(stolen)).booleanValue();
-    }
-
-    public void findPlayerToAttack()
-    {
-        if (getStolen() || getAttackTarget() != null)
-        {
+    public void findPlayerToAttack() {
+        if (getStolen() || getAttackTarget() != null) {
             return;
         }
 
         EntityPlayer player = world.getNearestPlayerNotCreative(this, 16.0d);
 
-        if (player != null)
-        {
-            for (ItemStack itemStack : player.inventory.mainInventory)
-            {
-                if (!itemStack.isEmpty())
-                {
-                    if (rand.nextInt(2) == 0)
-                    {
+        if (player != null) {
+            for (ItemStack itemStack : player.inventory.mainInventory) {
+                if (!itemStack.isEmpty()) {
+                    if (rand.nextInt(2) == 0) {
                         playSound(CreepsSoundHandler.thiefFindPlayerSound, getSoundVolume(), getSoundPitch());
                     }
 
@@ -317,8 +265,7 @@ public class EntityThief extends EntityCreepBase implements IMob, IEntityCanChan
     }
 
     @Override
-    public void writeEntityToNBT(NBTTagCompound compound)
-    {
+    public void writeEntityToNBT(NBTTagCompound compound) {
         super.writeEntityToNBT(compound);
 
         NBTTagCompound props = compound.getCompoundTag("MoreCreepsThief");
@@ -331,14 +278,12 @@ public class EntityThief extends EntityCreepBase implements IMob, IEntityCanChan
     }
 
     @Override
-    public void readEntityFromNBT(NBTTagCompound compound)
-    {
+    public void readEntityFromNBT(NBTTagCompound compound) {
         super.readEntityFromNBT(compound);
 
         NBTTagCompound props = compound.getCompoundTag("MoreCreepsThief");
 
-        if (props.hasKey("Stolen"))
-        {
+        if (props.hasKey("Stolen")) {
             setStolen(props.getBoolean("Stolen"));
         }
 
@@ -348,26 +293,27 @@ public class EntityThief extends EntityCreepBase implements IMob, IEntityCanChan
     }
 
     @Override
-    protected void dropItemsOnDeath()
-    {
+    protected void dropItemsOnDeath() {
         ItemStack itemStack = dataManager.get(ITEM).copy();
 
-        if (!itemStack.isEmpty())
-        {
+        if (!itemStack.isEmpty()) {
             entityDropItem(itemStack, 0.0f);
         }
     }
 
     @Override
-    protected void dropEquipment(boolean wasRecentlyHit, int lootingModifier)
-    {
+    protected void dropEquipment(boolean wasRecentlyHit, int lootingModifier) {
     }
 
     @Override
-    public float maxShrink() { return 0.4f; }
+    public float maxShrink() {
+        return 0.4f;
+    }
 
     @Override
-    public float getShrinkRayAmount() { return 0.2f; }
+    public float getShrinkRayAmount() {
+        return 0.2f;
+    }
 
     @Override
     public void onShrink(EntityShrink source) {
@@ -380,8 +326,7 @@ public class EntityThief extends EntityCreepBase implements IMob, IEntityCanChan
     }
 
     @Override
-    public float getGrowRayAmount()
-    {
+    public float getGrowRayAmount() {
         return 0.2F;
     }
 

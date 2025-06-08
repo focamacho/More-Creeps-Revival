@@ -5,11 +5,9 @@ import net.minecraft.client.renderer.entity.Render;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraftforge.fml.client.registry.IRenderFactory;
 
-public class RenderRatManFactory implements IRenderFactory<EntityRatMan>
-{
+public class RenderRatManFactory implements IRenderFactory<EntityRatMan> {
     @Override
-    public Render<? super EntityRatMan> createRenderFor(RenderManager renderManager)
-    {
+    public Render<? super EntityRatMan> createRenderFor(RenderManager renderManager) {
         return new RenderRatMan<>(renderManager);
     }
 }

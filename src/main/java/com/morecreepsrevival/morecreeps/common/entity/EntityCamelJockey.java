@@ -13,10 +13,8 @@ import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
-public class EntityCamelJockey extends EntityCreepBase implements IEntityCanChangeSize
-{
-    public EntityCamelJockey(World worldIn)
-    {
+public class EntityCamelJockey extends EntityCreepBase implements IEntityCanChangeSize {
+    public EntityCamelJockey(World worldIn) {
         super(worldIn);
 
         setCreepTypeName("Camel Jockey");
@@ -33,14 +31,12 @@ public class EntityCamelJockey extends EntityCreepBase implements IEntityCanChan
     }
 
     @Override
-    protected void updateTexture()
-    {
+    protected void updateTexture() {
         setTexture("textures/entity/jockey.png");
     }
 
     @Override
-    public void initEntityAI()
-    {
+    public void initEntityAI() {
         clearAITasks();
 
         NodeProcessor nodeProcessor = getNavigator().getNodeProcessor();
@@ -69,60 +65,47 @@ public class EntityCamelJockey extends EntityCreepBase implements IEntityCanChan
     }
 
     @Override
-    public void onLivingUpdate()
-    {
+    public void onLivingUpdate() {
         super.onLivingUpdate();
 
-        if (handleWaterMovement())
-        {
+        if (handleWaterMovement()) {
             motionY = 0.15999999642372131d;
         }
 
-        if (!isRiding())
-        {
-            for (Entity entity : world.loadedEntityList)
-            {
-                if (entity instanceof EntityCamel && !entity.isBeingRidden())
-                {
-                    EntityCamel camel = (EntityCamel)entity;
+        if (!isRiding()) {
+            for (Entity entity : world.loadedEntityList) {
+                if (entity instanceof EntityCamel && !entity.isBeingRidden()) {
+                    EntityCamel camel = (EntityCamel) entity;
 
-                    if (!camel.isTamed())
-                    {
+                    if (!camel.isTamed()) {
                         double d = camel.getDistanceSq(this);
 
-                        if (d < 4.0d)
-                        {
+                        if (d < 4.0d) {
                             camel.untame();
 
                             startRiding(camel);
                         }
 
-                        if (d < 16.0d && camel.canEntityBeSeen(this))
-                        {
+                        if (d < 16.0d && camel.canEntityBeSeen(this)) {
                             attackEntityAsMob(camel);
                         }
                     }
                 }
             }
-        }
-        else
-        {
+        } else {
             Entity ridingEnt = getRidingEntity();
 
-            if (ridingEnt != null)
-            {
+            if (ridingEnt != null) {
                 rotationYaw = ridingEnt.rotationYaw;
             }
         }
     }
 
     @Override
-    public float getBlockPathWeight(BlockPos blockPos)
-    {
+    public float getBlockPathWeight(BlockPos blockPos) {
         Block block = world.getBlockState(blockPos).getBlock();
 
-        if (block == Blocks.SAND || block == Blocks.GRAVEL)
-        {
+        if (block == Blocks.SAND || block == Blocks.GRAVEL) {
             return 10.0f;
         }
 
@@ -130,30 +113,24 @@ public class EntityCamelJockey extends EntityCreepBase implements IEntityCanChan
     }
 
     @Override
-    public int getMaxSpawnedInChunk()
-    {
+    public int getMaxSpawnedInChunk() {
         return 2;
     }
 
     @Override
-    protected void dropItemsOnDeath()
-    {
-        if (rand.nextInt(10) == 0)
-        {
+    protected void dropItemsOnDeath() {
+        if (rand.nextInt(10) == 0) {
             dropItem(Items.PORKCHOP, rand.nextInt(3) + 1);
         }
 
-        if (rand.nextInt(10) == 0)
-        {
+        if (rand.nextInt(10) == 0) {
             dropItem(Items.REEDS, rand.nextInt(3) + 1);
         }
     }
 
     @Override
-    protected SoundEvent getAmbientSound()
-    {
-        if (isRiding())
-        {
+    protected SoundEvent getAmbientSound() {
+        if (isRiding()) {
             return CreepsSoundHandler.camelJockeyGetSound;
         }
 
@@ -161,22 +138,24 @@ public class EntityCamelJockey extends EntityCreepBase implements IEntityCanChan
     }
 
     @Override
-    protected SoundEvent getHurtSound(DamageSource damageSource)
-    {
+    protected SoundEvent getHurtSound(DamageSource damageSource) {
         return CreepsSoundHandler.camelJockeyHurtSound;
     }
 
     @Override
-    protected SoundEvent getDeathSound()
-    {
+    protected SoundEvent getDeathSound() {
         return CreepsSoundHandler.camelJockeyDeathSound;
     }
 
     @Override
-    public float maxShrink() { return 0.4f; }
+    public float maxShrink() {
+        return 0.4f;
+    }
 
     @Override
-    public float getShrinkRayAmount() { return 0.2f; }
+    public float getShrinkRayAmount() {
+        return 0.2f;
+    }
 
     @Override
     public void onShrink(EntityShrink source) {
@@ -189,8 +168,7 @@ public class EntityCamelJockey extends EntityCreepBase implements IEntityCanChan
     }
 
     @Override
-    public float getGrowRayAmount()
-    {
+    public float getGrowRayAmount() {
         return 0.2F;
     }
 

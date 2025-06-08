@@ -25,8 +25,7 @@ import net.minecraft.world.World;
 
 import javax.annotation.Nonnull;
 
-public class EntityEvilScientist extends EntityCreepBase implements IMob, IEntityCanChangeSize
-{
+public class EntityEvilScientist extends EntityCreepBase implements IMob, IEntityCanChangeSize {
     private static final DataParameter<Integer> stage = EntityDataManager.createKey(EntityEvilScientist.class, DataSerializers.VARINT);
 
     private static final DataParameter<Boolean> trulyEvil = EntityDataManager.<Boolean>createKey(EntityEvilScientist.class, DataSerializers.BOOLEAN);
@@ -45,8 +44,7 @@ public class EntityEvilScientist extends EntityCreepBase implements IMob, IEntit
 
     private static final DataParameter<Boolean> water = EntityDataManager.<Boolean>createKey(EntityEvilScientist.class, DataSerializers.BOOLEAN);
 
-    public EntityEvilScientist(World worldIn)
-    {
+    public EntityEvilScientist(World worldIn) {
         super(worldIn);
 
         setCreepTypeName("Evil Scientist");
@@ -55,7 +53,7 @@ public class EntityEvilScientist extends EntityCreepBase implements IMob, IEntit
 
         isImmuneToFire = true;
 
-        baseHealth = (float)rand.nextInt(30) + 10.0f;
+        baseHealth = (float) rand.nextInt(30) + 10.0f;
 
         baseSpeed = 0.3d;
 
@@ -63,8 +61,7 @@ public class EntityEvilScientist extends EntityCreepBase implements IMob, IEntit
     }
 
     @Override
-    protected void entityInit()
-    {
+    protected void entityInit() {
         super.entityInit();
 
         dataManager.register(stage, 0);
@@ -87,8 +84,7 @@ public class EntityEvilScientist extends EntityCreepBase implements IMob, IEntit
     }
 
     @Override
-    public void initEntityAI()
-    {
+    public void initEntityAI() {
         clearAITasks();
 
         NodeProcessor nodeProcessor = getNavigator().getNodeProcessor();
@@ -113,101 +109,80 @@ public class EntityEvilScientist extends EntityCreepBase implements IMob, IEntit
     }
 
     @Override
-    protected void updateTexture()
-    {
-        if (getTrulyEvil())
-        {
+    protected void updateTexture() {
+        if (getTrulyEvil()) {
             setTexture("textures/entity/evilscientistblown.png");
-        }
-        else
-        {
+        } else {
             setTexture("textures/entity/evilscientist.png");
         }
     }
 
-    protected void setStage(int i)
-    {
-        dataManager.set(stage, i);
-    }
-
-    public int getStage()
-    {
+    public int getStage() {
         return dataManager.get(stage);
     }
 
-    protected void setTrulyEvil(boolean b)
-    {
-        dataManager.set(trulyEvil, Boolean.valueOf(b));
+    protected void setStage(int i) {
+        dataManager.set(stage, i);
     }
 
     @Override
-    protected double getMoveSpeed()
-    {
-        if (getTrulyEvil())
-        {
+    protected double getMoveSpeed() {
+        if (getTrulyEvil()) {
             return 0.5d;
         }
 
         return super.getMoveSpeed();
     }
 
-    public boolean getTrulyEvil()
-    {
-        return ((Boolean)dataManager.get(trulyEvil)).booleanValue();
+    public boolean getTrulyEvil() {
+        return ((Boolean) dataManager.get(trulyEvil)).booleanValue();
+    }
+
+    protected void setTrulyEvil(boolean b) {
+        dataManager.set(trulyEvil, Boolean.valueOf(b));
     }
 
     @Override
-    protected SoundEvent getAmbientSound()
-    {
+    protected SoundEvent getAmbientSound() {
         return CreepsSoundHandler.evilLaughSound;
     }
 
     @Override
-    protected SoundEvent getHurtSound(DamageSource damageSource)
-    {
+    protected SoundEvent getHurtSound(DamageSource damageSource) {
         return CreepsSoundHandler.evilHurtSound;
     }
 
     @Override
-    protected SoundEvent getDeathSound()
-    {
+    protected SoundEvent getDeathSound() {
         return CreepsSoundHandler.evilExplosionSound;
     }
 
 
     @Override
-    protected void dropItemsOnDeath()
-    {
-        if (rand.nextInt(5) == 0)
-        {
+    protected void dropItemsOnDeath() {
+        if (rand.nextInt(5) == 0) {
             dropItem(Items.COOKED_PORKCHOP, rand.nextInt(3) + 1);
-        }
-        else
-        {
+        } else {
             dropItem(Item.getItemFromBlock(Blocks.SAND), rand.nextInt(3) + 1);
         }
     }
 
     @Override
-    public void onDeath(@Nonnull DamageSource damageSource)
-    {
+    public void onDeath(@Nonnull DamageSource damageSource) {
         tearDownTower();
 
         super.onDeath(damageSource);
     }
 
     @Override
-    public void setDead()
-    {
+    public void setDead() {
         tearDownTower();
 
         super.setDead();
     }
 
-    private void tearDownTower()
-    {
-        if (!getTowerBuilt())
-        {
+    private void tearDownTower() {
+        if (!getTowerBuilt()) {
             return;
         }
 
@@ -219,19 +194,14 @@ public class EntityEvilScientist extends EntityCreepBase implements IMob, IEntit
 
         int towerZ = blockPos.getZ();
 
-        for (int b = 0; b < getTowerHeight() + 1; b++)
-        {
+        for (int b = 0; b < getTowerHeight() + 1; b++) {
             world.setBlockToAir(new BlockPos(towerX, towerY + b, towerZ));
 
-            for (int c = 0; c < 3; c++)
-            {
-                for (int d = 0; d < 3; d++)
-                {
-                    for (int k = 0; k < 4; k++)
-                    {
-                        for (int j = 0; j < 10; j++)
-                        {
-                            world.spawnParticle(EnumParticleTypes.SMOKE_LARGE, ((double)(2.0F + (float)towerX) + (double)(rand.nextFloat() * width * 2.0F)) - (double)width, (double)(1.0F + (float)towerY + (float)b) + (double)(rand.nextFloat() * height) + 2D, (2D + ((double)towerZ + (double)(rand.nextFloat() * width * 2.0F))) - (double)width, rand.nextGaussian() * 0.02d, rand.nextGaussian() * 0.02d, rand.nextGaussian() * 0.02d);
+            for (int c = 0; c < 3; c++) {
+                for (int d = 0; d < 3; d++) {
+                    for (int k = 0; k < 4; k++) {
+                        for (int j = 0; j < 10; j++) {
+                            world.spawnParticle(EnumParticleTypes.SMOKE_LARGE, ((double) (2.0F + (float) towerX) + (double) (rand.nextFloat() * width * 2.0F)) - (double) width, (double) (1.0F + (float) towerY + (float) b) + (double) (rand.nextFloat() * height) + 2D, (2D + ((double) towerZ + (double) (rand.nextFloat() * width * 2.0F))) - (double) width, rand.nextGaussian() * 0.02d, rand.nextGaussian() * 0.02d, rand.nextGaussian() * 0.02d);
                         }
                     }
 
@@ -246,54 +216,44 @@ public class EntityEvilScientist extends EntityCreepBase implements IMob, IEntit
     }
 
     @Override
-    public int getMaxSpawnedInChunk()
-    {
+    public int getMaxSpawnedInChunk() {
         return 1;
     }
 
-    protected void setTowerBuilt(boolean b)
-    {
+    public boolean getTowerBuilt() {
+        return ((Boolean) dataManager.get(towerBuilt)).booleanValue();
+    }
+
+    protected void setTowerBuilt(boolean b) {
         dataManager.set(towerBuilt, Boolean.valueOf(b));
     }
 
-    public boolean getTowerBuilt()
-    {
-        return ((Boolean)dataManager.get(towerBuilt)).booleanValue();
+    public boolean getExperimentStart() {
+        return ((Boolean) dataManager.get(experimentStart)).booleanValue();
     }
 
-    protected void setExperimentStart(boolean b)
-    {
+    protected void setExperimentStart(boolean b) {
         dataManager.set(experimentStart, Boolean.valueOf(b));
     }
 
-    public boolean getExperimentStart()
-    {
-        return ((Boolean)dataManager.get(experimentStart)).booleanValue();
-    }
-
-    protected void setExperimentTimer(int i)
-    {
-        dataManager.set(experimentTimer, i);
-    }
-
-    public int getExperimentTimer()
-    {
+    public int getExperimentTimer() {
         return dataManager.get(experimentTimer);
     }
 
-    protected void setNumExperiments(int i)
-    {
-        dataManager.set(numExperiments, i);
+    protected void setExperimentTimer(int i) {
+        dataManager.set(experimentTimer, i);
     }
 
-    public int getNumExperiments()
-    {
+    public int getNumExperiments() {
         return dataManager.get(numExperiments);
     }
 
+    protected void setNumExperiments(int i) {
+        dataManager.set(numExperiments, i);
+    }
+
     @Override
-    public void writeEntityToNBT(NBTTagCompound compound)
-    {
+    public void writeEntityToNBT(NBTTagCompound compound) {
         super.writeEntityToNBT(compound);
 
         NBTTagCompound props = compound.getCompoundTag("MoreCreepsEvilScientist");
@@ -324,74 +284,60 @@ public class EntityEvilScientist extends EntityCreepBase implements IMob, IEntit
     }
 
     @Override
-    public void readEntityFromNBT(NBTTagCompound compound)
-    {
+    public void readEntityFromNBT(NBTTagCompound compound) {
         super.readEntityFromNBT(compound);
 
         NBTTagCompound props = compound.getCompoundTag("MoreCreepsEvilScientist");
 
-        if (props.hasKey("ExperimentTimer"))
-        {
+        if (props.hasKey("ExperimentTimer")) {
             setExperimentTimer(props.getInteger("ExperimentTimer"));
         }
 
-        if (props.hasKey("ExperimentStart"))
-        {
+        if (props.hasKey("ExperimentStart")) {
             setExperimentStart(props.getBoolean("ExperimentStart"));
         }
 
-        if (props.hasKey("Stage"))
-        {
+        if (props.hasKey("Stage")) {
             setStage(props.getInteger("Stage"));
         }
 
-        if (props.hasKey("NumExperiments"))
-        {
+        if (props.hasKey("NumExperiments")) {
             setNumExperiments(props.getInteger("NumExperiments"));
         }
 
-        if (props.hasKey("TrulyEvil"))
-        {
+        if (props.hasKey("TrulyEvil")) {
             setTrulyEvil(props.getBoolean("TrulyEvil"));
         }
 
-        if (props.hasKey("TowerBuilt"))
-        {
+        if (props.hasKey("TowerBuilt")) {
             setTowerBuilt(props.getBoolean("TowerBuilt"));
         }
 
-        if (props.hasKey("TowerHeight"))
-        {
+        if (props.hasKey("TowerHeight")) {
             setTowerHeight(props.getInteger("TowerHeight"));
         }
 
-        if (props.hasKey("TowerPosX") && props.hasKey("TowerPosY") && props.hasKey("TowerPosZ"))
-        {
+        if (props.hasKey("TowerPosX") && props.hasKey("TowerPosY") && props.hasKey("TowerPosZ")) {
             setTowerPos(new BlockPos(props.getInteger("TowerPosX"), props.getInteger("TowerPosY"), props.getInteger("TowerPosZ")));
         }
     }
 
     @Override
-    public void onLivingUpdate()
-    {
+    public void onLivingUpdate() {
         super.onLivingUpdate();
 
         fallDistance = 0.0f;
 
-        if (getStage() == 3 && (posY + 3.0d) < (double)(getTowerPos().getY() + getTowerHeight()))
-        {
+        if (getStage() == 3 && (posY + 3.0d) < (double) (getTowerPos().getY() + getTowerHeight())) {
             setStage(2);
         }
 
-        if (getStage() == 0)
-        {
-            if (getExperimentTimer() > 0 && !getExperimentStart())
-            {
+        if (getStage() == 0) {
+            if (getExperimentTimer() > 0 && !getExperimentStart()) {
                 setExperimentTimer(getExperimentTimer() - 1);
             }
 
-            if (getExperimentTimer() < 1)
-            {
+            if (getExperimentTimer() < 1) {
                 setExperimentStart(true);
 
                 setStage(1);
@@ -400,8 +346,7 @@ public class EntityEvilScientist extends EntityCreepBase implements IMob, IEntit
             }
         }
 
-        if (getStage() == 1 && onGround && getExperimentStart() && posY > 63.0d)
-        {
+        if (getStage() == 1 && onGround && getExperimentStart() && posY > 63.0d) {
             int towerX = MathHelper.floor(posX) + 2;
 
             int towerY = MathHelper.floor(posY);
@@ -416,12 +361,9 @@ public class EntityEvilScientist extends EntityCreepBase implements IMob, IEntit
 
             int area = 0;
 
-            for (int i = 0; i < iTowerHeight; i++)
-            {
-                for (int q = 0; q < 3; q++)
-                {
-                    for (int k = 0; k < 3; k++)
-                    {
+            for (int i = 0; i < iTowerHeight; i++) {
+                for (int q = 0; q < 3; q++) {
+                    for (int k = 0; k < 3; k++) {
                         area += Block.getIdFromBlock(world.getBlockState(new BlockPos(towerX + k, towerY + i, towerZ + q + 1)).getBlock());
 
                         area += Block.getIdFromBlock(world.getBlockState(new BlockPos(towerX + q + 1, towerY + i, towerZ + k)).getBlock());
@@ -431,10 +373,8 @@ public class EntityEvilScientist extends EntityCreepBase implements IMob, IEntit
 
             boolean housesNear = false;
 
-            for (Entity entity : world.getEntitiesWithinAABBExcludingEntity(this, getEntityBoundingBox().expand(30.0d, 30.0d, 30.0d)))
-            {
-                if (entity instanceof EntityDogHouse)
-                {
+            for (Entity entity : world.getEntitiesWithinAABBExcludingEntity(this, getEntityBoundingBox().expand(30.0d, 30.0d, 30.0d))) {
+                if (entity instanceof EntityDogHouse) {
                     housesNear = true;
 
                     break;
@@ -443,20 +383,15 @@ public class EntityEvilScientist extends EntityCreepBase implements IMob, IEntit
 
             Block checkBlock = world.getBlockState(new BlockPos(towerX + 2, towerY - 1, towerZ + 2)).getBlock();
 
-            if (!housesNear && area == 0 && checkBlock != Blocks.AIR && checkBlock != Blocks.WATER && checkBlock != Blocks.FLOWING_WATER && world.getClosestPlayerToEntity(this, 20.0d) != null)
-            {
+            if (!housesNear && area == 0 && checkBlock != Blocks.AIR && checkBlock != Blocks.WATER && checkBlock != Blocks.FLOWING_WATER && world.getClosestPlayerToEntity(this, 20.0d) != null) {
                 setTowerBuilt(true);
 
-                for (int a = 0; a < iTowerHeight; a++)
-                {
-                    for (int b = 0; b < 3; b++)
-                    {
-                        for (int c = 0; c < 3; c++)
-                        {
+                for (int a = 0; a < iTowerHeight; a++) {
+                    for (int b = 0; b < 3; b++) {
+                        for (int c = 0; c < 3; c++) {
                             Block block = Blocks.COBBLESTONE;
 
-                            if (rand.nextInt(5) == 0)
-                            {
+                            if (rand.nextInt(5) == 0) {
                                 block = Blocks.MOSSY_COBBLESTONE;
                             }
 
@@ -464,8 +399,7 @@ public class EntityEvilScientist extends EntityCreepBase implements IMob, IEntit
 
                             block = Blocks.COBBLESTONE;
 
-                            if (rand.nextInt(5) == 0)
-                            {
+                            if (rand.nextInt(5) == 0) {
                                 block = Blocks.MOSSY_COBBLESTONE;
                             }
 
@@ -476,15 +410,12 @@ public class EntityEvilScientist extends EntityCreepBase implements IMob, IEntit
 
                 world.setBlockState(new BlockPos(towerX + 2, towerY + iTowerHeight, towerZ + 2), Blocks.CRAFTING_TABLE.getDefaultState());
 
-                for (int i = 0; i < iTowerHeight; i++)
-                {
+                for (int i = 0; i < iTowerHeight; i++) {
                     world.setBlockState(new BlockPos(towerX, towerY + i, towerZ), Blocks.LADDER.getDefaultState());
                 }
 
                 setStage(2);
-            }
-            else
-            {
+            } else {
                 setStage(0);
 
                 setExperimentTimer(rand.nextInt(100) + 50);
@@ -493,8 +424,7 @@ public class EntityEvilScientist extends EntityCreepBase implements IMob, IEntit
             }
         }
 
-        if (getStage() == 2)
-        {
+        if (getStage() == 2) {
             BlockPos blockPos = getTowerPos();
 
             int towerX = blockPos.getX();
@@ -503,18 +433,15 @@ public class EntityEvilScientist extends EntityCreepBase implements IMob, IEntit
 
             int towerZ = blockPos.getZ();
 
-            if (posX < (double)towerX)
-            {
+            if (posX < (double) towerX) {
                 motionX = 0.20000000298023224d;
             }
 
-            if (posZ < (double)towerZ)
-            {
+            if (posZ < (double) towerZ) {
                 motionZ = 0.20000000298023224d;
             }
 
-            if (Math.abs(posX - (double)towerX) < 0.40000000596046448d && Math.abs(posZ - (double)towerZ) < 0.40000000596046448d)
-            {
+            if (Math.abs(posX - (double) towerX) < 0.40000000596046448d && Math.abs(posZ - (double) towerZ) < 0.40000000596046448d) {
                 motionX = 0.0d;
 
                 motionZ = 0.0d;
@@ -523,8 +450,7 @@ public class EntityEvilScientist extends EntityCreepBase implements IMob, IEntit
 
                 world.setBlockToAir(new BlockPos(MathHelper.floor(posX), MathHelper.floor(getEntityBoundingBox().minY) + 2, MathHelper.floor(posZ)));
 
-                if (posY > (double)(towerY + getTowerHeight()))
-                {
+                if (posY > (double) (towerY + getTowerHeight())) {
                     motionY = 0.0d;
 
                     posZ++;
@@ -540,8 +466,7 @@ public class EntityEvilScientist extends EntityCreepBase implements IMob, IEntit
             }
         }
 
-        if (getStage() == 3)
-        {
+        if (getStage() == 3) {
             BlockPos blockPos = getTowerPos();
 
             int towerX = blockPos.getX();
@@ -564,18 +489,15 @@ public class EntityEvilScientist extends EntityCreepBase implements IMob, IEntit
 
             updateMoveSpeed();
 
-            if (getExperimentTimer() > 0)
-            {
+            if (getExperimentTimer() > 0) {
                 setExperimentTimer(getExperimentTimer() - 1);
             }
 
-            if (rand.nextInt(200) == 0)
-            {
+            if (rand.nextInt(200) == 0) {
                 world.addWeatherEffect(new EntityLightningBolt(world, MathHelper.floor(posX), MathHelper.floor(getEntityBoundingBox().minY) + 3, MathHelper.floor(posZ), true));
             }
 
-            if (rand.nextInt(150) == 0 && !getWater())
-            {
+            if (rand.nextInt(150) == 0 && !getWater()) {
                 world.setBlockState(new BlockPos(towerX + 2, towerY + iTowerHeight, towerZ + 1), Blocks.FLOWING_WATER.getDefaultState());
 
                 world.setBlockState(new BlockPos(towerX + 3, towerY + iTowerHeight, towerZ + 2), Blocks.FLOWING_WATER.getDefaultState());
@@ -587,8 +509,7 @@ public class EntityEvilScientist extends EntityCreepBase implements IMob, IEntit
                 setWater(true);
             }
 
-            if (rand.nextInt(8) == 0)
-            {
+            if (rand.nextInt(8) == 0) {
                 EntityEvilLight evilLight = new EntityEvilLight(world);
 
                 evilLight.setLocationAndAngles(towerX, towerY + iTowerHeight, towerZ, rotationYaw, 0.0f);
@@ -597,30 +518,23 @@ public class EntityEvilScientist extends EntityCreepBase implements IMob, IEntit
 
                 evilLight.setInitialHealth();
 
-                if (!world.isRemote)
-                {
+                if (!world.isRemote) {
                     world.spawnEntity(evilLight);
                 }
             }
 
-            if (rand.nextInt(10) == 0)
-            {
-                for (int i = 0; i < 4; i++)
-                {
-                    for (int k = 0; k < 10; k++)
-                    {
-                        world.spawnParticle(EnumParticleTypes.SMOKE_LARGE, ((double)(2.0F + (float)towerX) + (double)(rand.nextFloat() * width * 2.0F)) - (double)width, (double)(1.0F + (float)towerY + (float)iTowerHeight) + (double)(rand.nextFloat() * height) + 2D, (2D + ((double)towerZ + (double)(rand.nextFloat() * width * 2.0F))) - (double)width, rand.nextGaussian() * 0.02d, rand.nextGaussian() * 0.02d, rand.nextGaussian() * 0.02d);
+            if (rand.nextInt(10) == 0) {
+                for (int i = 0; i < 4; i++) {
+                    for (int k = 0; k < 10; k++) {
+                        world.spawnParticle(EnumParticleTypes.SMOKE_LARGE, ((double) (2.0F + (float) towerX) + (double) (rand.nextFloat() * width * 2.0F)) - (double) width, (double) (1.0F + (float) towerY + (float) iTowerHeight) + (double) (rand.nextFloat() * height) + 2D, (2D + ((double) towerZ + (double) (rand.nextFloat() * width * 2.0F))) - (double) width, rand.nextGaussian() * 0.02d, rand.nextGaussian() * 0.02d, rand.nextGaussian() * 0.02d);
                     }
                 }
             }
 
-            if (!getExperimentStart())
-            {
-                for (int i = 0; i < 4; i++)
-                {
-                    for (int k = 0; k < 10; k++)
-                    {
-                        world.spawnParticle(EnumParticleTypes.SMOKE_LARGE, ((double)(2.0F + (float)towerX) + (double)(rand.nextFloat() * width * 2.0F)) - (double)width, (double)(1.0F + (float)towerY + (float)iTowerHeight) + (double)(rand.nextFloat() * height) + 2D, (2D + ((double)towerZ + (double)(rand.nextFloat() * width * 2.0F))) - (double)width, rand.nextGaussian() * 0.02d, rand.nextGaussian() * 0.02d, rand.nextGaussian() * 0.02d);
+            if (!getExperimentStart()) {
+                for (int i = 0; i < 4; i++) {
+                    for (int k = 0; k < 10; k++) {
+                        world.spawnParticle(EnumParticleTypes.SMOKE_LARGE, ((double) (2.0F + (float) towerX) + (double) (rand.nextFloat() * width * 2.0F)) - (double) width, (double) (1.0F + (float) towerY + (float) iTowerHeight) + (double) (rand.nextFloat() * height) + 2D, (2D + ((double) towerZ + (double) (rand.nextFloat() * width * 2.0F))) - (double) width, rand.nextGaussian() * 0.02d, rand.nextGaussian() * 0.02d, rand.nextGaussian() * 0.02d);
                     }
                 }
 
@@ -632,16 +546,14 @@ public class EntityEvilScientist extends EntityCreepBase implements IMob, IEntit
 
                 evilLight.setInitialHealth();
 
-                if (!world.isRemote)
-                {
+                if (!world.isRemote) {
                     world.spawnEntity(evilLight);
                 }
 
                 setExperimentStart(true);
             }
 
-            if (getExperimentTimer() < 1)
-            {
+            if (getExperimentTimer() < 1) {
                 world.createExplosion(null, towerX + 2, towerY + iTowerHeight + 4, towerZ + 2, 2.0f, true);
 
                 setExperimentStart(true);
@@ -650,8 +562,7 @@ public class EntityEvilScientist extends EntityCreepBase implements IMob, IEntit
             }
         }
 
-        if (getStage() == 4)
-        {
+        if (getStage() == 4) {
             int x = MathHelper.floor(posX);
 
             int y = MathHelper.floor(getEntityBoundingBox().minY);
@@ -660,8 +571,7 @@ public class EntityEvilScientist extends EntityCreepBase implements IMob, IEntit
 
             int randInt = rand.nextInt(5) + 1;
 
-            for (int i = 0; i < randInt; i++)
-            {
+            for (int i = 0; i < randInt; i++) {
                 world.addWeatherEffect(new EntityLightningBolt(world, x + rand.nextInt(4) - 2, y + 6, z + rand.nextInt(4) - 2, true));
             }
 
@@ -689,16 +599,13 @@ public class EntityEvilScientist extends EntityCreepBase implements IMob, IEntit
 
             int iTowerHeight = getTowerHeight();
 
-            for (int i = 0; i < randInt; i++)
-            {
-                switch (rand.nextInt(4))
-                {
+            for (int i = 0; i < randInt; i++) {
+                switch (rand.nextInt(4)) {
                     case 0:
                     case 4:
                         int randInt2 = rand.nextInt(8) + 2;
 
-                        for (int j = 0; j < randInt2; j++)
-                        {
+                        for (int j = 0; j < randInt2; j++) {
                             EntityEvilSnowman evilSnowman = new EntityEvilSnowman(world);
 
                             evilSnowman.setLocationAndAngles(towerX + rand.nextInt(3), towerY + iTowerHeight + 1, towerZ + rand.nextInt(3), rotationYaw, 0.0f);
@@ -715,8 +622,7 @@ public class EntityEvilScientist extends EntityCreepBase implements IMob, IEntit
 
                             evilSnowman.fallDistance = -35.0f;
 
-                            if (!world.isRemote)
-                            {
+                            if (!world.isRemote) {
                                 world.spawnEntity(evilSnowman);
                             }
                         }
@@ -731,8 +637,7 @@ public class EntityEvilScientist extends EntityCreepBase implements IMob, IEntit
 
                         evilCreature.setInitialHealth();
 
-                        if (!world.isRemote)
-                        {
+                        if (!world.isRemote) {
                             world.spawnEntity(evilCreature);
                         }
 
@@ -746,8 +651,7 @@ public class EntityEvilScientist extends EntityCreepBase implements IMob, IEntit
 
                         evilPig.setInitialHealth();
 
-                        if (!world.isRemote)
-                        {
+                        if (!world.isRemote) {
                             world.spawnEntity(evilPig);
                         }
 
@@ -769,8 +673,7 @@ public class EntityEvilScientist extends EntityCreepBase implements IMob, IEntit
 
                         evilChicken.fallDistance = -35.0f;
 
-                        if (!world.isRemote)
-                        {
+                        if (!world.isRemote) {
                             world.spawnEntity(evilChicken);
                         }
 
@@ -782,14 +685,11 @@ public class EntityEvilScientist extends EntityCreepBase implements IMob, IEntit
 
             setNumExperiments(getNumExperiments() - 1);
 
-            if (getNumExperiments() < 1)
-            {
+            if (getNumExperiments() < 1) {
                 setNumExperiments(rand.nextInt(4) + 1);
 
                 setStage(5);
-            }
-            else
-            {
+            } else {
                 setStage(3);
 
                 setExperimentTimer(rand.nextInt(500) + 500);
@@ -798,58 +698,48 @@ public class EntityEvilScientist extends EntityCreepBase implements IMob, IEntit
             }
         }
 
-        if (getStage() == 5)
-        {
+        if (getStage() == 5) {
             tearDownTower();
 
             setStage(6);
         }
 
-        if (getStage() == 6)
-        {
+        if (getStage() == 6) {
             setExperimentTimer(rand.nextInt(5000) + 100);
 
             setStage(0);
         }
     }
 
-    protected void setTowerHeight(int i)
-    {
-        dataManager.set(towerHeight, i);
-    }
-
-    public int getTowerHeight()
-    {
+    public int getTowerHeight() {
         return dataManager.get(towerHeight);
     }
 
-    protected void setTowerPos(BlockPos pos)
-    {
+    protected void setTowerHeight(int i) {
+        dataManager.set(towerHeight, i);
+    }
+
+    public BlockPos getTowerPos() {
+        return dataManager.get(towerPos);
+    }
+
+    protected void setTowerPos(BlockPos pos) {
         dataManager.set(towerPos, new BlockPos(pos.getX(), pos.getY(), pos.getZ()));
 
         dataManager.setDirty(towerPos);
     }
 
-    public BlockPos getTowerPos()
-    {
-        return dataManager.get(towerPos);
+    public boolean getWater() {
+        return ((Boolean) dataManager.get(water)).booleanValue();
     }
 
-    protected void setWater(boolean b)
-    {
+    protected void setWater(boolean b) {
         dataManager.set(water, Boolean.valueOf(b));
     }
 
-    public boolean getWater()
-    {
-        return ((Boolean)dataManager.get(water)).booleanValue();
-    }
-
     @Override
-    protected boolean canDespawn()
-    {
-        if (getStage() != 0)
-        {
+    protected boolean canDespawn() {
+        if (getStage() != 0) {
             return false;
         }
 
@@ -857,23 +747,27 @@ public class EntityEvilScientist extends EntityCreepBase implements IMob, IEntit
     }
 
     @Override
-    public float maxShrink() { return 0.4f; }
+    public float maxShrink() {
+        return 0.4f;
+    }
 
     @Override
-    public float getShrinkRayAmount() { return 0.2f; }
+    public float getShrinkRayAmount() {
+        return 0.2f;
+    }
 
     @Override
     public void onShrink(EntityShrink source) {
 
     }
+
     @Override
     public float maxGrowth() {
         return 4.0f;
     }
 
     @Override
-    public float getGrowRayAmount()
-    {
+    public float getGrowRayAmount() {
         return 0.2F;
     }
 

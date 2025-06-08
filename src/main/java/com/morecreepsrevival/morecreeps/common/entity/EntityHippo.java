@@ -1,15 +1,11 @@
 package com.morecreepsrevival.morecreeps.common.entity;
 
-import com.morecreepsrevival.morecreeps.common.items.CreepsItemHandler;
 import com.morecreepsrevival.morecreeps.common.sounds.CreepsSoundHandler;
 import net.minecraft.block.Block;
-import net.minecraft.entity.Entity;
 import net.minecraft.entity.ai.*;
-import net.minecraft.entity.passive.EntityAnimal;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
-import net.minecraft.item.ItemStack;
 import net.minecraft.pathfinding.NodeProcessor;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.SoundEvent;
@@ -37,8 +33,7 @@ public class EntityHippo extends EntityCreepBase implements IEntityCanChangeSize
     }
 
     @Override
-    protected void initEntityAI()
-    {
+    protected void initEntityAI() {
         clearAITasks();
 
         NodeProcessor nodeProcessor = getNavigator().getNodeProcessor();
@@ -63,9 +58,65 @@ public class EntityHippo extends EntityCreepBase implements IEntityCanChangeSize
     }
 
     @Override
-    protected String[] getAvailableTextures()
-    {
+    protected String[] getAvailableTextures() {
         return textures;
+    }
+
+    @Override
+    protected void dropItemsOnDeath() {
+        if (rand.nextInt(3) == 1) {
+            dropItem(Items.REEDS, rand.nextInt(5) + 3);
+        }
+    }
+
+    @Override
+    protected SoundEvent getHurtSound(DamageSource damageSource) {
+        return CreepsSoundHandler.hippoHurtSound;
+    }
+
+    @Override
+    protected SoundEvent getDeathSound() {
+        return CreepsSoundHandler.hippoDeathSound;
+    }
+
+    @Override
+    protected SoundEvent getAmbientSound() {
+        return CreepsSoundHandler.hippoAmbientSound;
+    }
+
+    @Override
+    public int getMaxSpawnedInChunk() {
+        return 2;
+    }
+
+    @Override
+    public float maxShrink() {
+        return 0.3f;
+    }
+
+    @Override
+    public float getShrinkRayAmount() {
+        return 0.25f;
+    }
+
+    @Override
+    public void onShrink(EntityShrink source) {
+
+    }
+
+    @Override
+    public float maxGrowth() {
+        return 3.0f;
+    }
+
+    @Override
+    public float getGrowRayAmount() {
+        return 0.25F;
+    }
+
+    @Override
+    public void onGrow(EntityGrow source) {
+        this.increaseMoveSpeed(0.15f);
     }
 
     public static class GoToWaterGoal extends EntityAIMoveToBlock {
@@ -88,7 +139,7 @@ public class EntityHippo extends EntityCreepBase implements IEntityCanChangeSize
 
         @Override
         public boolean shouldExecute() {
-            if(this.hippo.isChild() && !this.hippo.isInWater()) {
+            if (this.hippo.isChild() && !this.hippo.isInWater()) {
                 return shouldExecute2();
             } else {
                 return !this.hippo.isInWater() && shouldExecute2();
@@ -96,7 +147,7 @@ public class EntityHippo extends EntityCreepBase implements IEntityCanChangeSize
         }
 
         public boolean shouldExecute2() {
-            if(this.runDelay > 0) {
+            if (this.runDelay > 0) {
                 --this.runDelay;
                 return false;
             } else {
@@ -115,13 +166,13 @@ public class EntityHippo extends EntityCreepBase implements IEntityCanChangeSize
             int i = 24;
             BlockPos blockpos = new BlockPos(this.hippo);
 
-            for(int k = -1; k <= 1; k = k > 0 ? -k : 1 - k) {
-                for(int l = 0; l < i; ++l) {
-                    for(int i1 = 0; i1 <= l; i1 = i1 > 0 ? -i1 : 1 - i1) {
-                        for(int j1 = i1 < l && i1 > -l ? l : 0; j1 <= l; j1 = j1 > 0 ? -j1 : 1 - j1) {
+            for (int k = -1; k <= 1; k = k > 0 ? -k : 1 - k) {
+                for (int l = 0; l < i; ++l) {
+                    for (int i1 = 0; i1 <= l; i1 = i1 > 0 ? -i1 : 1 - i1) {
+                        for (int j1 = i1 < l && i1 > -l ? l : 0; j1 <= l; j1 = j1 > 0 ? -j1 : 1 - j1) {
                             BlockPos blockpos1 = blockpos.add(i1, k - 1, j1);
 
-                            if(this.hippo.isWithinHomeDistanceFromPosition(blockpos1) && this.shouldMoveTo(this.hippo.world, blockpos1)) {
+                            if (this.hippo.isWithinHomeDistanceFromPosition(blockpos1) && this.shouldMoveTo(this.hippo.world, blockpos1)) {
                                 this.destinationBlock = blockpos1;
                                 return true;
                             }
@@ -135,11 +186,11 @@ public class EntityHippo extends EntityCreepBase implements IEntityCanChangeSize
 
         @Override
         public void updateTask() {
-            if(this.hippo.getDistanceSqToCenter(this.destinationBlock.up()) > 1.0D) {
+            if (this.hippo.getDistanceSqToCenter(this.destinationBlock.up()) > 1.0D) {
                 this.isAboveDestination2 = false;
                 ++this.timeoutCounter2;
 
-                if(this.timeoutCounter2 % 160 == 0) {
+                if (this.timeoutCounter2 % 160 == 0) {
                     this.hippo.getNavigator().tryMoveToXYZ((double) ((float) this.destinationBlock.getX()) + 0.5D, (double) (this.destinationBlock.getY() + 1), (double) ((float) this.destinationBlock.getZ()) + 0.5D, this.speed);
                 }
             } else {
@@ -158,65 +209,6 @@ public class EntityHippo extends EntityCreepBase implements IEntityCanChangeSize
             Block block = worldIn.getBlockState(pos).getBlock();
             return block == Blocks.WATER;
         }
-    }
-
-    @Override
-    protected void dropItemsOnDeath()
-    {
-        if (rand.nextInt(3) == 1)
-        {
-            dropItem(Items.REEDS, rand.nextInt(5) + 3);
-        }
-    }
-
-    @Override
-    protected SoundEvent getHurtSound(DamageSource damageSource)
-    {
-        return CreepsSoundHandler.hippoHurtSound;
-    }
-
-    @Override
-    protected SoundEvent getDeathSound()
-    {
-        return CreepsSoundHandler.hippoDeathSound;
-    }
-
-    @Override
-    protected SoundEvent getAmbientSound()
-    {
-        return CreepsSoundHandler.hippoAmbientSound;
-    }
-
-    @Override
-    public int getMaxSpawnedInChunk()
-    {
-        return 2;
-    }
-
-    @Override
-    public float maxShrink() { return 0.3f; }
-
-    @Override
-    public float getShrinkRayAmount() { return 0.25f; }
-
-    @Override
-    public void onShrink(EntityShrink source) {
-
-    }
-    @Override
-    public float maxGrowth() {
-        return 3.0f;
-    }
-
-    @Override
-    public float getGrowRayAmount()
-    {
-        return 0.25F;
-    }
-
-    @Override
-    public void onGrow(EntityGrow source) {
-        this.increaseMoveSpeed(0.15f);
     }
 
 }

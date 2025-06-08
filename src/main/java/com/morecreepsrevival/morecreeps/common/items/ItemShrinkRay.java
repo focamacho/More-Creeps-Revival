@@ -10,10 +10,8 @@ import net.minecraft.world.World;
 
 import javax.annotation.Nonnull;
 
-public class ItemShrinkRay extends CreepsItem
-{
-    public ItemShrinkRay()
-    {
+public class ItemShrinkRay extends CreepsItem {
+    public ItemShrinkRay() {
         super("shrink_ray");
 
         setMaxStackSize(1);
@@ -21,17 +19,16 @@ public class ItemShrinkRay extends CreepsItem
         setMaxDamage(128);
     }
 
-    @Override @Nonnull
-    public ActionResult<ItemStack> onItemRightClick(World world, EntityPlayer player, @Nonnull EnumHand hand)
-    {
+    @Override
+    @Nonnull
+    public ActionResult<ItemStack> onItemRightClick(World world, EntityPlayer player, @Nonnull EnumHand hand) {
         player.playSound(CreepsSoundHandler.shrinkRaySound, getSoundVolume(), getSoundPitch());
 
         player.getHeldItem(hand).damageItem(1, player);
 
         EntityShrink shrink = new EntityShrink(world, player);
 
-        if (!world.isRemote)
-        {
+        if (!world.isRemote) {
             world.spawnEntity(shrink);
         }
 
@@ -39,14 +36,12 @@ public class ItemShrinkRay extends CreepsItem
     }
 
     @Override
-    public float getSoundVolume()
-    {
+    public float getSoundVolume() {
         return 0.5f;
     }
 
     @Override
-    public float getSoundPitch()
-    {
+    public float getSoundPitch() {
         return (0.4f / ((itemRand.nextFloat() * 0.4f) + 0.8f));
     }
 }

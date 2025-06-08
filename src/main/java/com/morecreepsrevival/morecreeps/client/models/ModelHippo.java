@@ -122,7 +122,7 @@ public class ModelHippo extends ModelBase {
             }
         } else {
             this.tailwag -= 2.0E-4F;
-            if ((double)this.tailwag < -0.067) {
+            if ((double) this.tailwag < -0.067) {
                 this.taildirection *= -1;
             }
         }

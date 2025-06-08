@@ -14,8 +14,7 @@ import net.minecraft.world.World;
 
 import java.util.List;
 
-public class EntityGrowbotGregg extends EntityCreepBase
-{
+public class EntityGrowbotGregg extends EntityCreepBase {
     private int texSwitch = 0;
 
     private int texNumber = 0;
@@ -24,15 +23,14 @@ public class EntityGrowbotGregg extends EntityCreepBase
 
     private int attackCounter = 0;
 
-    public EntityGrowbotGregg(World worldIn)
-    {
+    public EntityGrowbotGregg(World worldIn) {
         super(worldIn);
 
         setCreepTypeName("Growbot Gregg");
 
         setModelSize(1.5f);
 
-        baseHealth = (float)rand.nextInt(15) + 10.0f;
+        baseHealth = (float) rand.nextInt(15) + 10.0f;
 
         baseSpeed = 0.3d;
 
@@ -42,8 +40,7 @@ public class EntityGrowbotGregg extends EntityCreepBase
     }
 
     @Override
-    public void initEntityAI()
-    {
+    public void initEntityAI() {
         clearAITasks();
 
         NodeProcessor nodeProcessor = getNavigator().getNodeProcessor();
@@ -64,10 +61,8 @@ public class EntityGrowbotGregg extends EntityCreepBase
     }
 
     @Override
-    protected void updateTexture()
-    {
-        switch (texNumber)
-        {
+    protected void updateTexture() {
+        switch (texNumber) {
             case 0:
                 setTexture("textures/entity/growbotgregg1.png");
 
@@ -88,32 +83,26 @@ public class EntityGrowbotGregg extends EntityCreepBase
     }
 
     @Override
-    protected SoundEvent getAmbientSound()
-    {
+    protected SoundEvent getAmbientSound() {
         return CreepsSoundHandler.greggSound;
     }
 
     @Override
-    protected SoundEvent getHurtSound(DamageSource damageSource)
-    {
+    protected SoundEvent getHurtSound(DamageSource damageSource) {
         return CreepsSoundHandler.greggHurtSound;
     }
 
     @Override
-    protected SoundEvent getDeathSound()
-    {
+    protected SoundEvent getDeathSound() {
         return CreepsSoundHandler.greggDeathSound;
     }
 
     @Override
-    public void onLivingUpdate()
-    {
+    public void onLivingUpdate() {
         super.onLivingUpdate();
 
-        if (texSwitch++ > 60)
-        {
-            if (texNumber++ > 2)
-            {
+        if (texSwitch++ > 60) {
+            if (texNumber++ > 2) {
                 texNumber = 0;
             }
 
@@ -122,74 +111,60 @@ public class EntityGrowbotGregg extends EntityCreepBase
 
         Entity targetedEntity = getAttackTarget();
 
-        if (targetedEntity != null && targetedEntity.getDistanceSq(this) < 25.0d)
-        {
+        if (targetedEntity != null && targetedEntity.getDistanceSq(this) < 25.0d) {
             baseSpeed = 0.0d;
-        }
-        else
-        {
+        } else {
             baseSpeed = 0.3d;
         }
 
         updateMoveSpeed();
 
-        if (targetedEntity instanceof EntityGrowbotGregg)
-        {
+        if (targetedEntity instanceof EntityGrowbotGregg) {
             setAttackTarget(null);
 
             targetedEntity = null;
         }
 
-        if (targetedEntity == null || aggroCooldown-- <= 0)
-        {
+        if (targetedEntity == null || aggroCooldown-- <= 0) {
             List<Entity> list = world.getEntitiesWithinAABBExcludingEntity(this, getEntityBoundingBox().expand(16.0d, 16.0d, 16.0d));
 
-            if (list.size() > 0)
-            {
+            if (list.size() > 0) {
                 int i = rand.nextInt(list.size());
 
                 Entity entity1 = list.get(i);
 
-                if (entity1 instanceof EntityCreepBase)
-                {
-                    setAttackTarget((EntityLivingBase)entity1);
+                if (entity1 instanceof EntityCreepBase) {
+                    setAttackTarget((EntityLivingBase) entity1);
 
                     targetedEntity = entity1;
                 }
             }
 
-            if (targetedEntity != null)
-            {
+            if (targetedEntity != null) {
                 aggroCooldown = 60;
             }
         }
 
         double var9 = 64.0d;
 
-        if (targetedEntity != null && targetedEntity.getDistanceSq(this) < (var9 * var9))
-        {
-            if (canEntityBeSeen(targetedEntity))
-            {
+        if (targetedEntity != null && targetedEntity.getDistanceSq(this) < (var9 * var9)) {
+            if (canEntityBeSeen(targetedEntity)) {
                 attackCounter++;
 
-                if (attackCounter == 20)
-                {
+                if (attackCounter == 20) {
                     playSound(CreepsSoundHandler.growRaySound, 0.5f, 0.4f / (rand.nextFloat() * 0.4f + 0.8f));
 
                     faceEntity(targetedEntity, 360.0f, 360.0f);
 
                     EntityGrow grow = new EntityGrow(world, this);
 
-                    if (!world.isRemote)
-                    {
+                    if (!world.isRemote) {
                         world.spawnEntity(grow);
                     }
 
                     attackCounter = -40;
                 }
-            }
-            else if (attackCounter > 0)
-            {
+            } else if (attackCounter > 0) {
                 faceEntity(targetedEntity, 360.0f, 360.0f);
 
                 attackCounter--;
@@ -198,12 +173,11 @@ public class EntityGrowbotGregg extends EntityCreepBase
     }
 
     @Override
-    protected void dropEquipment(boolean wasRecentlyHit, int lootingModifier)
-    {
+    protected void dropEquipment(boolean wasRecentlyHit, int lootingModifier) {
     }
+
     @Override
-    protected void dropItemsOnDeath()
-    {
+    protected void dropItemsOnDeath() {
         dropItem(CreepsItemHandler.growRay, 1);
     }
 

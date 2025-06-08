@@ -4,8 +4,7 @@ import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.model.ModelRenderer;
 import net.minecraft.entity.Entity;
 
-public class ModelTrophy extends ModelBase
-{
+public class ModelTrophy extends ModelBase {
     public ModelRenderer body;
 
     public ModelRenderer New_Shape2;
@@ -34,18 +33,15 @@ public class ModelTrophy extends ModelBase
 
     public ModelRenderer New_Shape9;
 
-    public ModelTrophy()
-    {
+    public ModelTrophy() {
         this(0.0F);
     }
 
-    public ModelTrophy(float f)
-    {
+    public ModelTrophy(float f) {
         this(f, 0.0F);
     }
 
-    public ModelTrophy(float f, float f1)
-    {
+    public ModelTrophy(float f, float f1) {
         float f2 = 0.0F;
         body = new ModelRenderer(this, 32, 24);
         body.addBox(-3F, -2F, -3F, 6, 2, 6, f2);
@@ -90,8 +86,7 @@ public class ModelTrophy extends ModelBase
         New_Shape9.addBox(4F, -16F, -0.5F, 2, 1, 1, f2);
         New_Shape9.setRotationPoint(0.0F, 0.0F, 0.0F);
 
-        for(int i = 0; i < boxList.size(); ++i)
-        {
+        for (int i = 0; i < boxList.size(); ++i) {
             ModelRenderer curr = boxList.get(i);
             curr.offsetY += 1.5f;
 
@@ -100,12 +95,10 @@ public class ModelTrophy extends ModelBase
     }
 
     @Override
-    public void render(Entity entity, float f, float f1, float f2, float f3, float f4, float f5)
-    {
+    public void render(Entity entity, float f, float f1, float f2, float f3, float f4, float f5) {
         setRotationAngles(f, f1, f2, f3, f4, f5, entity);
 
-        for(int i = 0; i < boxList.size(); ++i)
-        {
+        for (int i = 0; i < boxList.size(); ++i) {
             boxList.get(i).render(f5);
         }
 

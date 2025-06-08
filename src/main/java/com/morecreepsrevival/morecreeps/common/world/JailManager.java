@@ -24,7 +24,6 @@ import net.minecraft.tileentity.TileEntityMobSpawner;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Vec2f;
 import net.minecraft.util.math.Vec3i;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.world.World;
@@ -35,30 +34,26 @@ import net.minecraft.world.gen.structure.template.TemplateManager;
 
 import java.util.Random;
 
-public class JailManager
-{
-    static Template STRUCTURE = null;
+public class JailManager {
     private static final int maxObstruct = 99999;
+    static Template STRUCTURE = null;
 
-    public static boolean tryCasheStructure(World world)
-    {
-        if(STRUCTURE != null) return true;
+    public static boolean tryCasheStructure(World world) {
+        if (STRUCTURE != null) return true;
 
         ResourceLocation location = new ResourceLocation(MoreCreepsAndWeirdos.modid, "prison(with mobs)");
         MinecraftServer serv = world.getMinecraftServer();
         TemplateManager manager = ((WorldServer) world).getStructureTemplateManager();
         STRUCTURE = manager.get(serv, location);
-        if(STRUCTURE == null) return false;
+        if (STRUCTURE == null) return false;
 
         return true;
     }
 
-    public static boolean buildJail(EntityPlayer player, World world, Random rand)
-    {
+    public static boolean buildJail(EntityPlayer player, World world, Random rand) {
 
         boolean loaded = tryCasheStructure(world);
-        if(!loaded)
-        {
+        if (!loaded) {
             player.sendMessage(new TextComponentString("Couldn't generate jail 2."));
             return false;
         }
@@ -66,26 +61,23 @@ public class JailManager
         return newBuildJail(player, world, rand);
     }
 
-    private static boolean newBuildJail(EntityPlayer player, World world, Random rand)
-    {
+    private static boolean newBuildJail(EntityPlayer player, World world, Random rand) {
 
         BlockPos structuresize = STRUCTURE.getSize();
 
         int randInt = rand.nextInt(200) - 100;
 
-        if (rand.nextInt(2) == 0)
-        {
+        if (rand.nextInt(2) == 0) {
             randInt *= -1;
         }
 
-        int jailX = (int)player.posX + randInt;
+        int jailX = (int) player.posX + randInt;
 
         int jailY = rand.nextInt(20) + 25;
 
-        int jailZ = (int)player.posZ + randInt;
+        int jailZ = (int) player.posZ + randInt;
 
-        if(!isJailPossible(player, world, rand, jailX, jailY, jailZ))
-        {
+        if (!isJailPossible(player, world, rand, jailX, jailY, jailZ)) {
             player.sendMessage(new TextComponentString("Couldn't generate jail. 1"));
             return false;
         }
@@ -106,8 +98,7 @@ public class JailManager
 
         Vec3i playerpos = new Vec3i(structurepos.getX(), jailY, jailZ);
 
-        for(int i = 0; i < 10; ++i)
-        {
+        for (int i = 0; i < 10; ++i) {
             spawnLawyerGoul(world, playerpos.getX(), playerpos.getY(), playerpos.getZ());
         }
 
@@ -116,40 +107,32 @@ public class JailManager
         return true;
     }
 
-    private static boolean oldBuildJail(EntityPlayer player, World world, Random rand)
-    {
+    private static boolean oldBuildJail(EntityPlayer player, World world, Random rand) {
         int randInt = rand.nextInt(200) - 100;
 
-        if (rand.nextInt(2) == 0)
-        {
+        if (rand.nextInt(2) == 0) {
             randInt *= -1;
         }
 
-        int jailX = (int)player.posX + randInt;
+        int jailX = (int) player.posX + randInt;
 
         int jailY = rand.nextInt(20) + 25;
 
-        int jailZ = (int)player.posZ + randInt;
+        int jailZ = (int) player.posZ + randInt;
 
-        if (!world.isBlockLoaded(new BlockPos(jailX, jailY, jailZ - 31)) || !world.isBlockLoaded(new BlockPos(jailX + 14, jailY, jailZ - 31)) || !world.isBlockLoaded(new BlockPos(jailX, jailY, jailZ + 45)) || !world.isBlockLoaded(new BlockPos(jailX + 14, jailY, jailZ + 45)))
-        {
+        if (!world.isBlockLoaded(new BlockPos(jailX, jailY, jailZ - 31)) || !world.isBlockLoaded(new BlockPos(jailX + 14, jailY, jailZ - 31)) || !world.isBlockLoaded(new BlockPos(jailX, jailY, jailZ + 45)) || !world.isBlockLoaded(new BlockPos(jailX + 14, jailY, jailZ + 45))) {
             return false;
         }
 
         int area = 0;
 
-        for (int i = -1; i < 6; i++)
-        {
-            for (int k = -1; k < 14; k++)
-            {
-                for (int q = -1; q < 14; q++)
-                {
-                    if (world.isAirBlock(new BlockPos(jailX + k, jailY + i, jailZ + q)))
-                    {
+        for (int i = -1; i < 6; i++) {
+            for (int k = -1; k < 14; k++) {
+                for (int q = -1; q < 14; q++) {
+                    if (world.isAirBlock(new BlockPos(jailX + k, jailY + i, jailZ + q))) {
                         area++;
 
-                        if (area > JailManager.maxObstruct)
-                        {
+                        if (area > JailManager.maxObstruct) {
                             return false;
                         }
                     }
@@ -159,68 +142,49 @@ public class JailManager
 
         Block block = world.getBlockState(new BlockPos(jailX + 16, jailY + 20, jailZ + 7)).getBlock();
 
-        if (block == Blocks.FLOWING_WATER || block == Blocks.WATER)
-        {
+        if (block == Blocks.FLOWING_WATER || block == Blocks.WATER) {
             area++;
 
-            if (area > JailManager.maxObstruct)
-            {
+            if (area > JailManager.maxObstruct) {
                 return false;
             }
         }
 
-        for (int i = -1; i < 6; i++)
-        {
-            for (int k = -41; k < 55; k++)
-            {
-                for (int q = -1; q < 16; q++)
-                {
+        for (int i = -1; i < 6; i++) {
+            for (int k = -41; k < 55; k++) {
+                for (int q = -1; q < 16; q++) {
                     int a = rand.nextInt(100);
 
-                    if (a < 1)
-                    {
+                    if (a < 1) {
                         world.setBlockState(new BlockPos(jailX + q, jailY + i, jailZ + k), Blocks.GRAVEL.getDefaultState());
-                    }
-                    else if (a < 15)
-                    {
+                    } else if (a < 15) {
                         world.setBlockState(new BlockPos(jailX + q, jailY + i, jailZ + k), Blocks.MOSSY_COBBLESTONE.getDefaultState());
-                    }
-                    else
-                    {
+                    } else {
                         world.setBlockState(new BlockPos(jailX + q, jailY + i, jailZ + k), Blocks.STONE.getDefaultState());
                     }
                 }
             }
         }
 
-        for (int i = 0; i < 5; i++)
-        {
-            for (int k = 0; k < 13; k++)
-            {
-                for (int q = 0; q < 13; q++)
-                {
+        for (int i = 0; i < 5; i++) {
+            for (int k = 0; k < 13; k++) {
+                for (int q = 0; q < 13; q++) {
                     world.setBlockToAir(new BlockPos(jailX + q, jailY + i, jailZ + k + 1));
                 }
             }
         }
 
-        for (int i = 0; i < 5; i++)
-        {
-            for (int k = 3; k < 11; k++)
-            {
-                for (int q = 3; q < 11; q++)
-                {
+        for (int i = 0; i < 5; i++) {
+            for (int k = 3; k < 11; k++) {
+                for (int q = 3; q < 11; q++) {
                     world.setBlockState(new BlockPos(jailX + q, jailY + i, jailZ + k + 1), Blocks.STONE.getDefaultState());
                 }
             }
         }
 
-        for (int i = 0; i < 5; i++)
-        {
-            for (int k = 5; k < 9; k++)
-            {
-                for (int q = 5; q < 9; q++)
-                {
+        for (int i = 0; i < 5; i++) {
+            for (int k = 5; k < 9; k++) {
+                for (int q = 5; q < 9; q++) {
                     world.setBlockToAir(new BlockPos(jailX + q, jailY + i, jailZ + k + 1));
                 }
             }
@@ -260,19 +224,15 @@ public class JailManager
 
         int stairHeight = 80;
 
-        while (world.isAirBlock(new BlockPos(jailX + offsetX, stairHeight, jailZ + offsetZ)) || world.getBlockState(new BlockPos(jailX + offsetX, stairHeight, jailZ + offsetZ)).getBlock() == Blocks.LOG || world.getBlockState(new BlockPos(jailX + offsetX, stairHeight, jailZ + offsetZ)).getBlock() == Blocks.LEAVES)
-        {
+        while (world.isAirBlock(new BlockPos(jailX + offsetX, stairHeight, jailZ + offsetZ)) || world.getBlockState(new BlockPos(jailX + offsetX, stairHeight, jailZ + offsetZ)).getBlock() == Blocks.LOG || world.getBlockState(new BlockPos(jailX + offsetX, stairHeight, jailZ + offsetZ)).getBlock() == Blocks.LEAVES) {
             stairHeight--;
         }
 
         int maxI = stairHeight - jailY;
 
-        for (int i = 0; i < maxI; i++)
-        {
-            for (int k = 0; k < 2; k++)
-            {
-                for (int q = 0; q < 2; q++)
-                {
+        for (int i = 0; i < maxI; i++) {
+            for (int k = 0; k < 2; k++) {
+                for (int q = 0; q < 2; q++) {
                     world.setBlockToAir(new BlockPos(jailX + k + offsetX, jailY + i, jailZ + offsetZ + q));
                 }
             }
@@ -280,10 +240,8 @@ public class JailManager
 
         int side = 0;
 
-        for (int i = 0; i < maxI; i++)
-        {
-            switch (side)
-            {
+        for (int i = 0; i < maxI; i++) {
+            switch (side) {
                 case 0:
                     world.setBlockState(new BlockPos(jailX + offsetX, jailY + i, jailZ + offsetZ), Blocks.STONE_STAIRS.getDefaultState().withProperty(BlockStairs.FACING, EnumFacing.NORTH));
 
@@ -304,14 +262,12 @@ public class JailManager
                     break;
             }
 
-            if (side++ == 3)
-            {
+            if (side++ == 3) {
                 side = 0;
             }
         }
 
-        for (int i = 0; i < 3; i++)
-        {
+        for (int i = 0; i < 3; i++) {
             world.setBlockToAir(new BlockPos(jailX + 13 + i, jailY, jailZ + 7));
 
             world.setBlockToAir(new BlockPos(jailX + 13 + i, jailY + 1, jailZ + 7));
@@ -325,12 +281,9 @@ public class JailManager
 
         world.setBlockToAir(new BlockPos(jailX + 14, jailY + 2, jailZ + offsetZ));
 
-        for (int i = 0; i < 32; i++)
-        {
-            for (int k = 6; k < 9; k++)
-            {
-                for (int q = 0; q < 4; q++)
-                {
+        for (int i = 0; i < 32; i++) {
+            for (int k = 6; k < 9; k++) {
+                for (int q = 0; q < 4; q++) {
                     world.setBlockToAir(new BlockPos(jailX + k, jailY + q, jailZ - i - 1));
 
                     world.setBlockToAir(new BlockPos(jailX + k, jailY + q, jailZ + i + 15));
@@ -338,14 +291,10 @@ public class JailManager
             }
         }
 
-        for (int i = 1; i < 5; i++)
-        {
-            for (int k = 0; k < 3; k++)
-            {
-                for (int q = 0; q < 3; q++)
-                {
-                    for (int z = 0; z < 4; z++)
-                    {
+        for (int i = 1; i < 5; i++) {
+            for (int k = 0; k < 3; k++) {
+                for (int q = 0; q < 3; q++) {
+                    for (int z = 0; z < 4; z++) {
                         world.setBlockToAir(new BlockPos(jailX + 10 + q, jailY + z, jailZ - i * 7 + k));
 
                         world.setBlockToAir(new BlockPos(jailX + 2 + q, jailY + z, jailZ - i * 7 + k));
@@ -366,8 +315,7 @@ public class JailManager
 
         world.setBlockToAir(new BlockPos(jailX + 7, jailY + 1, jailZ + 14));
 
-        for (int i = 0; i < 4; i++)
-        {
+        for (int i = 0; i < 4; i++) {
             world.setBlockState(new BlockPos(jailX + 5, jailY + 1, jailZ - i * 7 - 7), Blocks.IRON_BARS.getDefaultState());
 
             world.setBlockState(new BlockPos(jailX + 5, jailY, jailZ - i * 7 - 5), Blocks.OAK_DOOR.getDefaultState().withProperty(BlockDoor.HALF, BlockDoor.EnumDoorHalf.LOWER).withProperty(BlockDoor.FACING, EnumFacing.WEST).withProperty(BlockDoor.HINGE, BlockDoor.EnumHingePosition.RIGHT));
@@ -400,46 +348,37 @@ public class JailManager
 
             world.setBlockState(new BlockPos(jailX + 9, jailY + 1, jailZ + i * 7 + 19), Blocks.OAK_DOOR.getDefaultState().withProperty(BlockDoor.HALF, BlockDoor.EnumDoorHalf.UPPER).withProperty(BlockDoor.FACING, EnumFacing.EAST).withProperty(BlockDoor.HINGE, BlockDoor.EnumHingePosition.LEFT));
 
-            if (rand.nextInt(1) == 0)
-            {
+            if (rand.nextInt(1) == 0) {
                 CreepsUtil.TryPlaceTorch(world, new BlockPos(jailX + 12, jailY + 2, jailZ - i * 7 - 5));
             }
 
-            if (rand.nextInt(1) == 0)
-            {
+            if (rand.nextInt(1) == 0) {
                 CreepsUtil.TryPlaceTorch(world, new BlockPos(jailX + 2, jailY + 2, jailZ - i * 7 - 5));
             }
 
-            if (rand.nextInt(1) == 0)
-            {
+            if (rand.nextInt(1) == 0) {
                 CreepsUtil.TryPlaceTorch(world, new BlockPos(jailX + 12, jailY + 2, jailZ + i * 7 + 19));
             }
 
-            if (rand.nextInt(1) == 0)
-            {
+            if (rand.nextInt(1) == 0) {
                 CreepsUtil.TryPlaceTorch(world, new BlockPos(jailX + 2, jailY + 2, jailZ + i * 7 + 19));
             }
         }
 
-        for (int i = 0; i < 9; i++)
-        {
-            if (rand.nextInt(2) == 0)
-            {
+        for (int i = 0; i < 9; i++) {
+            if (rand.nextInt(2) == 0) {
                 CreepsUtil.TryPlaceTorch(world, new BlockPos(jailX + 6, jailY + 2, jailZ - i * 4 - 2));
             }
 
-            if (rand.nextInt(2) == 0)
-            {
+            if (rand.nextInt(2) == 0) {
                 CreepsUtil.TryPlaceTorch(world, new BlockPos(jailX + 8, jailY + 2, jailZ - i * 4 - 2));
             }
 
-            if (rand.nextInt(2) == 0)
-            {
+            if (rand.nextInt(2) == 0) {
                 CreepsUtil.TryPlaceTorch(world, new BlockPos(jailX + 6, jailY + 2, jailZ + i * 4 + 18));
             }
 
-            if (rand.nextInt(2) == 0)
-            {
+            if (rand.nextInt(2) == 0) {
                 CreepsUtil.TryPlaceTorch(world, new BlockPos(jailX + 8, jailY + 2, jailZ + i * 4 + 18));
             }
         }
@@ -490,14 +429,11 @@ public class JailManager
 
         TileEntityChest chestToUse = chest1;
 
-        for (int i = 0; i < player.inventory.mainInventory.size(); i++)
-        {
+        for (int i = 0; i < player.inventory.mainInventory.size(); i++) {
             ItemStack itemStack = player.inventory.mainInventory.get(i);
 
-            if (!itemStack.isEmpty())
-            {
-                if (chestToUse.equals(chest1) && (chestIndex + 1) > chest1Size)
-                {
+            if (!itemStack.isEmpty()) {
+                if (chestToUse.equals(chest1) && (chestIndex + 1) > chest1Size) {
                     chestToUse = chest12;
 
                     chestIndex = 0;
@@ -509,14 +445,11 @@ public class JailManager
             }
         }
 
-        for (int i = 0; i < player.inventory.armorInventory.size(); i++)
-        {
+        for (int i = 0; i < player.inventory.armorInventory.size(); i++) {
             ItemStack itemStack = player.inventory.armorInventory.get(i);
 
-            if (!itemStack.isEmpty())
-            {
-                if (chestToUse.equals(chest1) && (chestIndex + 1) > chest1Size)
-                {
+            if (!itemStack.isEmpty()) {
+                if (chestToUse.equals(chest1) && (chestIndex + 1) > chest1Size) {
                     chestToUse = chest12;
 
                     chestIndex = 0;
@@ -528,14 +461,11 @@ public class JailManager
             }
         }
 
-        for (int i = 0; i < player.inventory.offHandInventory.size(); i++)
-        {
+        for (int i = 0; i < player.inventory.offHandInventory.size(); i++) {
             ItemStack itemStack = player.inventory.offHandInventory.get(i);
 
-            if (!itemStack.isEmpty())
-            {
-                if (chestToUse.equals(chest1) && (chestIndex + 1) > chest1Size)
-                {
+            if (!itemStack.isEmpty()) {
+                if (chestToUse.equals(chest1) && (chestIndex + 1) > chest1Size) {
                     chestToUse = chest12;
 
                     chestIndex = 0;
@@ -547,12 +477,9 @@ public class JailManager
             }
         }
 
-        for (ItemStack itemStack : player.getEquipmentAndArmor())
-        {
-            if (!itemStack.isEmpty())
-            {
-                if (chestToUse.equals(chest1) && (chestIndex + 1) > chest1Size)
-                {
+        for (ItemStack itemStack : player.getEquipmentAndArmor()) {
+            if (!itemStack.isEmpty()) {
+                if (chestToUse.equals(chest1) && (chestIndex + 1) > chest1Size) {
                     chestToUse = chest12;
 
                     chestIndex = 0;
@@ -564,16 +491,12 @@ public class JailManager
             }
         }
 
-        for (int i = 1; i < chest4.getSizeInventory(); i++)
-        {
+        for (int i = 1; i < chest4.getSizeInventory(); i++) {
             int r = rand.nextInt(10);
 
-            if (r == 1)
-            {
+            if (r == 1) {
                 chest4.setInventorySlotContents(i, new ItemStack(CreepsItemHandler.bandaid, rand.nextInt(2) + 1));
-            }
-            else if (r == 2)
-            {
+            } else if (r == 2) {
                 chest4.setInventorySlotContents(i, new ItemStack(CreepsItemHandler.money, rand.nextInt(24) + 1));
             }
         }
@@ -600,16 +523,13 @@ public class JailManager
 
         int petRoom = rand.nextInt(11);
 
-        for (int i = 0; i < 4; i++)
-        {
-            for (int k = 0; k < 4; k++)
-            {
+        for (int i = 0; i < 4; i++) {
+            for (int k = 0; k < 4; k++) {
                 int placeX;
 
                 int placeZ;
 
-                switch (k + 1)
-                {
+                switch (k + 1) {
                     case 2:
                         placeX = jailX + 2;
 
@@ -637,32 +557,25 @@ public class JailManager
                         break;
                 }
 
-                if ((i * 4 + k) == petRoom)
-                {
+                if ((i * 4 + k) == petRoom) {
                     populateCell(player, world, rand, placeX, jailY, placeZ, true);
-                }
-                else
-                {
+                } else {
                     populateCell(player, world, rand, placeX, jailY, placeZ, false);
                 }
 
-                if (rand.nextInt(3) == 0)
-                {
-                    dropTreasure(world, rand,jailX + 12, jailY + 2, jailZ - i * 7 - 6);
+                if (rand.nextInt(3) == 0) {
+                    dropTreasure(world, rand, jailX + 12, jailY + 2, jailZ - i * 7 - 6);
                 }
 
-                if (rand.nextInt(3) == 0)
-                {
-                    dropTreasure(world, rand,jailX + 2, jailY + 2, jailZ - i * 7 - 6);
+                if (rand.nextInt(3) == 0) {
+                    dropTreasure(world, rand, jailX + 2, jailY + 2, jailZ - i * 7 - 6);
                 }
 
-                if (rand.nextInt(3) == 0)
-                {
+                if (rand.nextInt(3) == 0) {
                     dropTreasure(world, rand, jailX + 12, jailY + 2, jailZ + i * 7 + 20);
                 }
 
-                if (rand.nextInt(3) == 0)
-                {
+                if (rand.nextInt(3) == 0) {
                     dropTreasure(world, rand, jailX + 2, jailY + 2, jailZ + i * 7 + 20);
                 }
             }
@@ -670,8 +583,7 @@ public class JailManager
 
         int lawyerCount = rand.nextInt(5) + 3;
 
-        for (int i = 1; i < lawyerCount; i++)
-        {
+        for (int i = 1; i < lawyerCount; i++) {
             EntityLawyerFromHell lawyer = new EntityLawyerFromHell(world);
 
             lawyer.setLocationAndAngles(jailX + 8, jailY + 1, jailZ - 12, player.rotationYaw, 0.0f);
@@ -699,8 +611,7 @@ public class JailManager
 
         lawyerCount = rand.nextInt(3) + 3;
 
-        for (int i = 2; i < lawyerCount; i++)
-        {
+        for (int i = 2; i < lawyerCount; i++) {
             EntityLawyerFromHell lawyer = new EntityLawyerFromHell(world);
 
             lawyer.setLocationAndAngles(jailX + i, jailY + 2, jailZ + 2, player.rotationYaw, 0.0f);
@@ -732,22 +643,19 @@ public class JailManager
 
         player.playSound(CreepsSoundHandler.lawyerBustedSound, 1.0f, 1.0f);
 
-        if (rand.nextInt(5) == 0)
-        {
+        if (rand.nextInt(5) == 0) {
             dropTreasure(world, rand, jailX + 8, jailY + 2, jailZ + 8);
         }
 
         return true;
     }
 
-    private static void dropTreasure(World world, Random rand, int x, int y, int z)
-    {
+    private static void dropTreasure(World world, Random rand, int x, int y, int z) {
         int treasureIndex = rand.nextInt(12);
 
         ItemStack itemStack;
 
-        switch (treasureIndex)
-        {
+        switch (treasureIndex) {
             case 1:
                 itemStack = new ItemStack(Items.WHEAT, rand.nextInt(2) + 1);
 
@@ -806,22 +714,16 @@ public class JailManager
         world.spawnEntity(entityItem);
     }
 
-    private static void populateCell(EntityPlayer player, World world, Random rand, int placeX, int placeY, int placeZ, boolean flag)
-    {
-        if (flag)
-        {
-            for (Entity entity : world.getEntitiesWithinAABBExcludingEntity(player, player.getEntityBoundingBox().expand(26.0d, 26.0d, 26.0d)))
-            {
-                if (entity instanceof EntityCreepBase)
-                {
-                    EntityCreepBase creep = (EntityCreepBase)entity;
+    private static void populateCell(EntityPlayer player, World world, Random rand, int placeX, int placeY, int placeZ, boolean flag) {
+        if (flag) {
+            for (Entity entity : world.getEntitiesWithinAABBExcludingEntity(player, player.getEntityBoundingBox().expand(26.0d, 26.0d, 26.0d))) {
+                if (entity instanceof EntityCreepBase) {
+                    EntityCreepBase creep = (EntityCreepBase) entity;
 
-                    if (creep.isTamed())
-                    {
+                    if (creep.isTamed()) {
                         creep.setWanderState(1);
 
-                        if (creep.getModelSize() > 1.0f)
-                        {
+                        if (creep.getModelSize() > 1.0f) {
                             creep.resetModelSize();
                         }
 
@@ -833,8 +735,7 @@ public class JailManager
             return;
         }
 
-        switch (rand.nextInt(5) + 1)
-        {
+        switch (rand.nextInt(5) + 1) {
             case 1:
                 EntityRatMan ratMan = new EntityRatMan(world);
 
@@ -880,28 +781,21 @@ public class JailManager
         }
     }
 
-    public static boolean isJailPossible(EntityPlayer player, World world, Random rand, int jailX, int jailY, int jailZ)
-    {
+    public static boolean isJailPossible(EntityPlayer player, World world, Random rand, int jailX, int jailY, int jailZ) {
 
-        if (!world.isBlockLoaded(new BlockPos(jailX, jailY, jailZ - 31)) || !world.isBlockLoaded(new BlockPos(jailX + 14, jailY, jailZ - 31)) || !world.isBlockLoaded(new BlockPos(jailX, jailY, jailZ + 45)) || !world.isBlockLoaded(new BlockPos(jailX + 14, jailY, jailZ + 45)))
-        {
+        if (!world.isBlockLoaded(new BlockPos(jailX, jailY, jailZ - 31)) || !world.isBlockLoaded(new BlockPos(jailX + 14, jailY, jailZ - 31)) || !world.isBlockLoaded(new BlockPos(jailX, jailY, jailZ + 45)) || !world.isBlockLoaded(new BlockPos(jailX + 14, jailY, jailZ + 45))) {
             return false;
         }
 
         int area = 0;
 
-        for (int i = -1; i < 6; i++)
-        {
-            for (int k = -1; k < 14; k++)
-            {
-                for (int q = -1; q < 14; q++)
-                {
-                    if (world.isAirBlock(new BlockPos(jailX + k, jailY + i, jailZ + q)))
-                    {
+        for (int i = -1; i < 6; i++) {
+            for (int k = -1; k < 14; k++) {
+                for (int q = -1; q < 14; q++) {
+                    if (world.isAirBlock(new BlockPos(jailX + k, jailY + i, jailZ + q))) {
                         area++;
 
-                        if (area > JailManager.maxObstruct)
-                        {
+                        if (area > JailManager.maxObstruct) {
                             return false;
                         }
                     }
@@ -911,12 +805,10 @@ public class JailManager
 
         Block block = world.getBlockState(new BlockPos(jailX + 16, jailY + 20, jailZ + 7)).getBlock();
 
-        if (block == Blocks.FLOWING_WATER || block == Blocks.WATER)
-        {
+        if (block == Blocks.FLOWING_WATER || block == Blocks.WATER) {
             area++;
 
-            if (area > JailManager.maxObstruct)
-            {
+            if (area > JailManager.maxObstruct) {
                 return false;
             }
         }
@@ -924,8 +816,7 @@ public class JailManager
         return true;
     }
 
-    private static void fixPlayer(EntityPlayer player, Vec3i structurepos)
-    {
+    private static void fixPlayer(EntityPlayer player, Vec3i structurepos) {
         player.setPositionAndUpdate(structurepos.getX() + 7, structurepos.getY() - 2, structurepos.getZ() + 2);
 
         player.heal(20.0f);
@@ -933,8 +824,7 @@ public class JailManager
         player.playSound(CreepsSoundHandler.lawyerBustedSound, 1.0f, 1.0f);
     }
 
-    private static void spawnLawyerGoul(World world, double strux, double struy, double struz)
-    {
+    private static void spawnLawyerGoul(World world, double strux, double struy, double struz) {
         EntityLawyerFromHell lawyer = new EntityLawyerFromHell(world);
 
         lawyer.setPosition(strux + 7, struy - 2, struz + 6);

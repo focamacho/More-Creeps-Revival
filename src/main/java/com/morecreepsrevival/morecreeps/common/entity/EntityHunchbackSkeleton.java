@@ -23,14 +23,12 @@ import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-public class EntityHunchbackSkeleton extends EntityCreepBase implements IRangedAttackMob, IEntityCanChangeSize
-{
+public class EntityHunchbackSkeleton extends EntityCreepBase implements IRangedAttackMob, IEntityCanChangeSize {
     private static final DataParameter<Integer> timeLeft = EntityDataManager.createKey(EntityHunchbackSkeleton.class, DataSerializers.VARINT);
 
     private static final DataParameter<Boolean> SWINGING_ARMS = EntityDataManager.<Boolean>createKey(EntityHunchbackSkeleton.class, DataSerializers.BOOLEAN);
 
-    public EntityHunchbackSkeleton(World worldIn)
-    {
+    public EntityHunchbackSkeleton(World worldIn) {
         super(worldIn);
 
         setCreepTypeName("Hunchback Skeleton");
@@ -39,7 +37,7 @@ public class EntityHunchbackSkeleton extends EntityCreepBase implements IRangedA
 
         setSize(0.6f, 1.99f);
 
-        baseHealth = (float)rand.nextInt(10) + 10.0f;
+        baseHealth = (float) rand.nextInt(10) + 10.0f;
 
         baseSpeed = 0.25f;
 
@@ -49,8 +47,7 @@ public class EntityHunchbackSkeleton extends EntityCreepBase implements IRangedA
     }
 
     @Override
-    protected void initEntityAI()
-    {
+    protected void initEntityAI() {
         clearAITasks();
 
         NodeProcessor nodeProcessor = getNavigator().getNodeProcessor();
@@ -79,8 +76,7 @@ public class EntityHunchbackSkeleton extends EntityCreepBase implements IRangedA
     }
 
     @Override
-    protected void entityInit()
-    {
+    protected void entityInit() {
         super.entityInit();
 
         dataManager.register(timeLeft, rand.nextInt(500) + 200);
@@ -89,26 +85,18 @@ public class EntityHunchbackSkeleton extends EntityCreepBase implements IRangedA
     }
 
     @Override
-    protected void updateTexture()
-    {
+    protected void updateTexture() {
         int iTimeLeft = getTimeLeft();
 
         int textureNum = 1;
 
-        if (iTimeLeft < 500 && iTimeLeft > 300)
-        {
+        if (iTimeLeft < 500 && iTimeLeft > 300) {
             textureNum = 2;
-        }
-        else if (iTimeLeft < 300 && iTimeLeft > 200)
-        {
+        } else if (iTimeLeft < 300 && iTimeLeft > 200) {
             textureNum = 3;
-        }
-        else if (iTimeLeft < 200 && iTimeLeft > 100)
-        {
+        } else if (iTimeLeft < 200 && iTimeLeft > 100) {
             textureNum = 4;
-        }
-        else if (iTimeLeft < 100 && iTimeLeft > 1)
-        {
+        } else if (iTimeLeft < 100 && iTimeLeft > 1) {
             textureNum = 5;
         }
 
@@ -116,134 +104,120 @@ public class EntityHunchbackSkeleton extends EntityCreepBase implements IRangedA
     }
 
     @Override
-    public void onLivingUpdate()
-    {
+    public void onLivingUpdate() {
         super.onLivingUpdate();
 
         EntityLivingBase target = getAttackTarget();
 
         EntityPlayer owner = getOwner();
 
-        if (target != null && owner != null && (target.equals(owner) || (target instanceof EntityCreepBase && owner.equals(((EntityCreepBase)target).getOwner())) || (target instanceof EntityTameable && owner.equals(((EntityTameable)target).getOwner()))))
-        {
+        if (target != null && owner != null && (target.equals(owner) || (target instanceof EntityCreepBase && owner.equals(((EntityCreepBase) target).getOwner())) || (target instanceof EntityTameable && owner.equals(((EntityTameable) target).getOwner())))) {
             setAttackTarget(null);
         }
 
-        if (rand.nextInt(2) == 0)
-        {
+        if (rand.nextInt(2) == 0) {
             setTimeLeft(getTimeLeft() - 1);
         }
 
         updateTexture();
 
-        if (getTimeLeft() < 1)
-        {
+        if (getTimeLeft() < 1) {
             smoke();
 
             setDead();
         }
     }
 
-    private void setTimeLeft(int i)
-    {
-        dataManager.set(timeLeft, i);
-    }
-
-    public int getTimeLeft()
-    {
+    public int getTimeLeft() {
         return dataManager.get(timeLeft);
     }
 
+    private void setTimeLeft(int i) {
+        dataManager.set(timeLeft, i);
+    }
+
     @Override
-    protected void dropItemsOnDeath()
-    {
-        if (rand.nextInt(10) == 0)
-        {
-            if (rand.nextInt(2) == 0)
-            {
+    protected void dropItemsOnDeath() {
+        if (rand.nextInt(10) == 0) {
+            if (rand.nextInt(2) == 0) {
                 dropItem(Items.ARROW, rand.nextInt(3));
             }
 
-            if (rand.nextInt(2) == 0)
-            {
+            if (rand.nextInt(2) == 0) {
                 dropItem(Items.BONE, rand.nextInt(2));
             }
         }
     }
 
     @Override
-    public boolean getCanSpawnHere()
-    {
+    public boolean getCanSpawnHere() {
         return true;
     }
 
     @Override
-    protected SoundEvent getAmbientSound()
-    {
+    protected SoundEvent getAmbientSound() {
         return SoundEvents.ENTITY_SKELETON_AMBIENT;
     }
 
     @Override
-    protected SoundEvent getHurtSound(DamageSource damageSource)
-    {
+    protected SoundEvent getHurtSound(DamageSource damageSource) {
         return SoundEvents.ENTITY_SKELETON_HURT;
     }
 
     @Override
-    protected SoundEvent getDeathSound()
-    {
+    protected SoundEvent getDeathSound() {
         return SoundEvents.ENTITY_SKELETON_HURT;
     }
 
     @Override
-    public void attackEntityWithRangedAttack(EntityLivingBase target, float distanceFactor)
-    {
+    public void attackEntityWithRangedAttack(EntityLivingBase target, float distanceFactor) {
         EntityArrow entityarrow = this.getArrow(distanceFactor);
         double d0 = target.posX - this.posX;
-        double d1 = target.getEntityBoundingBox().minY + (double)(target.height / 3.0F) - entityarrow.posY;
+        double d1 = target.getEntityBoundingBox().minY + (double) (target.height / 3.0F) - entityarrow.posY;
         double d2 = target.posZ - this.posZ;
         double d3 = (double) MathHelper.sqrt(d0 * d0 + d2 * d2);
-        entityarrow.shoot(d0, d1 + d3 * 0.20000000298023224D, d2, 1.6F, (float)(14 - this.world.getDifficulty().getDifficultyId() * 4));
+        entityarrow.shoot(d0, d1 + d3 * 0.20000000298023224D, d2, 1.6F, (float) (14 - this.world.getDifficulty().getDifficultyId() * 4));
         this.playSound(SoundEvents.ENTITY_SKELETON_SHOOT, 1.0F, 1.0F / (this.getRNG().nextFloat() * 0.4F + 0.8F));
         this.world.spawnEntity(entityarrow);
     }
 
-    protected EntityArrow getArrow(float p_190726_1_)
-    {
+    protected EntityArrow getArrow(float p_190726_1_) {
         EntityTippedArrow entitytippedarrow = new EntityTippedArrow(this.world, this);
         entitytippedarrow.setEnchantmentEffectsFromEntity(this, p_190726_1_);
         return entitytippedarrow;
     }
 
     @SideOnly(Side.CLIENT)
-    public boolean isSwingingArms()
-    {
-        return ((Boolean)dataManager.get(SWINGING_ARMS)).booleanValue();
+    public boolean isSwingingArms() {
+        return ((Boolean) dataManager.get(SWINGING_ARMS)).booleanValue();
     }
 
-    public void setSwingingArms(boolean swingingArms)
-    {
+    public void setSwingingArms(boolean swingingArms) {
         dataManager.set(SWINGING_ARMS, Boolean.valueOf(swingingArms));
     }
 
     @Override
-    public float maxShrink() { return 0.5f; }
+    public float maxShrink() {
+        return 0.5f;
+    }
 
     @Override
-    public float getShrinkRayAmount() { return 0.2f; }
+    public float getShrinkRayAmount() {
+        return 0.2f;
+    }
 
     @Override
     public void onShrink(EntityShrink source) {
 
     }
+
     @Override
     public float maxGrowth() {
         return 5.0f;
     }
 
     @Override
-    public float getGrowRayAmount()
-    {
+    public float getGrowRayAmount() {
         return 0.2F;
     }
 

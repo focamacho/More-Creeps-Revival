@@ -2,7 +2,6 @@ package com.morecreepsrevival.morecreeps.common.entity;
 
 import com.morecreepsrevival.morecreeps.common.items.CreepsItemHandler;
 import com.morecreepsrevival.morecreeps.common.sounds.CreepsSoundHandler;
-import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.ai.*;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
@@ -16,14 +15,12 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
 
-public class EntityGooGoat extends EntityCreepBase implements IEntityCanChangeSize
-{
+public class EntityGooGoat extends EntityCreepBase implements IEntityCanChangeSize {
     private static final DataParameter<Integer> hungryTime = EntityDataManager.createKey(EntityGooGoat.class, DataSerializers.VARINT);
 
     private static final DataParameter<Boolean> hungry = EntityDataManager.<Boolean>createKey(EntityGooGoat.class, DataSerializers.BOOLEAN);
 
-    public EntityGooGoat(World world)
-    {
+    public EntityGooGoat(World world) {
         super(world);
 
         setCreepTypeName("Goo Goat");
@@ -42,8 +39,7 @@ public class EntityGooGoat extends EntityCreepBase implements IEntityCanChangeSi
     }
 
     @Override
-    protected void entityInit()
-    {
+    protected void entityInit() {
         super.entityInit();
 
         dataManager.register(hungryTime, 0);
@@ -52,8 +48,7 @@ public class EntityGooGoat extends EntityCreepBase implements IEntityCanChangeSi
     }
 
     @Override
-    protected void initEntityAI()
-    {
+    protected void initEntityAI() {
         clearAITasks();
 
         NodeProcessor nodeProcessor = getNavigator().getNodeProcessor();
@@ -80,32 +75,27 @@ public class EntityGooGoat extends EntityCreepBase implements IEntityCanChangeSi
     }
 
     @Override
-    protected SoundEvent getHurtSound(DamageSource damageSource)
-    {
+    protected SoundEvent getHurtSound(DamageSource damageSource) {
         return CreepsSoundHandler.gooGoatHurtSound;
     }
 
     @Override
-    protected SoundEvent getDeathSound()
-    {
+    protected SoundEvent getDeathSound() {
         return CreepsSoundHandler.gooGoatDeathSound;
     }
 
     @Override
-    protected SoundEvent getAmbientSound()
-    {
+    protected SoundEvent getAmbientSound() {
         return CreepsSoundHandler.gooGoatSound;
     }
 
     @Override
-    public int getMaxSpawnedInChunk()
-    {
+    public int getMaxSpawnedInChunk() {
         return 2;
     }
 
     @Override
-    public void onLivingUpdate()
-    {
+    public void onLivingUpdate() {
         super.onLivingUpdate();
 
         float modelSize = getModelSize();
@@ -114,23 +104,19 @@ public class EntityGooGoat extends EntityCreepBase implements IEntityCanChangeSi
 
         float h = modelSize * 1.5f;
 
-        if (width != w || height != h)
-        {
+        if (width != w || height != h) {
             setSize(w, h);
         }
 
-        if (getHungry())
-        {
+        if (getHungry()) {
             BlockPos blockPos = new BlockPos(MathHelper.floor(posX), MathHelper.floor(getEntityBoundingBox().minY) - 1, MathHelper.floor(posZ));
 
-            if (world.getBlockState(blockPos).getBlock() == Blocks.GRASS && rand.nextInt(10) == 0)
-            {
+            if (world.getBlockState(blockPos).getBlock() == Blocks.GRASS && rand.nextInt(10) == 0) {
                 world.setBlockState(blockPos, Blocks.DIRT.getDefaultState());
 
                 dataManager.set(hungryTime, dataManager.get(hungryTime) + rand.nextInt(100) + 25);
 
-                if (dataManager.get(hungryTime) > 300 && getLevel() < 5)
-                {
+                if (dataManager.get(hungryTime) > 300 && getLevel() < 5) {
                     setHungry(false);
 
                     dataManager.set(hungryTime, 0);
@@ -148,13 +134,10 @@ public class EntityGooGoat extends EntityCreepBase implements IEntityCanChangeSi
                     playSound(CreepsSoundHandler.gooGoatStretchSound, getSoundVolume(), getSoundPitch());
                 }
             }
-        }
-        else
-        {
+        } else {
             dataManager.set(hungryTime, dataManager.get(hungryTime) - 1);
 
-            if (dataManager.get(hungryTime) < 1)
-            {
+            if (dataManager.get(hungryTime) < 1) {
                 setHungry(true);
 
                 dataManager.set(hungryTime, 0);
@@ -163,62 +146,59 @@ public class EntityGooGoat extends EntityCreepBase implements IEntityCanChangeSi
     }
 
     @Override
-    public void updateTexture()
-    {
+    public void updateTexture() {
         setTexture("textures/entity/googoat" + getLevel() + ".png");
     }
 
     @Override
-    protected float getLevelHealthMultiplier()
-    {
+    protected float getLevelHealthMultiplier() {
         return 15.0f;
     }
 
     @Override
-    protected float getSoundVolume()
-    {
+    protected float getSoundVolume() {
         return 0.5f;
     }
 
     @Override
-    protected void dropItemsOnDeath()
-    {
+    protected void dropItemsOnDeath() {
         int i = (getLevel() - 1) + rand.nextInt(2);
 
-        if (i > 0)
-        {
+        if (i > 0) {
             dropItem(CreepsItemHandler.gooDonut, i);
         }
     }
 
-    private void setHungry(boolean b)
-    {
+    public boolean getHungry() {
+        return ((Boolean) dataManager.get(hungry)).booleanValue();
+    }
+
+    private void setHungry(boolean b) {
         dataManager.set(hungry, Boolean.valueOf(b));
     }
 
-    public boolean getHungry()
-    {
-        return ((Boolean)dataManager.get(hungry)).booleanValue();
+    @Override
+    public float maxShrink() {
+        return 0.3f;
     }
 
     @Override
-    public float maxShrink() { return 0.3f; }
-
-    @Override
-    public float getShrinkRayAmount() { return 0.25f; }
+    public float getShrinkRayAmount() {
+        return 0.25f;
+    }
 
     @Override
     public void onShrink(EntityShrink source) {
 
     }
+
     @Override
     public float maxGrowth() {
         return 3.0f;
     }
 
     @Override
-    public float getGrowRayAmount()
-    {
+    public float getGrowRayAmount() {
         return 0.25F;
     }
 

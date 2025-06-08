@@ -2,27 +2,20 @@ package com.morecreepsrevival.morecreeps.common.entity;
 
 import com.morecreepsrevival.morecreeps.common.items.CreepsItemHandler;
 import com.morecreepsrevival.morecreeps.common.sounds.CreepsSoundHandler;
-import net.minecraft.client.model.ModelCreeper;
 import net.minecraft.entity.EnumCreatureType;
 import net.minecraft.entity.ai.*;
-import net.minecraft.entity.monster.EntityCreeper;
 import net.minecraft.entity.monster.IMob;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.Items;
 import net.minecraft.pathfinding.NodeProcessor;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.world.World;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 
-public class EntityRobotTed extends EntityCreepBase implements IMob, IEntityCanChangeSize
-{
+public class EntityRobotTed extends EntityCreepBase implements IMob, IEntityCanChangeSize {
 
     public int floattimer;
 
-    public EntityRobotTed(World worldIn)
-    {
+    public EntityRobotTed(World worldIn) {
         super(worldIn);
 
         setCreepTypeName("Robot Ted");
@@ -33,7 +26,7 @@ public class EntityRobotTed extends EntityCreepBase implements IMob, IEntityCanC
 
         setSize(2.5f * 0.75f, 2.5f * 1.85f);
 
-        baseHealth = (float)rand.nextInt(20) + 25.0f;
+        baseHealth = (float) rand.nextInt(20) + 25.0f;
 
         baseSpeed = 0.25d;
 
@@ -45,14 +38,12 @@ public class EntityRobotTed extends EntityCreepBase implements IMob, IEntityCanC
     }
 
     @Override
-    protected void updateTexture()
-    {
+    protected void updateTexture() {
         setTexture("textures/entity/robotted.png");
     }
 
     @Override
-    protected void initEntityAI()
-    {
+    protected void initEntityAI() {
         clearAITasks();
 
         NodeProcessor nodeProcessor = getNavigator().getNodeProcessor();
@@ -60,7 +51,6 @@ public class EntityRobotTed extends EntityCreepBase implements IMob, IEntityCanC
         nodeProcessor.setCanSwim(true);
 
         nodeProcessor.setCanEnterDoors(true);
-
 
 
         tasks.addTask(1, new EntityAISwimming(this));
@@ -87,15 +77,12 @@ public class EntityRobotTed extends EntityCreepBase implements IMob, IEntityCanC
     }
 
     @Override
-    public float getEyeHeight()
-    {
+    public float getEyeHeight() {
         return 2.0f;
     }
 
-    protected void dropItemsOnDeath()
-    {
-        if (rand.nextInt(5) == 0)
-        {
+    protected void dropItemsOnDeath() {
+        if (rand.nextInt(5) == 0) {
             dropItem(CreepsItemHandler.ram16k, rand.nextInt(3) + 1);
         }
     }
@@ -105,15 +92,13 @@ public class EntityRobotTed extends EntityCreepBase implements IMob, IEntityCanC
         super.onLivingUpdate();
         fallDistance += -1.5f;
 
-        if (!this.onGround && this.motionY < 0.0D)
-        {
+        if (!this.onGround && this.motionY < 0.0D) {
             this.motionY *= 0.6D;
         }
     }
 
     @Override
-    public void fall(float distance, float damageMultiplier)
-    {
+    public void fall(float distance, float damageMultiplier) {
     }
 
     @Override
@@ -122,47 +107,47 @@ public class EntityRobotTed extends EntityCreepBase implements IMob, IEntityCanC
     }
 
     @Override
-    public int getMaxSpawnedInChunk()
-    {
+    public int getMaxSpawnedInChunk() {
         return 1;
     }
 
     @Override
-    protected SoundEvent getAmbientSound()
-    {
+    protected SoundEvent getAmbientSound() {
         return CreepsSoundHandler.tedInsultSound;
     }
 
     @Override
-    protected SoundEvent getHurtSound(DamageSource damageSource)
-    {
+    protected SoundEvent getHurtSound(DamageSource damageSource) {
         return CreepsSoundHandler.robotHurtSound;
     }
 
     @Override
-    protected SoundEvent getDeathSound()
-    {
+    protected SoundEvent getDeathSound() {
         return CreepsSoundHandler.tedDeadSound;
     }
 
     @Override
-    public float maxShrink() { return 0.6f; }
+    public float maxShrink() {
+        return 0.6f;
+    }
 
     @Override
-    public float getShrinkRayAmount() { return 0.15f; }
+    public float getShrinkRayAmount() {
+        return 0.15f;
+    }
 
     @Override
     public void onShrink(EntityShrink source) {
 
     }
+
     @Override
     public float maxGrowth() {
         return 6.0f;
     }
 
     @Override
-    public float getGrowRayAmount()
-    {
+    public float getGrowRayAmount() {
         return 0.15F;
     }
 

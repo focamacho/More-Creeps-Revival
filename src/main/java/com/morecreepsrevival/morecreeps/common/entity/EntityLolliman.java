@@ -17,8 +17,7 @@ import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
 
-public class EntityLolliman extends EntityCreepBase implements IEntityCanChangeSize
-{
+public class EntityLolliman extends EntityCreepBase implements IEntityCanChangeSize {
     private static final DataParameter<Boolean> kidMounted = EntityDataManager.<Boolean>createKey(EntityLolliman.class, DataSerializers.BOOLEAN);
 
     private static final DataParameter<Integer> kidCheck = EntityDataManager.createKey(EntityLolliman.class, DataSerializers.VARINT);
@@ -27,8 +26,7 @@ public class EntityLolliman extends EntityCreepBase implements IEntityCanChangeS
 
     private static final DataParameter<Integer> treats = EntityDataManager.createKey(EntityLolliman.class, DataSerializers.VARINT);
 
-    public EntityLolliman(World world)
-    {
+    public EntityLolliman(World world) {
         super(world);
 
         setCreepTypeName("Lolliman");
@@ -45,14 +43,12 @@ public class EntityLolliman extends EntityCreepBase implements IEntityCanChangeS
     }
 
     @Override
-    protected void updateTexture()
-    {
+    protected void updateTexture() {
         setTexture("textures/entity/lolliman.png");
     }
 
     @Override
-    protected void entityInit()
-    {
+    protected void entityInit() {
         super.entityInit();
 
         dataManager.register(kidMounted, Boolean.valueOf(false));
@@ -65,8 +61,7 @@ public class EntityLolliman extends EntityCreepBase implements IEntityCanChangeS
     }
 
     @Override
-    public void initEntityAI()
-    {
+    public void initEntityAI() {
         clearAITasks();
 
         NodeProcessor nodeProcessor = getNavigator().getNodeProcessor();
@@ -75,8 +70,7 @@ public class EntityLolliman extends EntityCreepBase implements IEntityCanChangeS
 
         nodeProcessor.setCanEnterDoors(true);
 
-        if (!getKidMounted())
-        {
+        if (!getKidMounted()) {
             tasks.addTask(1, new EntityAISwimming(this));
 
             tasks.addTask(2, new EntityAIBreakDoor(this));
@@ -96,10 +90,8 @@ public class EntityLolliman extends EntityCreepBase implements IEntityCanChangeS
     }
 
     @Override
-    public boolean isEntityInsideOpaqueBlock()
-    {
-        if (getKidMounted())
-        {
+    public boolean isEntityInsideOpaqueBlock() {
+        if (getKidMounted()) {
             return false;
         }
 
@@ -107,63 +99,52 @@ public class EntityLolliman extends EntityCreepBase implements IEntityCanChangeS
     }
 
     @Override
-    public int getMaxSpawnedInChunk()
-    {
+    public int getMaxSpawnedInChunk() {
         return 1;
     }
 
     @Override
-    protected void dropItemsOnDeath()
-    {
-        if (rand.nextInt(10) == 0)
-        {
+    protected void dropItemsOnDeath() {
+        if (rand.nextInt(10) == 0) {
             dropItem(CreepsItemHandler.lolly, rand.nextInt(3) + 1);
         }
 
-        if (rand.nextInt(10) == 0)
-        {
+        if (rand.nextInt(10) == 0) {
             dropItem(CreepsItemHandler.sundae, rand.nextInt(3) + 1);
         }
     }
 
     @Override
-    protected SoundEvent getAmbientSound()
-    {
+    protected SoundEvent getAmbientSound() {
         return CreepsSoundHandler.lollimanSound;
     }
 
     @Override
-    protected SoundEvent getHurtSound(DamageSource damageSource)
-    {
+    protected SoundEvent getHurtSound(DamageSource damageSource) {
         return CreepsSoundHandler.lollimanHurtSound;
     }
 
     @Override
-    protected SoundEvent getDeathSound()
-    {
+    protected SoundEvent getDeathSound() {
         return CreepsSoundHandler.lollimanDeathSound;
     }
 
-    protected void setKidMounted(boolean b)
-    {
+    public boolean getKidMounted() {
+        return ((Boolean) dataManager.get(kidMounted)).booleanValue();
+    }
+
+    protected void setKidMounted(boolean b) {
         dataManager.set(kidMounted, Boolean.valueOf(b));
     }
 
-    public boolean getKidMounted()
-    {
-        return ((Boolean)dataManager.get(kidMounted)).booleanValue();
-    }
-
     @Override
-    protected boolean shouldJumpWhileAttacking(Entity entity)
-    {
+    protected boolean shouldJumpWhileAttacking(Entity entity) {
         return true;
     }
 
     @Override
-    protected void doAttackJump(Entity entity)
-    {
-        rotationYaw = ((float)Math.toDegrees(Math.atan2(entity.posZ - posZ, entity.posX - posX))) - 90.0f;
+    protected void doAttackJump(Entity entity) {
+        rotationYaw = ((float) Math.toDegrees(Math.atan2(entity.posZ - posZ, entity.posX - posX))) - 90.0f;
 
         double d0 = entity.posX - posX;
 
@@ -181,22 +162,17 @@ public class EntityLolliman extends EntityCreepBase implements IEntityCanChangeS
     }
 
     @Override
-    public void onLivingUpdate()
-    {
+    public void onLivingUpdate() {
         super.onLivingUpdate();
 
-        if (!getKidMounted())
-        {
+        if (!getKidMounted()) {
             dataManager.set(kidCheck, dataManager.get(kidCheck) + 1);
 
-            if (dataManager.get(kidCheck) > 10)
-            {
+            if (dataManager.get(kidCheck) > 10) {
                 dataManager.set(kidCheck, 0);
 
-                for (Entity entity : world.getEntitiesWithinAABBExcludingEntity(this, getEntityBoundingBox().expand(2.0d, 2.0d, 2.0d)))
-                {
-                    if (entity instanceof EntityKid)
-                    {
+                for (Entity entity : world.getEntitiesWithinAABBExcludingEntity(this, getEntityBoundingBox().expand(2.0d, 2.0d, 2.0d))) {
+                    if (entity instanceof EntityKid) {
                         playSound(CreepsSoundHandler.lollimanTakeOffSound, getSoundVolume(), getSoundPitch());
 
                         // TODO: give player achievement
@@ -207,8 +183,7 @@ public class EntityLolliman extends EntityCreepBase implements IEntityCanChangeS
 
                         motionY = 0.6000000238418579d;
 
-                        if (!world.isRemote)
-                        {
+                        if (!world.isRemote) {
                             entity.startRiding(this);
 
                             setKidMounted(true);
@@ -218,34 +193,27 @@ public class EntityLolliman extends EntityCreepBase implements IEntityCanChangeS
                     }
                 }
             }
-        }
-        else
-        {
+        } else {
             motionY = 0.25d;
 
             dataManager.set(rocketTime, dataManager.get(rocketTime) + 1);
 
-            if (dataManager.get(rocketTime) > 5)
-            {
+            if (dataManager.get(rocketTime) > 5) {
                 dataManager.set(rocketTime, 0);
 
                 int randInt = rand.nextInt(2) + 1;
 
-                for (int i = 0; i < randInt; i++)
-                {
+                for (int i = 0; i < randInt; i++) {
                     dataManager.set(treats, dataManager.get(treats) + 1);
 
-                    if (dataManager.get(treats) == 30)
-                    {
+                    if (dataManager.get(treats) == 30) {
                         playSound(CreepsSoundHandler.lollimanExplodeSound, getSoundVolume(), getSoundPitch());
                     }
 
-                    if (!world.isRemote && rand.nextInt(3) == 0)
-                    {
+                    if (!world.isRemote && rand.nextInt(3) == 0) {
                         EntityItem entityItem;
 
-                        switch (rand.nextInt(4))
-                        {
+                        switch (rand.nextInt(4)) {
                             case 1:
                                 entityItem = entityDropItem(new ItemStack(Items.COOKIE, 1), 1.0f);
 
@@ -264,25 +232,21 @@ public class EntityLolliman extends EntityCreepBase implements IEntityCanChangeS
                                 break;
                         }
 
-                        if (entityItem != null)
-                        {
+                        if (entityItem != null) {
                             entityItem.motionX += (rand.nextFloat() - rand.nextFloat()) * 0.2f;
 
                             entityItem.motionZ += (rand.nextFloat() - rand.nextFloat()) * 0.2f;
                         }
                     }
 
-                    if (posY > 100.0d || dataManager.get(treats) > 55)
-                    {
-                        for (Entity entity : getPassengers())
-                        {
+                    if (posY > 100.0d || dataManager.get(treats) > 55) {
+                        for (Entity entity : getPassengers()) {
                             entity.setDead();
                         }
 
                         setDead();
 
-                        if (dataManager.get(treats) > 50)
-                        {
+                        if (dataManager.get(treats) > 50) {
                             world.createExplosion(this, posX, posY + 2.0d, posZ, 2.5f, true);
                         }
                     }
@@ -292,23 +256,27 @@ public class EntityLolliman extends EntityCreepBase implements IEntityCanChangeS
     }
 
     @Override
-    public float maxShrink() { return 0.5f; }
+    public float maxShrink() {
+        return 0.5f;
+    }
 
     @Override
-    public float getShrinkRayAmount() { return 0.25f; }
+    public float getShrinkRayAmount() {
+        return 0.25f;
+    }
 
     @Override
     public void onShrink(EntityShrink source) {
 
     }
+
     @Override
     public float maxGrowth() {
         return 5.0f;
     }
 
     @Override
-    public float getGrowRayAmount()
-    {
+    public float getGrowRayAmount() {
         return 0.25F;
     }
 

@@ -5,11 +5,9 @@ import net.minecraft.client.renderer.entity.Render;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraftforge.fml.client.registry.IRenderFactory;
 
-public class RenderPonyGirlFactory implements IRenderFactory<EntityPonyGirl>
-{
+public class RenderPonyGirlFactory implements IRenderFactory<EntityPonyGirl> {
     @Override
-    public Render<? super EntityPonyGirl> createRenderFor(RenderManager renderManager)
-    {
+    public Render<? super EntityPonyGirl> createRenderFor(RenderManager renderManager) {
         return new RenderPonyGirl<>(renderManager);
     }
 }

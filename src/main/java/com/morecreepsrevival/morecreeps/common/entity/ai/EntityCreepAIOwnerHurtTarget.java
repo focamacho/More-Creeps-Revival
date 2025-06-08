@@ -5,16 +5,14 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.ai.EntityAITarget;
 import net.minecraft.entity.player.EntityPlayer;
 
-public class EntityCreepAIOwnerHurtTarget extends EntityAITarget
-{
+public class EntityCreepAIOwnerHurtTarget extends EntityAITarget {
     private EntityCreepBase tamable;
 
     private EntityLivingBase attacker;
 
     private int timestamp;
 
-    public EntityCreepAIOwnerHurtTarget(EntityCreepBase tamableIn)
-    {
+    public EntityCreepAIOwnerHurtTarget(EntityCreepBase tamableIn) {
         super(tamableIn, false);
 
         tamable = tamableIn;
@@ -23,16 +21,13 @@ public class EntityCreepAIOwnerHurtTarget extends EntityAITarget
     }
 
     @Override
-    public boolean shouldExecute()
-    {
+    public boolean shouldExecute() {
         EntityPlayer owner = tamable.getOwner();
 
-        if (owner != null)
-        {
+        if (owner != null) {
             attacker = owner.getLastAttackedEntity();
 
-            if (owner.getLastAttackedEntityTime() != timestamp && isSuitableTarget(attacker, false) && tamable.shouldAttackEntity(attacker))
-            {
+            if (owner.getLastAttackedEntityTime() != timestamp && isSuitableTarget(attacker, false) && tamable.shouldAttackEntity(attacker)) {
                 return true;
             }
         }
@@ -41,14 +36,12 @@ public class EntityCreepAIOwnerHurtTarget extends EntityAITarget
     }
 
     @Override
-    public void startExecuting()
-    {
+    public void startExecuting() {
         taskOwner.setAttackTarget(attacker);
 
         EntityPlayer owner = tamable.getOwner();
 
-        if (owner != null)
-        {
+        if (owner != null) {
             timestamp = owner.getLastAttackedEntityTime();
         }
 
@@ -56,10 +49,8 @@ public class EntityCreepAIOwnerHurtTarget extends EntityAITarget
     }
 
     @Override
-    public boolean shouldContinueExecuting()
-    {
-        if (tamable.getOwner() == null)
-        {
+    public boolean shouldContinueExecuting() {
+        if (tamable.getOwner() == null) {
             return false;
         }
 

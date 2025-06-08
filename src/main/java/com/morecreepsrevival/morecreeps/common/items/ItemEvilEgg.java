@@ -10,18 +10,16 @@ import net.minecraft.world.World;
 
 import javax.annotation.Nonnull;
 
-public class ItemEvilEgg extends CreepsItem
-{
-    public ItemEvilEgg()
-    {
+public class ItemEvilEgg extends CreepsItem {
+    public ItemEvilEgg() {
         super("evil_egg");
 
         setMaxStackSize(44);
     }
 
-    @Override @Nonnull
-    public ActionResult<ItemStack> onItemRightClick(World world, EntityPlayer player, @Nonnull EnumHand hand)
-    {
+    @Override
+    @Nonnull
+    public ActionResult<ItemStack> onItemRightClick(World world, EntityPlayer player, @Nonnull EnumHand hand) {
         player.getHeldItem(hand).shrink(1);
 
         player.swingArm(hand);
@@ -30,8 +28,7 @@ public class ItemEvilEgg extends CreepsItem
 
         EntityEvilEgg evilEgg = new EntityEvilEgg(world, player);
 
-        if (!world.isRemote)
-        {
+        if (!world.isRemote) {
             world.spawnEntity(evilEgg);
         }
 

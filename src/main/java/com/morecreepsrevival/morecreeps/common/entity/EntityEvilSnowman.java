@@ -18,12 +18,10 @@ import net.minecraft.world.World;
 
 import javax.annotation.Nonnull;
 
-public class EntityEvilSnowman extends EntityCreepBase implements IMob, IEntityCanChangeSize
-{
+public class EntityEvilSnowman extends EntityCreepBase implements IMob, IEntityCanChangeSize {
     private int updateSizeTime = 0;
 
-    public EntityEvilSnowman(World worldIn)
-    {
+    public EntityEvilSnowman(World worldIn) {
         super(worldIn);
 
         setCreepTypeName("Evil Snowman");
@@ -42,53 +40,43 @@ public class EntityEvilSnowman extends EntityCreepBase implements IMob, IEntityC
     }
 
     @Override
-    protected void updateTexture()
-    {
+    protected void updateTexture() {
         setTexture("textures/entity/evilsnowman.png");
     }
 
     @Override
-    public boolean getCanSpawnHere()
-    {
+    public boolean getCanSpawnHere() {
         return true;
     }
 
     @Override
-    protected SoundEvent getAmbientSound()
-    {
+    protected SoundEvent getAmbientSound() {
         return CreepsSoundHandler.snowmanSound;
     }
 
     @Override
-    protected SoundEvent getHurtSound(DamageSource damageSource)
-    {
+    protected SoundEvent getHurtSound(DamageSource damageSource) {
         return CreepsSoundHandler.snowmanHurtSound;
     }
 
     @Override
-    protected SoundEvent getDeathSound()
-    {
+    protected SoundEvent getDeathSound() {
         return CreepsSoundHandler.snowmanDeathSound;
     }
 
     @Override
-    protected void dropItemsOnDeath()
-    {
-        if (rand.nextInt(10) == 0)
-        {
+    protected void dropItemsOnDeath() {
+        if (rand.nextInt(10) == 0) {
             dropItem(Item.getItemFromBlock(Blocks.ICE), rand.nextInt(3) + 1);
 
             dropItem(Item.getItemFromBlock(Blocks.SNOW), rand.nextInt(10) + 1);
-        }
-        else
-        {
+        } else {
             dropItem(Item.getItemFromBlock(Blocks.SNOW), rand.nextInt(5) + 2);
         }
     }
 
     @Override
-    public void initEntityAI()
-    {
+    public void initEntityAI() {
         clearAITasks();
 
         NodeProcessor nodeProcessor = getNavigator().getNodeProcessor();
@@ -115,12 +103,10 @@ public class EntityEvilSnowman extends EntityCreepBase implements IMob, IEntityC
     }
 
     @Override
-    public void onLivingUpdate()
-    {
+    public void onLivingUpdate() {
         super.onLivingUpdate();
 
-        if (!onGround && !isJumping)
-        {
+        if (!onGround && !isJumping) {
             motionY -= 0.0020000000949949026d;
         }
 
@@ -130,51 +116,41 @@ public class EntityEvilSnowman extends EntityCreepBase implements IMob, IEntityC
 
         int z = MathHelper.floor(posZ);
 
-        if (world.getBlockState(new BlockPos(x, y - 1, z)).getBlock() == Blocks.SNOW)
-        {
+        if (world.getBlockState(new BlockPos(x, y - 1, z)).getBlock() == Blocks.SNOW) {
             setModelSize(getModelSize() + 0.001f);
-        }
-        else
-        {
+        } else {
             setModelSize(getModelSize() + 0.002f);
         }
 
-        if (inWater)
-        {
+        if (inWater) {
             setModelSize(getModelSize() - 0.02f);
         }
 
-        if (getModelSize() > 6.0f)
-        {
+        if (getModelSize() > 6.0f) {
             setModelSize(6.0f);
         }
 
         float f = getModelSize();
 
-        if (updateSizeTime-- < 1)
-        {
+        if (updateSizeTime-- < 1) {
             setSize(f * 0.45f, f * 2.0f);
 
             updateSizeTime = 100;
         }
 
-        if (f < 0.050000000000000003d)
-        {
+        if (f < 0.050000000000000003d) {
             setDead();
         }
     }
 
     @Override
-    protected boolean shouldJumpWhileAttacking(Entity entity)
-    {
+    protected boolean shouldJumpWhileAttacking(Entity entity) {
         return true;
     }
 
     @Override
-    protected void doAttackJump(Entity entity)
-    {
-        for (int i = 0; i < 8; i++)
-        {
+    protected void doAttackJump(Entity entity) {
+        for (int i = 0; i < 8; i++) {
             playSound(CreepsSoundHandler.snowmanBounceSound, 1.0f, 2.0f - getModelSize());
 
             world.spawnParticle(EnumParticleTypes.SNOWBALL, posX, posY, posZ, 0.0d, 0.0d, 0.0d);
@@ -186,31 +162,28 @@ public class EntityEvilSnowman extends EntityCreepBase implements IMob, IEntityC
 
         float f1 = MathHelper.sqrt(d * d + d1 * d1);
 
-        motionX = (d / (double)f1) * 0.5D * 0.30000000192092896D + motionX * 0.20000000098023224D;
+        motionX = (d / (double) f1) * 0.5D * 0.30000000192092896D + motionX * 0.20000000098023224D;
 
-        motionZ = (d1 / (double)f1) * 0.5D * 0.25000000192092897D + motionZ * 0.20000000098023224D;
+        motionZ = (d1 / (double) f1) * 0.5D * 0.25000000192092897D + motionZ * 0.20000000098023224D;
 
         motionY = 0.35000000196046449D;
 
-        if (rand.nextInt(20) == 0)
-        {
-            double d2 = -MathHelper.sin((entity.rotationYaw * (float)Math.PI) / 180F);
-            double d5 = MathHelper.cos((entity.rotationYaw * (float)Math.PI) / 180F);
+        if (rand.nextInt(20) == 0) {
+            double d2 = -MathHelper.sin((entity.rotationYaw * (float) Math.PI) / 180F);
+            double d5 = MathHelper.cos((entity.rotationYaw * (float) Math.PI) / 180F);
             motionX -= d2 * 0.40000000596046448D;
             motionZ -= d5 * 0.40000000596046448D;
         }
 
-        if (rand.nextInt(20) == 0)
-        {
-            double d3 = -MathHelper.sin((entity.rotationYaw * (float)Math.PI) / 180F);
+        if (rand.nextInt(20) == 0) {
+            double d3 = -MathHelper.sin((entity.rotationYaw * (float) Math.PI) / 180F);
             motionX -= d3 * 1.0D;
             motionY += 0.16599999368190765D;
         }
 
-        if (rand.nextInt(40) == 0)
-        {
-            double d4 = -MathHelper.sin((entity.rotationYaw * (float)Math.PI) / 180F);
-            double d7 = MathHelper.cos((entity.rotationYaw * (float)Math.PI) / 180F);
+        if (rand.nextInt(40) == 0) {
+            double d4 = -MathHelper.sin((entity.rotationYaw * (float) Math.PI) / 180F);
+            double d7 = MathHelper.cos((entity.rotationYaw * (float) Math.PI) / 180F);
             motionX -= d4 * 0.30000001192092896D;
             motionZ -= d7 * 0.30000001192092896D;
             motionY += 0.76599997282028198D;
@@ -218,21 +191,18 @@ public class EntityEvilSnowman extends EntityCreepBase implements IMob, IEntityC
     }
 
     @Override
-    public boolean attackEntityFrom(@Nonnull DamageSource source, float amount)
-    {
+    public boolean attackEntityFrom(@Nonnull DamageSource source, float amount) {
         boolean flag = super.attackEntityFrom(source, amount);
 
-        if (flag)
-        {
+        if (flag) {
             Entity entity = source.getTrueSource();
 
-            if (entity instanceof EntityPlayer)
-            {
-                EntityPlayer player = (EntityPlayer)entity;
+            if (entity instanceof EntityPlayer) {
+                EntityPlayer player = (EntityPlayer) entity;
 
-                double d = -MathHelper.sin((player.rotationYaw * (float)Math.PI) / 180F);
+                double d = -MathHelper.sin((player.rotationYaw * (float) Math.PI) / 180F);
 
-                double d1 = MathHelper.cos((player.rotationYaw * (float)Math.PI) / 180F);
+                double d1 = MathHelper.cos((player.rotationYaw * (float) Math.PI) / 180F);
 
                 motionX += d * 2D;
 
@@ -246,24 +216,20 @@ public class EntityEvilSnowman extends EntityCreepBase implements IMob, IEntityC
     }
 
     @Override
-    public void fall(float dist, float damage)
-    {
+    public void fall(float dist, float damage) {
     }
 
     @Override
-    protected float getSoundPitch()
-    {
+    protected float getSoundPitch() {
         return ((rand.nextFloat() - rand.nextFloat()) * 0.2f + 1.0f + (1.0f - getModelSize()) * 2.0f);
     }
 
     @Override
-    public void knockBack(@Nonnull Entity entity, float strength, double xRatio, double zRatio)
-    {
+    public void knockBack(@Nonnull Entity entity, float strength, double xRatio, double zRatio) {
         float f = getModelSize();
 
-        for (int j = 0; j < 8 + (int)(f * 20F); j++)
-        {
-            world.spawnParticle(EnumParticleTypes.SNOWBALL, posX, posY + (double)f, posZ, 0.0D, 0.0D, 0.0D);
+        for (int j = 0; j < 8 + (int) (f * 20F); j++) {
+            world.spawnParticle(EnumParticleTypes.SNOWBALL, posX, posY + (double) f, posZ, 0.0D, 0.0D, 0.0D);
         }
 
         strength *= strength;
@@ -278,23 +244,27 @@ public class EntityEvilSnowman extends EntityCreepBase implements IMob, IEntityC
     }
 
     @Override
-    public float maxShrink() { return 0.7f; }
+    public float maxShrink() {
+        return 0.7f;
+    }
 
     @Override
-    public float getShrinkRayAmount() { return 0.2f; }
+    public float getShrinkRayAmount() {
+        return 0.2f;
+    }
 
     @Override
     public void onShrink(EntityShrink source) {
 
     }
+
     @Override
     public float maxGrowth() {
         return 7.0f;
     }
 
     @Override
-    public float getGrowRayAmount()
-    {
+    public float getGrowRayAmount() {
         return 0.2F;
     }
 

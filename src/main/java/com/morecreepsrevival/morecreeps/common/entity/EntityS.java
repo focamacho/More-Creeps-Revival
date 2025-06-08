@@ -6,14 +6,10 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EnumCreatureType;
 import net.minecraft.entity.ai.*;
 import net.minecraft.entity.monster.IMob;
-import net.minecraft.entity.passive.EntityChicken;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
-import net.minecraft.item.Item;
 import net.minecraft.pathfinding.NodeProcessor;
 import net.minecraft.util.DamageSource;
-import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.world.World;
 
@@ -29,7 +25,7 @@ public class EntityS extends EntityCreepBase implements IMob {
 
         setModelSize(2.0f);
 
-        baseHealth = (float)rand.nextInt(40) + 40.0f;
+        baseHealth = (float) rand.nextInt(40) + 40.0f;
 
         baseSpeed = 0.3d;
 
@@ -39,20 +35,17 @@ public class EntityS extends EntityCreepBase implements IMob {
     }
 
     @Override
-    protected void updateTexture()
-    {
+    protected void updateTexture() {
         setTexture("textures/entity/s.png");
     }
 
     @Override
-    public int getMaxSpawnedInChunk()
-    {
+    public int getMaxSpawnedInChunk() {
         return 1;
     }
 
     @Override
-    protected void initEntityAI()
-    {
+    protected void initEntityAI() {
         clearAITasks();
 
         NodeProcessor nodeProcessor = getNavigator().getNodeProcessor();
@@ -83,9 +76,9 @@ public class EntityS extends EntityCreepBase implements IMob {
     @Override
     public boolean attackEntityFrom(DamageSource damageSource, float i) {
         Entity entity = damageSource.getTrueSource();
-        if(entity != null) {
-            if(entity instanceof EntityPlayer) {
-                if(!world.isRemote && !this.isChild()) {
+        if (entity != null) {
+            if (entity instanceof EntityPlayer) {
+                if (!world.isRemote && !this.isChild()) {
                     dropItem(CreepsItemHandler.money, rand.nextInt(3) + 1);
                 }
             }
@@ -94,34 +87,28 @@ public class EntityS extends EntityCreepBase implements IMob {
     }
 
     @Override
-    protected void dropItemsOnDeath()
-    {
-        if (rand.nextInt(10) == 0)
-        {
+    protected void dropItemsOnDeath() {
+        if (rand.nextInt(10) == 0) {
             dropItem(CreepsItemHandler.money, rand.nextInt(10) + 1);
         }
-        if (rand.nextInt(10) == 0)
-        {
+        if (rand.nextInt(10) == 0) {
             dropItem(Items.GOLD_INGOT, rand.nextInt(3) + 1);
         }
 
     }
 
     @Override
-    protected SoundEvent getAmbientSound()
-    {
+    protected SoundEvent getAmbientSound() {
         return CreepsSoundHandler.sAmbient;
     }
 
     @Override
-    protected SoundEvent getHurtSound(DamageSource damageSource)
-    {
+    protected SoundEvent getHurtSound(DamageSource damageSource) {
         return CreepsSoundHandler.sHurt;
     }
 
     @Override
-    protected SoundEvent getDeathSound()
-    {
+    protected SoundEvent getDeathSound() {
         return CreepsSoundHandler.sDeath;
     }
 

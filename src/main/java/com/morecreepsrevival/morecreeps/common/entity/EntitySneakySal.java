@@ -28,27 +28,11 @@ import net.minecraft.world.World;
 
 import javax.annotation.Nonnull;
 
-public class EntitySneakySal extends EntityCreepBase implements IRangedAttackMob, IEntityCanChangeSize
-{
-    private static final DataParameter<Integer> dissedMax = EntityDataManager.createKey(EntitySneakySal.class, DataSerializers.VARINT);
-
-    private static final DataParameter<Integer> sale = EntityDataManager.createKey(EntitySneakySal.class, DataSerializers.VARINT);
-
-    private static final DataParameter<Float> salePrice = EntityDataManager.createKey(EntitySneakySal.class, DataSerializers.FLOAT);
-
-    private static final DataParameter<Boolean> shooting = EntityDataManager.<Boolean>createKey(EntitySneakySal.class, DataSerializers.BOOLEAN);
-
-    private static final DataParameter<Integer> shootingDelay = EntityDataManager.createKey(EntitySneakySal.class, DataSerializers.VARINT);
-
-    private static final DataParameter<NBTTagCompound> shopItems = EntityDataManager.createKey(EntitySneakySal.class, DataSerializers.COMPOUND_TAG);
-
-    private static final DataParameter<Boolean> blackFriday = EntityDataManager.<Boolean>createKey(EntitySneakySal.class, DataSerializers.BOOLEAN);
-
+public class EntitySneakySal extends EntityCreepBase implements IRangedAttackMob, IEntityCanChangeSize {
     public static final int[] itemPrices = {
             10, 200, 100, 20, 175, 150, 225, 50, 350, 100,
             150, 10, 200, 150, 250
     };
-
     public static final Item[] itemDefinitions = {
             CreepsItemHandler.blorpCola,
             CreepsItemHandler.armyGem,
@@ -66,9 +50,15 @@ public class EntitySneakySal extends EntityCreepBase implements IRangedAttackMob
             CreepsItemHandler.fireGem,
             CreepsItemHandler.skyGem
     };
+    private static final DataParameter<Integer> dissedMax = EntityDataManager.createKey(EntitySneakySal.class, DataSerializers.VARINT);
+    private static final DataParameter<Integer> sale = EntityDataManager.createKey(EntitySneakySal.class, DataSerializers.VARINT);
+    private static final DataParameter<Float> salePrice = EntityDataManager.createKey(EntitySneakySal.class, DataSerializers.FLOAT);
+    private static final DataParameter<Boolean> shooting = EntityDataManager.<Boolean>createKey(EntitySneakySal.class, DataSerializers.BOOLEAN);
+    private static final DataParameter<Integer> shootingDelay = EntityDataManager.createKey(EntitySneakySal.class, DataSerializers.VARINT);
+    private static final DataParameter<NBTTagCompound> shopItems = EntityDataManager.createKey(EntitySneakySal.class, DataSerializers.COMPOUND_TAG);
+    private static final DataParameter<Boolean> blackFriday = EntityDataManager.<Boolean>createKey(EntitySneakySal.class, DataSerializers.BOOLEAN);
 
-    public EntitySneakySal(World worldIn)
-    {
+    public EntitySneakySal(World worldIn) {
         super(worldIn);
 
         setCreepTypeName("Sneaky Sal");
@@ -79,7 +69,7 @@ public class EntitySneakySal extends EntityCreepBase implements IRangedAttackMob
 
         setHeldItem(EnumHand.MAIN_HAND, new ItemStack(CreepsItemHandler.salGun));
 
-        baseHealth = (float)rand.nextInt(50) + 50.0f;
+        baseHealth = (float) rand.nextInt(50) + 50.0f;
 
         baseAttackDamage = 3.0d;
 
@@ -89,8 +79,7 @@ public class EntitySneakySal extends EntityCreepBase implements IRangedAttackMob
     }
 
     @Override
-    protected void entityInit()
-    {
+    protected void entityInit() {
         super.entityInit();
 
         dataManager.register(dissedMax, rand.nextInt(4) + 1);
@@ -113,14 +102,12 @@ public class EntitySneakySal extends EntityCreepBase implements IRangedAttackMob
     }
 
     @Override
-    protected void updateTexture()
-    {
+    protected void updateTexture() {
         setTexture("textures/entity/sneakysal.png");
     }
 
     @Override
-    protected void initEntityAI()
-    {
+    protected void initEntityAI() {
         clearAITasks();
 
         NodeProcessor nodeProcessor = getNavigator().getNodeProcessor();
@@ -147,8 +134,7 @@ public class EntitySneakySal extends EntityCreepBase implements IRangedAttackMob
     }
 
     @Override
-    public void attackEntityWithRangedAttack(@Nonnull EntityLivingBase target, float distanceFactor)
-    {
+    public void attackEntityWithRangedAttack(@Nonnull EntityLivingBase target, float distanceFactor) {
         setShooting(true);
 
         dataManager.set(shootingDelay, 10);
@@ -157,22 +143,18 @@ public class EntitySneakySal extends EntityCreepBase implements IRangedAttackMob
 
         EntityBullet bullet = new EntityBullet(world, this, target.posX - posX, target.getEntityBoundingBox().minY + (target.height / 2.0f) - posY + (height / 2.0f), target.posZ - posZ);
 
-        if (!world.isRemote)
-        {
+        if (!world.isRemote) {
             world.spawnEntity(bullet);
         }
     }
 
     @Override
-    public void setSwingingArms(boolean swingingArms)
-    {
+    public void setSwingingArms(boolean swingingArms) {
     }
 
     @Override
-    protected SoundEvent getAmbientSound()
-    {
-        if (rand.nextInt(10) == 0)
-        {
+    protected SoundEvent getAmbientSound() {
+        if (rand.nextInt(10) == 0) {
             return CreepsSoundHandler.giraffeSound;
         }
 
@@ -180,42 +162,32 @@ public class EntitySneakySal extends EntityCreepBase implements IRangedAttackMob
     }
 
     @Override
-    protected SoundEvent getHurtSound(DamageSource damageSource)
-    {
+    protected SoundEvent getHurtSound(DamageSource damageSource) {
         return CreepsSoundHandler.salHurtSound;
     }
 
     @Override
-    protected SoundEvent getDeathSound()
-    {
+    protected SoundEvent getDeathSound() {
         return CreepsSoundHandler.salDeadSound;
     }
 
     @Override
-    public int getMaxSpawnedInChunk()
-    {
+    public int getMaxSpawnedInChunk() {
         return 1;
     }
 
     @Override
-    public boolean processInteract(EntityPlayer player, EnumHand hand)
-    {
-        if (hand == EnumHand.OFF_HAND)
-        {
+    public boolean processInteract(EntityPlayer player, EnumHand hand) {
+        if (hand == EnumHand.OFF_HAND) {
             return super.processInteract(player, hand);
-        }
-        else if (getDissedMax() > 0)
-        {
-            if (getSalePrice() == 0.0f || dataManager.get(sale) < 1)
-            {
+        } else if (getDissedMax() > 0) {
+            if (getSalePrice() == 0.0f || dataManager.get(sale) < 1) {
                 restock();
             }
 
-            if (!(getAttackTarget() instanceof EntityPlayer))
-            {
-                if (!world.isRemote)
-                {
-                    CreepsPacketHandler.INSTANCE.sendTo(new MessageOpenGuiSneakySal(getEntityId()), (EntityPlayerMP)player);
+            if (!(getAttackTarget() instanceof EntityPlayer)) {
+                if (!world.isRemote) {
+                    CreepsPacketHandler.INSTANCE.sendTo(new MessageOpenGuiSneakySal(getEntityId()), (EntityPlayerMP) player);
                 }
             }
 
@@ -226,88 +198,71 @@ public class EntitySneakySal extends EntityCreepBase implements IRangedAttackMob
     }
 
     @Override
-    public void onLivingUpdate()
-    {
+    public void onLivingUpdate() {
         super.onLivingUpdate();
 
         setBlackFriday(MoreCreepsAndWeirdos.isBlackFriday());
 
-        if (dataManager.get(shootingDelay) > 0)
-        {
+        if (dataManager.get(shootingDelay) > 0) {
             dataManager.set(shootingDelay, dataManager.get(shootingDelay) - 1);
 
-            if (dataManager.get(shootingDelay) < 1)
-            {
+            if (dataManager.get(shootingDelay) < 1) {
                 setShooting(false);
             }
         }
 
-        if (dataManager.get(sale) > 0)
-        {
+        if (dataManager.get(sale) > 0) {
             dataManager.set(sale, dataManager.get(sale) - 1);
         }
 
-        if (rand.nextInt(10) == 0)
-        {
-            double xHeading = -MathHelper.sin(rotationYaw * (float)Math.PI / 180.0f);
+        if (rand.nextInt(10) == 0) {
+            double xHeading = -MathHelper.sin(rotationYaw * (float) Math.PI / 180.0f);
 
-            double zHeading = MathHelper.cos(rotationYaw * (float)Math.PI / 180.0f);
+            double zHeading = MathHelper.cos(rotationYaw * (float) Math.PI / 180.0f);
 
             world.spawnParticle(EnumParticleTypes.EXPLOSION_NORMAL, posX + xHeading * 0.5d, posY + 2.0d, posZ + zHeading * 0.5d, rand.nextGaussian() * 0.02d, rand.nextGaussian() * 0.02d, rand.nextGaussian() * 0.02d);
         }
 
-        if (getDissedMax() < 1 && getAttackTarget() == null)
-        {
+        if (getDissedMax() < 1 && getAttackTarget() == null) {
             EntityPlayer player = world.getClosestPlayerToEntity(this, 16.0d);
 
-            if (player != null && canEntityBeSeen(player) && !player.capabilities.disableDamage)
-            {
+            if (player != null && canEntityBeSeen(player) && !player.capabilities.disableDamage) {
                 setAttackTarget(player);
             }
         }
 
         EntityLivingBase target = getAttackTarget();
 
-        if (target instanceof EntityPlayer && ((EntityPlayer)target).capabilities.disableDamage)
-        {
+        if (target instanceof EntityPlayer && ((EntityPlayer) target).capabilities.disableDamage) {
             setAttackTarget(null);
         }
     }
 
     @Override
-    public void smoke()
-    {
-        for (int i = 0; i < 8; i++)
-        {
-            for (int j = 0; j < 10; j++)
-            {
-                world.spawnParticle(EnumParticleTypes.EXPLOSION_NORMAL, (posX + (double)(rand.nextFloat() * width * 2.0f)) - (double)width, posY + (double)(rand.nextFloat() * height) + (double)i, (posZ + (double)(rand.nextFloat() * width * 2.0f)) - (double)width, rand.nextGaussian() * 0.06d, rand.nextGaussian() * 0.06d, rand.nextGaussian() * 0.06d);
+    public void smoke() {
+        for (int i = 0; i < 8; i++) {
+            for (int j = 0; j < 10; j++) {
+                world.spawnParticle(EnumParticleTypes.EXPLOSION_NORMAL, (posX + (double) (rand.nextFloat() * width * 2.0f)) - (double) width, posY + (double) (rand.nextFloat() * height) + (double) i, (posZ + (double) (rand.nextFloat() * width * 2.0f)) - (double) width, rand.nextGaussian() * 0.06d, rand.nextGaussian() * 0.06d, rand.nextGaussian() * 0.06d);
             }
         }
     }
 
-    private void restock()
-    {
+    private void restock() {
         dataManager.set(sale, rand.nextInt(2000) + 100);
 
-        if (isBlackFriday())
-        {
+        if (isBlackFriday()) {
             dataManager.set(salePrice, 0.5f);
-        }
-        else
-        {
+        } else {
             dataManager.set(salePrice, 1.0f - (rand.nextFloat() * 0.25f - rand.nextFloat() * 0.25f));
         }
 
         int[] currentItems = dataManager.get(shopItems).getIntArray("Items");
 
-        for (int i = 0; i < itemDefinitions.length; i++)
-        {
+        for (int i = 0; i < itemDefinitions.length; i++) {
             currentItems[i] = i;
         }
 
-        for (int i = 0; i < itemDefinitions.length; i++)
-        {
+        for (int i = 0; i < itemDefinitions.length; i++) {
             int k = rand.nextInt(itemDefinitions.length);
 
             int l = currentItems[i];
@@ -321,57 +276,46 @@ public class EntitySneakySal extends EntityCreepBase implements IRangedAttackMob
     }
 
     @Override
-    protected void dropItemsOnDeath()
-    {
-        if (rand.nextInt(10) == 0)
-        {
+    protected void dropItemsOnDeath() {
+        if (rand.nextInt(10) == 0) {
             dropItem(CreepsItemHandler.rocket, rand.nextInt(5) + 1);
         }
     }
 
     @Override
-    public void onDeath(@Nonnull DamageSource cause)
-    {
+    public void onDeath(@Nonnull DamageSource cause) {
         smoke();
 
         super.onDeath(cause);
     }
 
-    private void setShooting(boolean b)
-    {
+    public boolean getShooting() {
+        return ((Boolean) dataManager.get(shooting)).booleanValue();
+    }
+
+    private void setShooting(boolean b) {
         dataManager.set(shooting, Boolean.valueOf(b));
     }
 
-    public boolean getShooting()
-    {
-        return ((Boolean)dataManager.get(shooting)).booleanValue();
-    }
-
-    public int[] getShopItems()
-    {
+    public int[] getShopItems() {
         return dataManager.get(shopItems).getIntArray("Items");
     }
 
-    public float getSalePrice()
-    {
+    public float getSalePrice() {
         return dataManager.get(salePrice);
     }
 
-    public void ripOff()
-    {
-        if (getDissedMax() < 1)
-        {
+    public void ripOff() {
+        if (getDissedMax() < 1) {
             return;
         }
 
         setDissedMax(getDissedMax() - 1);
 
-        if (rand.nextInt(9) == 0)
-        {
+        if (rand.nextInt(9) == 0) {
             playSound(SoundEvents.ENTITY_CHICKEN_EGG, getSoundVolume(), getSoundPitch());
 
-            switch (rand.nextInt(15) + 1)
-            {
+            switch (rand.nextInt(15) + 1) {
                 case 1:
                     dropItem(CreepsItemHandler.armyGem, 1);
 
@@ -420,15 +364,14 @@ public class EntitySneakySal extends EntityCreepBase implements IRangedAttackMob
 
         int randInt = rand.nextInt(15) + 5;
 
-        double d = -MathHelper.sin((rotationYaw * (float)Math.PI) / 180.0f);
+        double d = -MathHelper.sin((rotationYaw * (float) Math.PI) / 180.0f);
 
-        double d1 = MathHelper.cos((rotationYaw * (float)Math.PI) / 180.0f);
+        double d1 = MathHelper.cos((rotationYaw * (float) Math.PI) / 180.0f);
 
-        for (int i = 0; i < randInt; i++)
-        {
+        for (int i = 0; i < randInt; i++) {
             EntityRatMan ratMan = new EntityRatMan(world);
 
-            ratMan.setLocationAndAngles((posX + d * 1.0d + (double)rand.nextInt(4)) - 2.0d, posY - 1.0d, (posZ + d1 * 1.0d + (double)rand.nextInt(4)) - 2.0d, rotationYaw, 0.0f);
+            ratMan.setLocationAndAngles((posX + d * 1.0d + (double) rand.nextInt(4)) - 2.0d, posY - 1.0d, (posZ + d1 * 1.0d + (double) rand.nextInt(4)) - 2.0d, rotationYaw, 0.0f);
 
             ratMan.motionY = 1.0d;
 
@@ -436,8 +379,7 @@ public class EntitySneakySal extends EntityCreepBase implements IRangedAttackMob
 
             ratMan.setInitialHealth();
 
-            if (!world.isRemote)
-            {
+            if (!world.isRemote) {
                 world.spawnEntity(ratMan);
             }
         }
@@ -445,30 +387,24 @@ public class EntitySneakySal extends EntityCreepBase implements IRangedAttackMob
         playSound(CreepsSoundHandler.salRatsSound, 1.0f, 1.0f);
     }
 
-    public void buyItem(EntityPlayer player, int itemId)
-    {
-        if (getDissedMax() < 1 || itemId < 0 || itemId >= itemDefinitions.length)
-        {
+    public void buyItem(EntityPlayer player, int itemId) {
+        if (getDissedMax() < 1 || itemId < 0 || itemId >= itemDefinitions.length) {
             return;
         }
 
         int item = getShopItems()[itemId];
 
-        if (InventoryHelper.takeItem(player.inventory, CreepsItemHandler.money, Math.round((float)itemPrices[item] * getSalePrice())))
-        {
+        if (InventoryHelper.takeItem(player.inventory, CreepsItemHandler.money, Math.round((float) itemPrices[item] * getSalePrice()))) {
             dropItem(itemDefinitions[item], 1);
 
             playSound(CreepsSoundHandler.salSaleSound, 1.0f, 1.0f);
-        }
-        else
-        {
+        } else {
             playSound(CreepsSoundHandler.salNoMoneySound, 1.0f, 1.0f);
         }
     }
 
     @Override
-    public void writeEntityToNBT(NBTTagCompound compound)
-    {
+    public void writeEntityToNBT(NBTTagCompound compound) {
         super.writeEntityToNBT(compound);
 
         NBTTagCompound props = compound.getCompoundTag("MoreCreepsSneakySal");
@@ -483,24 +419,20 @@ public class EntitySneakySal extends EntityCreepBase implements IRangedAttackMob
     }
 
     @Override
-    public void readEntityFromNBT(NBTTagCompound compound)
-    {
+    public void readEntityFromNBT(NBTTagCompound compound) {
         super.readEntityFromNBT(compound);
 
         NBTTagCompound props = compound.getCompoundTag("MoreCreepsSneakySal");
 
-        if (props.hasKey("Sale"))
-        {
+        if (props.hasKey("Sale")) {
             dataManager.set(sale, props.getInteger("Sale"));
         }
 
-        if (props.hasKey("SalePrice"))
-        {
+        if (props.hasKey("SalePrice")) {
             dataManager.set(salePrice, props.getFloat("SalePrice"));
         }
 
-        if (props.hasKey("DissedMax"))
-        {
+        if (props.hasKey("DissedMax")) {
             setDissedMax(props.getInteger("DissedMax"));
         }
 
@@ -508,41 +440,39 @@ public class EntitySneakySal extends EntityCreepBase implements IRangedAttackMob
     }
 
     @Override
-    public boolean attackEntityFrom(@Nonnull DamageSource damageSource, float amt)
-    {
-        if (damageSource.getTrueSource() instanceof EntityPlayer)
-        {
+    public boolean attackEntityFrom(@Nonnull DamageSource damageSource, float amt) {
+        if (damageSource.getTrueSource() instanceof EntityPlayer) {
             setDissedMax(0);
         }
 
         return super.attackEntityFrom(damageSource, amt);
     }
 
-    private void setBlackFriday(boolean b)
-    {
+    public boolean isBlackFriday() {
+        return ((Boolean) dataManager.get(blackFriday)).booleanValue();
+    }
+
+    private void setBlackFriday(boolean b) {
         dataManager.set(blackFriday, Boolean.valueOf(b));
     }
 
-    public boolean isBlackFriday()
-    {
-        return ((Boolean)dataManager.get(blackFriday)).booleanValue();
-    }
-
-    public void setDissedMax(int i)
-    {
-        dataManager.set(dissedMax, i);
-    }
-
-    public int getDissedMax()
-    {
+    public int getDissedMax() {
         return dataManager.get(dissedMax);
     }
 
-    @Override
-    public float maxShrink() { return 0.5f; }
+    public void setDissedMax(int i) {
+        dataManager.set(dissedMax, i);
+    }
 
     @Override
-    public float getShrinkRayAmount() { return 0.2f; }
+    public float maxShrink() {
+        return 0.5f;
+    }
+
+    @Override
+    public float getShrinkRayAmount() {
+        return 0.2f;
+    }
 
     @Override
     public void onShrink(EntityShrink source) {
@@ -555,14 +485,12 @@ public class EntitySneakySal extends EntityCreepBase implements IRangedAttackMob
     }
 
     @Override
-    public float getGrowRayAmount()
-    {
+    public float getGrowRayAmount() {
         return 0.2F;
     }
 
     @Override
-    public void onGrow(EntityGrow source)
-    {
+    public void onGrow(EntityGrow source) {
         this.setDissedMax(0);
     }
 }

@@ -14,38 +14,23 @@ import net.minecraft.world.World;
 
 import javax.annotation.Nonnull;
 
-public class EntityShrink extends EntityThrowable
-{
-    protected int hitX;
-
-    protected int hitY;
-
-    protected int hitZ;
-
-    protected boolean aoLightValueZPos;
-
+public class EntityShrink extends EntityThrowable {
+    private static final float shrinkMax = 1.0f;
+    private static final float shrinkBonus = 0.45f;
     public EntityLivingBase lightValueOwn;
-
+    protected int hitX;
+    protected int hitY;
+    protected int hitZ;
+    protected boolean aoLightValueZPos;
     protected int aoLightValueScratchXYZNNP;
-
     protected int aoLightValueScratchXYNN;
-
     protected boolean aoLightValueScratchXYZNNN;
-
     protected boolean playerFire;
-
     protected float shrinkSize;
-
     protected int vibrate;
-
     protected IBlockState blockHit;
 
-    private static final float shrinkMax = 1.0f;
-
-    private static final float shrinkBonus = 0.45f;
-
-    public EntityShrink(World world)
-    {
+    public EntityShrink(World world) {
         super(world);
 
         setSize(0.0325f, 0.01125f);
@@ -67,57 +52,51 @@ public class EntityShrink extends EntityThrowable
         vibrate = 1;
     }
 
-    public EntityShrink(World world, EntityLivingBase entity)
-    {
+    public EntityShrink(World world, EntityLivingBase entity) {
         this(world);
 
-        setLocationAndAngles(entity.posX, entity.posY + (double)entity.getEyeHeight(), entity.posZ, entity.rotationYaw, entity.rotationPitch);
+        setLocationAndAngles(entity.posX, entity.posY + (double) entity.getEyeHeight(), entity.posZ, entity.rotationYaw, entity.rotationPitch);
 
-        posX -= MathHelper.cos((rotationYaw / 180.0f) * (float)Math.PI) * 0.16f;
+        posX -= MathHelper.cos((rotationYaw / 180.0f) * (float) Math.PI) * 0.16f;
 
         posY += 0.20000000149011612d;
 
-        posZ -= MathHelper.sin((rotationYaw / 180.0f) * (float)Math.PI) * 0.16f;
+        posZ -= MathHelper.sin((rotationYaw / 180.0f) * (float) Math.PI) * 0.16f;
 
-        if (entity instanceof EntityPlayer)
-        {
+        if (entity instanceof EntityPlayer) {
             posY -= 0.40000000596046448d;
         }
 
         setPosition(posX, posY, posZ);
 
-        motionX = -MathHelper.sin((rotationYaw / 180.0f) * (float)Math.PI) * MathHelper.cos((rotationPitch / 180.0f) * (float)Math.PI);
+        motionX = -MathHelper.sin((rotationYaw / 180.0f) * (float) Math.PI) * MathHelper.cos((rotationPitch / 180.0f) * (float) Math.PI);
 
-        motionZ = MathHelper.cos((rotationYaw / 180.0f) * (float)Math.PI) * MathHelper.cos((rotationPitch / 180.0f) * (float)Math.PI);
+        motionZ = MathHelper.cos((rotationYaw / 180.0f) * (float) Math.PI) * MathHelper.cos((rotationPitch / 180.0f) * (float) Math.PI);
 
-        motionY = -MathHelper.sin((rotationPitch / 180.0f) * (float)Math.PI);
+        motionY = -MathHelper.sin((rotationPitch / 180.0f) * (float) Math.PI);
 
         float f1 = 1.0f;
 
-        if (entity instanceof EntityPlayer)
-        {
+        if (entity instanceof EntityPlayer) {
             playerFire = true;
 
             float f2 = 0.3333333f;
 
             float f3 = f2 / 0.1f;
 
-            if (f3 > 0.0f)
-            {
-                f1 = (float)((double)f1 * (1.0d + 2.0d / (double)f3));
+            if (f3 > 0.0f) {
+                f1 = (float) ((double) f1 * (1.0d + 2.0d / (double) f3));
             }
         }
 
-        if (Math.abs(entity.motionX) > 0.10000000000000001d || Math.abs(entity.motionY) > 0.10000000000000001d || Math.abs(entity.motionZ) > 0.10000000000000001d)
-        {
+        if (Math.abs(entity.motionX) > 0.10000000000000001d || Math.abs(entity.motionY) > 0.10000000000000001d || Math.abs(entity.motionZ) > 0.10000000000000001d) {
             f1 *= 2.0f;
         }
 
-        adjustMotion(motionX, motionY, motionZ, (float)(2.5d + ((double)world.rand.nextFloat() - 0.5d)), f1);
+        adjustMotion(motionX, motionY, motionZ, (float) (2.5d + ((double) world.rand.nextFloat() - 0.5d)), f1);
     }
 
-    private void adjustMotion(double d, double d1, double d2, float f, float f1)
-    {
+    private void adjustMotion(double d, double d1, double d2, float f, float f1) {
         float f2 = MathHelper.sqrt(d * d + d1 * d1 + d2 * d2);
 
         d /= f2;
@@ -126,11 +105,11 @@ public class EntityShrink extends EntityThrowable
 
         d2 /= f2;
 
-        d += rand.nextGaussian() * 0.0074999998323619366d * (double)f1;
+        d += rand.nextGaussian() * 0.0074999998323619366d * (double) f1;
 
-        d1 += rand.nextGaussian() * 0.0074999998323619366d * (double)f1;
+        d1 += rand.nextGaussian() * 0.0074999998323619366d * (double) f1;
 
-        d2 += rand.nextGaussian() * 0.0074999998323619366d * (double)f1;
+        d2 += rand.nextGaussian() * 0.0074999998323619366d * (double) f1;
 
         d *= f;
 
@@ -146,47 +125,40 @@ public class EntityShrink extends EntityThrowable
 
         float f3 = MathHelper.sqrt(d * d + d2 * d2);
 
-        prevRotationYaw = rotationYaw = (float)((Math.atan2(d, d2) * 180.0d) / Math.PI);
+        prevRotationYaw = rotationYaw = (float) ((Math.atan2(d, d2) * 180.0d) / Math.PI);
 
-        prevRotationPitch = rotationPitch = (float)((Math.atan2(d1, f3) * 180.0d) / Math.PI);
+        prevRotationPitch = rotationPitch = (float) ((Math.atan2(d1, f3) * 180.0d) / Math.PI);
 
         aoLightValueScratchXYZNNP = 0;
     }
 
     @Override
-    protected void onImpact(@Nonnull RayTraceResult rayTraceResult)
-    {
+    protected void onImpact(@Nonnull RayTraceResult rayTraceResult) {
     }
 
     @Override
-    public boolean isInRangeToRenderDist(double d)
-    {
+    public boolean isInRangeToRenderDist(double d) {
         return true;
     }
 
     @Override
-    public void onUpdate()
-    {
+    public void onUpdate() {
         super.onUpdate();
 
-        if (aoLightValueScratchXYNN == 5)
-        {
+        if (aoLightValueScratchXYNN == 5) {
             setDead();
         }
 
-        if (prevRotationPitch == 0.0f && prevRotationYaw == 0.0f)
-        {
+        if (prevRotationPitch == 0.0f && prevRotationYaw == 0.0f) {
             float f = MathHelper.sqrt(motionX * motionX + motionZ * motionZ);
 
-            prevRotationYaw = rotationYaw = (float)((Math.atan2(motionX, motionZ) * 180.0d) / Math.PI);
+            prevRotationYaw = rotationYaw = (float) ((Math.atan2(motionX, motionZ) * 180.0d) / Math.PI);
 
-            prevRotationPitch = rotationPitch = (float)((Math.atan2(motionY, f) * 180.0d) / Math.PI);
+            prevRotationPitch = rotationPitch = (float) ((Math.atan2(motionY, f) * 180.0d) / Math.PI);
         }
 
-        if (aoLightValueZPos)
-        {
-            if (world.getBlockState(new BlockPos(hitX, hitY, hitZ)) != blockHit)
-            {
+        if (aoLightValueZPos) {
+            if (world.getBlockState(new BlockPos(hitX, hitY, hitZ)) != blockHit) {
                 aoLightValueZPos = false;
 
                 motionX *= rand.nextFloat() * 0.2f;
@@ -196,21 +168,16 @@ public class EntityShrink extends EntityThrowable
                 aoLightValueScratchXYZNNP = 0;
 
                 aoLightValueScratchXYNN = 0;
-            }
-            else
-            {
+            } else {
                 aoLightValueScratchXYZNNP++;
 
-                if (aoLightValueScratchXYZNNP == 5)
-                {
+                if (aoLightValueScratchXYZNNP == 5) {
                     setDead();
                 }
 
                 return;
             }
-        }
-        else
-        {
+        } else {
             aoLightValueScratchXYNN++;
         }
 
@@ -224,8 +191,7 @@ public class EntityShrink extends EntityThrowable
 
         vec3d1 = new Vec3d(posX + motionX, posY + motionY, posZ + motionZ);
 
-        if (rtr != null)
-        {
+        if (rtr != null) {
             vec3d1 = new Vec3d(rtr.hitVec.x, rtr.hitVec.y, rtr.hitVec.z);
         }
 
@@ -233,12 +199,9 @@ public class EntityShrink extends EntityThrowable
 
         double d = 0.0d;
 
-        for (Entity entity1 : world.getEntitiesWithinAABBExcludingEntity(this, getEntityBoundingBox().grow(motionX, motionY, motionZ).expand(1.0d, 1.0d, 1.0d)))
-        {
-            if (!entity1.canBeCollidedWith() || ((entity1 == lightValueOwn || (lightValueOwn != null && entity1 == lightValueOwn.getRidingEntity())) && aoLightValueScratchXYNN < 5) || aoLightValueScratchXYZNNN)
-            {
-                if (motionZ != 0.0d || !((motionX == 0.0d) & (motionY == 0.0d)))
-                {
+        for (Entity entity1 : world.getEntitiesWithinAABBExcludingEntity(this, getEntityBoundingBox().grow(motionX, motionY, motionZ).expand(1.0d, 1.0d, 1.0d))) {
+            if (!entity1.canBeCollidedWith() || ((entity1 == lightValueOwn || (lightValueOwn != null && entity1 == lightValueOwn.getRidingEntity())) && aoLightValueScratchXYNN < 5) || aoLightValueScratchXYZNNN) {
+                if (motionZ != 0.0d || !((motionX == 0.0d) & (motionY == 0.0d))) {
                     continue;
                 }
 
@@ -253,69 +216,57 @@ public class EntityShrink extends EntityThrowable
 
             RayTraceResult rtr1 = axisAlignedBB.calculateIntercept(vec3d, vec3d1);
 
-            if (rtr1 == null)
-            {
+            if (rtr1 == null) {
                 continue;
             }
 
             double d2 = vec3d.distanceTo(rtr1.hitVec);
 
-            if (d2 < d || d == 0.0d)
-            {
+            if (d2 < d || d == 0.0d) {
                 entity = entity1;
 
                 d = d2;
             }
         }
 
-        if (entity != null)
-        {
+        if (entity != null) {
             rtr = new RayTraceResult(entity);
         }
 
-        if (rtr != null)
-        {
-            if (rtr.entityHit != null)
-            {
-                if (rtr.entityHit instanceof EntityLiving)
-                {
+        if (rtr != null) {
+            if (rtr.entityHit != null) {
+                if (rtr.entityHit instanceof EntityLiving) {
                     boolean flag = false;
                     Entity Hit = rtr.entityHit;
 
-                    if(Hit instanceof EntityCreepBase && Hit instanceof  IEntityCanChangeSize) {
+                    if (Hit instanceof EntityCreepBase && Hit instanceof IEntityCanChangeSize) {
 
                         EntityCreepBase entityCreep = (EntityCreepBase) Hit;
                         IEntityCanChangeSize entitySizable = (IEntityCanChangeSize) Hit;
 
-                        if(entityCreep.getModelSize() > entitySizable.maxShrink()) {
+                        if (entityCreep.getModelSize() > entitySizable.maxShrink()) {
                             float shrink = entitySizable.getShrinkRayAmount();
                             entityCreep.shrinkModelSize(shrink);
                             entityCreep.shrinkHitboxSize(shrink);
 
                             entitySizable.onShrink(this);
-                        }
-                        else {
+                        } else {
                             entityCreep.setDead();
                             flag = true;
                         }
                     }
 
-                    if (flag)
-                    {
+                    if (flag) {
                         smoke();
 
                         playSound(CreepsSoundHandler.shrinkKillSound, 1.0f, 1.0f / (rand.nextFloat() * 0.1f + 0.95f));
 
                         setDead();
                     }
-                }
-                else
-                {
+                } else {
                     setDead();
                 }
-            }
-            else
-            {
+            } else {
                 BlockPos hitBlockPos = rtr.getBlockPos();
 
                 hitX = hitBlockPos.getX();
@@ -326,24 +277,23 @@ public class EntityShrink extends EntityThrowable
 
                 blockHit = world.getBlockState(hitBlockPos);
 
-                motionX = (float)(rtr.hitVec.x - posX);
+                motionX = (float) (rtr.hitVec.x - posX);
 
-                motionY = (float)(rtr.hitVec.y - posY);
+                motionY = (float) (rtr.hitVec.y - posY);
 
-                motionZ = (float)(rtr.hitVec.z - posZ);
+                motionZ = (float) (rtr.hitVec.z - posZ);
 
                 float f1 = MathHelper.sqrt(motionX * motionX + motionY * motionY + motionZ * motionZ);
 
-                posX -= (motionX / (double)f1) * 0.05000000074505806d;
+                posX -= (motionX / (double) f1) * 0.05000000074505806d;
 
-                posY -= (motionY / (double)f1) * 0.05000000074505806d;
+                posY -= (motionY / (double) f1) * 0.05000000074505806d;
 
-                posZ -= (motionZ / (double)f1) * 0.05000000074505806d;
+                posZ -= (motionZ / (double) f1) * 0.05000000074505806d;
 
                 aoLightValueZPos = true;
 
-                if (blockHit.getBlock() == Blocks.ICE)
-                {
+                if (blockHit.getBlock() == Blocks.ICE) {
                     world.setBlockState(hitBlockPos, Blocks.FLOWING_WATER.getDefaultState());
                 }
 
@@ -363,15 +313,16 @@ public class EntityShrink extends EntityThrowable
 
         float f2 = MathHelper.sqrt(motionX * motionX + motionZ * motionZ);
 
-        rotationYaw = (float)((Math.atan2(motionX, motionZ) * 180.0d) / Math.PI);
+        rotationYaw = (float) ((Math.atan2(motionX, motionZ) * 180.0d) / Math.PI);
 
-        for (rotationPitch = (float)((Math.atan2(motionY, f2) * 180.0d) / Math.PI); (rotationPitch - prevRotationPitch) < -180.0f; prevRotationPitch -= 360.0f);
+        for (rotationPitch = (float) ((Math.atan2(motionY, f2) * 180.0d) / Math.PI); (rotationPitch - prevRotationPitch) < -180.0f; prevRotationPitch -= 360.0f)
+            ;
 
-        for (; (rotationPitch - prevRotationPitch) >= 180.0f; prevRotationPitch += 360.0f);
+        for (; (rotationPitch - prevRotationPitch) >= 180.0f; prevRotationPitch += 360.0f) ;
 
-        for (; (rotationYaw - prevRotationYaw) < -180.0f; prevRotationYaw -= 360.0f);
+        for (; (rotationYaw - prevRotationYaw) < -180.0f; prevRotationYaw -= 360.0f) ;
 
-        for (; (rotationYaw - prevRotationYaw) >= 180.0f; prevRotationYaw += 360.0f);
+        for (; (rotationYaw - prevRotationYaw) >= 180.0f; prevRotationYaw += 360.0f) ;
 
         rotationPitch = prevRotationPitch + (rotationPitch - prevRotationPitch) * 0.2f;
 
@@ -379,13 +330,11 @@ public class EntityShrink extends EntityThrowable
 
         float f3 = 0.99f;
 
-        if (handleWaterMovement())
-        {
-            for (int l = 0; l < 4; l++)
-            {
+        if (handleWaterMovement()) {
+            for (int l = 0; l < 4; l++) {
                 float f7 = 0.25f;
 
-                world.spawnParticle(EnumParticleTypes.WATER_BUBBLE, posX - motionX * (double)f7, posY - motionY * (double)f7, posZ - motionZ * (double)f7, motionX, motionY, motionZ);
+                world.spawnParticle(EnumParticleTypes.WATER_BUBBLE, posX - motionX * (double) f7, posY - motionY * (double) f7, posZ - motionZ * (double) f7, motionX, motionY, motionZ);
             }
 
             f3 = 0.8f;
@@ -401,8 +350,7 @@ public class EntityShrink extends EntityThrowable
     }
 
     @Override
-    public void setDead()
-    {
+    public void setDead() {
         super.setDead();
 
         blast();
@@ -410,21 +358,16 @@ public class EntityShrink extends EntityThrowable
         lightValueOwn = null;
     }
 
-    private void smoke()
-    {
-        for (int i = 0; i < 7; i++)
-        {
-            for (int j = 0; j < 4; j++)
-            {
-                for (int k = 0; k < 5; k++)
-                {
-                    world.spawnParticle(EnumParticleTypes.EXPLOSION_NORMAL, (posX + (double)(rand.nextFloat() * width * 2.0f)) - (double)width, posY + (double)(rand.nextFloat() * height), (posZ + (double)(rand.nextFloat() * width * 2.0f)) - (double)width, rand.nextGaussian() * 0.12d, rand.nextGaussian() * 0.12d, rand.nextGaussian() * 0.12d);
+    private void smoke() {
+        for (int i = 0; i < 7; i++) {
+            for (int j = 0; j < 4; j++) {
+                for (int k = 0; k < 5; k++) {
+                    world.spawnParticle(EnumParticleTypes.EXPLOSION_NORMAL, (posX + (double) (rand.nextFloat() * width * 2.0f)) - (double) width, posY + (double) (rand.nextFloat() * height), (posZ + (double) (rand.nextFloat() * width * 2.0f)) - (double) width, rand.nextGaussian() * 0.12d, rand.nextGaussian() * 0.12d, rand.nextGaussian() * 0.12d);
                 }
             }
         }
     }
 
-    private void blast()
-    {
+    private void blast() {
     }
 }

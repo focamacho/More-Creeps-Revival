@@ -16,16 +16,14 @@ import net.minecraft.world.World;
 
 import javax.annotation.Nonnull;
 
-public class EntityPonyCloud extends EntityCreepBase
-{
+public class EntityPonyCloud extends EntityCreepBase {
     private static final DataParameter<Boolean> delivered = EntityDataManager.<Boolean>createKey(EntityPonyCloud.class, DataSerializers.BOOLEAN);
 
     private static final int explodeChance = 1500;
 
     private static final float boomSize = 13.5f;
 
-    public EntityPonyCloud(World worldIn)
-    {
+    public EntityPonyCloud(World worldIn) {
         super(worldIn);
 
         creatureType = EnumCreatureType.AMBIENT;
@@ -38,7 +36,7 @@ public class EntityPonyCloud extends EntityCreepBase
 
         posY = 100.0d;
 
-        baseHealth = (float)rand.nextInt(15) + 100.0f;
+        baseHealth = (float) rand.nextInt(15) + 100.0f;
 
         baseAttackDamage = 2.0d;
 
@@ -48,56 +46,48 @@ public class EntityPonyCloud extends EntityCreepBase
     }
 
     @Override
-    protected void entityInit()
-    {
+    protected void entityInit() {
         super.entityInit();
 
         dataManager.register(delivered, Boolean.valueOf(false));
     }
 
     @Override
-    public void initEntityAI()
-    {
+    public void initEntityAI() {
         clearAITasks();
     }
 
-    private void setDelivered(boolean b)
-    {
+    public boolean getDelivered() {
+        return ((Boolean) dataManager.get(delivered).booleanValue());
+    }
+
+    private void setDelivered(boolean b) {
         dataManager.set(delivered, Boolean.valueOf(b));
     }
 
-    public boolean getDelivered()
-    {
-        return ((Boolean)dataManager.get(delivered).booleanValue());
-    }
-
     @Override
-    protected void updateTexture()
-    {
+    protected void updateTexture() {
         setTexture("textures/entity/ponycloud.png");
     }
 
     @Override
-    protected SoundEvent getAmbientSound()
-    {
+    protected SoundEvent getAmbientSound() {
         return CreepsSoundHandler.ponyCloudLivingSound;
     }
 
     @Override
-    protected SoundEvent getHurtSound(@Nonnull DamageSource damageSource)
-    {
+    protected SoundEvent getHurtSound(@Nonnull DamageSource damageSource) {
         return null;
     }
 
     @Override
-    protected SoundEvent getDeathSound()
-    {
+    protected SoundEvent getDeathSound() {
         return null;
     }
 
     @Override
     public void updatePassenger(@Nonnull Entity passenger) {
-        if(isPassenger(passenger) && passenger instanceof EntityPony) {
+        if (isPassenger(passenger) && passenger instanceof EntityPony) {
             passenger.setPosition(posX, posY + 2.5d, posZ);
         }
     }
@@ -108,16 +98,14 @@ public class EntityPonyCloud extends EntityCreepBase
     }
 
     @Override
-    public void onLivingUpdate()
-    {
+    public void onLivingUpdate() {
         motionX = 0.0d;
 
         motionY = 0.0d;
 
         motionZ = 0.0d;
 
-        if (rand.nextInt(explodeChance) == 999)
-        {
+        if (rand.nextInt(explodeChance) == 999) {
             playSound(CreepsSoundHandler.ponyCloudKillSound, getSoundVolume(), getSoundPitch());
 
             world.createExplosion(this, posX, posY, posZ, boomSize, false);
@@ -126,49 +114,38 @@ public class EntityPonyCloud extends EntityCreepBase
         }
 
         Entity firstPassenger = getFirstPassenger();
-        if (firstPassenger == null && !getDelivered())
-        {
+        if (firstPassenger == null && !getDelivered()) {
             setDead();
         }
 
-        double xHeading = -MathHelper.sin(rotationYaw * (float)Math.PI / 180.0f);
-        double zHeading = MathHelper.cos(rotationYaw * (float)Math.PI / 180.0f);
+        double xHeading = -MathHelper.sin(rotationYaw * (float) Math.PI / 180.0f);
+        double zHeading = MathHelper.cos(rotationYaw * (float) Math.PI / 180.0f);
 
-        for (int x = 0; x < 5; x++)
-        {
+        for (int x = 0; x < 5; x++) {
             world.spawnParticle(EnumParticleTypes.WATER_BUBBLE, posX + rand.nextGaussian() * 0.25d - rand.nextGaussian() * 0.25d + xHeading * 1.0d, posX + 1.5d + rand.nextGaussian() * 0.5d - rand.nextGaussian() * 0.5d, posZ + rand.nextGaussian() * 0.25d - rand.nextGaussian() * 0.25d + zHeading * 1.0d, rand.nextGaussian() * 0.02d, rand.nextGaussian() * 0.02d, rand.nextGaussian() * 0.02d);
         }
 
-        if (firstPassenger != null)
-        {
-            if (!getDelivered())
-            {
-                if (!world.isAirBlock(new BlockPos(posX, posY - 1, posZ)))
-                {
+        if (firstPassenger != null) {
+            if (!getDelivered()) {
+                if (!world.isAirBlock(new BlockPos(posX, posY - 1, posZ))) {
                     firstPassenger.dismountRidingEntity();
                     playSound(CreepsSoundHandler.ponyPopOffSound, getSoundVolume(), getSoundPitch());
                     playSound(SoundEvents.BLOCK_LAVA_POP, 0.9f, getSoundPitch());
                     setDelivered(true);
-                    for (int j = 0; j < 10; j++)
-                    {
-                        world.spawnParticle(EnumParticleTypes.EXPLOSION_NORMAL, (posX + (double)(rand.nextFloat() * width * 2.0F)) - (double)width, posY + (double)(rand.nextFloat() * height), (posZ + (double)(rand.nextFloat() * width * 2.0F)) - (double)width, rand.nextGaussian() * 0.02D, rand.nextGaussian() * 0.02D, rand.nextGaussian() * 0.02D);
+                    for (int j = 0; j < 10; j++) {
+                        world.spawnParticle(EnumParticleTypes.EXPLOSION_NORMAL, (posX + (double) (rand.nextFloat() * width * 2.0F)) - (double) width, posY + (double) (rand.nextFloat() * height), (posZ + (double) (rand.nextFloat() * width * 2.0F)) - (double) width, rand.nextGaussian() * 0.02D, rand.nextGaussian() * 0.02D, rand.nextGaussian() * 0.02D);
                     }
-                }
-                else
-                {
+                } else {
                     motionY = -0.2d;
                 }
             }
-        }
-        else if (getDelivered())
-        {
+        } else if (getDelivered()) {
             motionY = -0.05d;
-            for (int j = 0; j < 2; j++)
-            {
-                world.spawnParticle(EnumParticleTypes.EXPLOSION_NORMAL, (posX + (double)(rand.nextFloat() * width * 2.0F)) - (double)width, posY + (double)(rand.nextFloat() * height * 4.0f), (posZ + (double)(rand.nextFloat() * width * 2.0F)) - (double)width, rand.nextGaussian() * 0.2D, rand.nextGaussian() * 0.08D, rand.nextGaussian() * 0.04D);
+            for (int j = 0; j < 2; j++) {
+                world.spawnParticle(EnumParticleTypes.EXPLOSION_NORMAL, (posX + (double) (rand.nextFloat() * width * 2.0F)) - (double) width, posY + (double) (rand.nextFloat() * height * 4.0f), (posZ + (double) (rand.nextFloat() * width * 2.0F)) - (double) width, rand.nextGaussian() * 0.2D, rand.nextGaussian() * 0.08D, rand.nextGaussian() * 0.04D);
             }
             setModelSize(getModelSize() - 0.050f);
-            if(getModelSize() < 0.15f) {
+            if (getModelSize() < 0.15f) {
                 setDead();
             }
         }

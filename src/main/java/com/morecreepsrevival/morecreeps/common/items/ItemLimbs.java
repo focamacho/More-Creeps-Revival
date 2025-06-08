@@ -10,18 +10,16 @@ import net.minecraft.world.World;
 
 import javax.annotation.Nonnull;
 
-public class ItemLimbs extends CreepsItem
-{
-    public ItemLimbs()
-    {
+public class ItemLimbs extends CreepsItem {
+    public ItemLimbs() {
         super("limbs");
 
         setMaxStackSize(24);
     }
 
-    @Override @Nonnull
-    public ActionResult<ItemStack> onItemRightClick(World world, EntityPlayer player, @Nonnull EnumHand hand)
-    {
+    @Override
+    @Nonnull
+    public ActionResult<ItemStack> onItemRightClick(World world, EntityPlayer player, @Nonnull EnumHand hand) {
         player.playSound(CreepsSoundHandler.barfSound, 1.0f, 1.0f);
 
         player.getHeldItem(hand).shrink(1);

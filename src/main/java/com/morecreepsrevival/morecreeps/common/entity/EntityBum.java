@@ -29,8 +29,7 @@ import net.minecraft.world.World;
 
 import javax.annotation.Nonnull;
 
-public class EntityBum extends EntityCreepBase implements IMob, IEntityCanChangeSize
-{
+public class EntityBum extends EntityCreepBase implements IMob, IEntityCanChangeSize {
     private static final DataParameter<Integer> timeToPee = EntityDataManager.createKey(EntityBum.class, DataSerializers.VARINT);
 
     private static final DataParameter<Boolean> bumGave = EntityDataManager.<Boolean>createKey(EntityBum.class, DataSerializers.BOOLEAN);
@@ -39,8 +38,7 @@ public class EntityBum extends EntityCreepBase implements IMob, IEntityCanChange
 
     private float bumRotation = 999.0f;
 
-    public EntityBum(World worldIn)
-    {
+    public EntityBum(World worldIn) {
         super(worldIn);
 
         setCreepTypeName("Bum");
@@ -57,21 +55,16 @@ public class EntityBum extends EntityCreepBase implements IMob, IEntityCanChange
     }
 
     @Override
-    protected void updateTexture()
-    {
-        if (getBumGave())
-        {
+    protected void updateTexture() {
+        if (getBumGave()) {
             setTexture("textures/entity/bumdressed.png");
-        }
-        else
-        {
+        } else {
             setTexture("textures/entity/bum.png");
         }
     }
 
     @Override
-    protected void entityInit()
-    {
+    protected void entityInit() {
         super.entityInit();
 
         dataManager.register(timeToPee, rand.nextInt(900) + 500);
@@ -82,8 +75,7 @@ public class EntityBum extends EntityCreepBase implements IMob, IEntityCanChange
     }
 
     @Override
-    public void initEntityAI()
-    {
+    public void initEntityAI() {
         clearAITasks();
 
         NodeProcessor nodeProcessor = getNavigator().getNodeProcessor();
@@ -110,16 +102,13 @@ public class EntityBum extends EntityCreepBase implements IMob, IEntityCanChange
     }
 
     @Override
-    public int getMaxSpawnedInChunk()
-    {
+    public int getMaxSpawnedInChunk() {
         return 1;
     }
 
     @Override
-    protected SoundEvent getAmbientSound()
-    {
-        if (getTimeToPee() > 0 || getBumGave() || !MoreCreepsConfig.publicUrination)
-        {
+    protected SoundEvent getAmbientSound() {
+        if (getTimeToPee() > 0 || getBumGave() || !MoreCreepsConfig.publicUrination) {
             return CreepsSoundHandler.bumSound;
         }
 
@@ -127,93 +116,72 @@ public class EntityBum extends EntityCreepBase implements IMob, IEntityCanChange
     }
 
     @Override
-    protected SoundEvent getHurtSound(DamageSource damageSource)
-    {
+    protected SoundEvent getHurtSound(DamageSource damageSource) {
         return CreepsSoundHandler.bumHurtSound;
     }
 
     @Override
-    protected SoundEvent getDeathSound()
-    {
+    protected SoundEvent getDeathSound() {
         return CreepsSoundHandler.bumDeathSound;
     }
 
-    private void setBumGave(boolean b)
-    {
+    public boolean getBumGave() {
+        return ((Boolean) dataManager.get(bumGave)).booleanValue();
+    }
+
+    private void setBumGave(boolean b) {
         dataManager.set(bumGave, Boolean.valueOf(b));
     }
 
-    public boolean getBumGave()
-    {
-        return ((Boolean)dataManager.get(bumGave)).booleanValue();
-    }
-
-    private void setTimeToPee(int i)
-    {
-        dataManager.set(timeToPee, i);
-    }
-
-    public int getTimeToPee()
-    {
+    public int getTimeToPee() {
         return dataManager.get(timeToPee);
     }
 
-    private void setAngerLevel(int i)
-    {
-        dataManager.set(angerLevel, i);
+    private void setTimeToPee(int i) {
+        dataManager.set(timeToPee, i);
     }
 
-    public int getAngerLevel()
-    {
+    public int getAngerLevel() {
         return dataManager.get(angerLevel);
     }
 
+    private void setAngerLevel(int i) {
+        dataManager.set(angerLevel, i);
+    }
+
     @Override
-    protected void dropItemsOnDeath()
-    {
+    protected void dropItemsOnDeath() {
         dropItem(Items.COOKED_PORKCHOP, 1);
     }
 
     @Override
-    public boolean processInteract(EntityPlayer player, EnumHand hand)
-    {
-        if (hand == EnumHand.OFF_HAND)
-        {
+    public boolean processInteract(EntityPlayer player, EnumHand hand) {
+        if (hand == EnumHand.OFF_HAND) {
             return super.processInteract(player, hand);
         }
 
         ItemStack itemStack = player.getHeldItem(hand);
 
-        if (!getBumGave() && getAngerLevel() == 0)
-        {
-            if (!itemStack.isEmpty())
-            {
+        if (!getBumGave() && getAngerLevel() == 0) {
+            if (!itemStack.isEmpty()) {
                 Item item = itemStack.getItem();
 
-                if (item == Items.DIAMOND || item == Items.GOLD_INGOT || item == Items.IRON_INGOT)
-                {
+                if (item == Items.DIAMOND || item == Items.GOLD_INGOT || item == Items.IRON_INGOT) {
                     int value = 0;
 
-                    if (item == Items.IRON_INGOT)
-                    {
+                    if (item == Items.IRON_INGOT) {
                         value = rand.nextInt(2) + 1;
-                    }
-                    else if (item == Items.GOLD_INGOT)
-                    {
+                    } else if (item == Items.GOLD_INGOT) {
                         value = rand.nextInt(5) + 1;
-                    }
-                    else
-                    {
+                    } else {
                         value = rand.nextInt(10) + 1;
                     }
 
                     itemStack.shrink(1);
 
-                    for (int i = 0; i < 4; i++)
-                    {
-                        for (int j = 0; j < 10; j++)
-                        {
-                            world.spawnParticle(EnumParticleTypes.EXPLOSION_NORMAL, (posX + (double)(rand.nextFloat() * width * 2.0F)) - (double)width, posY + (double)(rand.nextFloat() * height) + (double)i, (posZ + (double)(rand.nextFloat() * width * 2.0F)) - (double)width, rand.nextGaussian() * 0.02D, rand.nextGaussian() * 0.02D ,rand.nextGaussian() * 0.02D);
+                    for (int i = 0; i < 4; i++) {
+                        for (int j = 0; j < 10; j++) {
+                            world.spawnParticle(EnumParticleTypes.EXPLOSION_NORMAL, (posX + (double) (rand.nextFloat() * width * 2.0F)) - (double) width, posY + (double) (rand.nextFloat() * height) + (double) i, (posZ + (double) (rand.nextFloat() * width * 2.0F)) - (double) width, rand.nextGaussian() * 0.02D, rand.nextGaussian() * 0.02D, rand.nextGaussian() * 0.02D);
                         }
                     }
 
@@ -225,23 +193,17 @@ public class EntityBum extends EntityCreepBase implements IMob, IEntityCanChange
 
                     updateAttributes();
 
-                    if (rand.nextInt(5) == 0)
-                    {
+                    if (rand.nextInt(5) == 0) {
                         playSound(CreepsSoundHandler.bumSuckerSound, getSoundVolume(), getSoundPitch());
-                    }
-                    else
-                    {
+                    } else {
                         playSound(CreepsSoundHandler.bumThankYouSound, getSoundVolume(), getSoundPitch());
 
-                        for (int j = 0; j < 10; j++)
-                        {
-                            world.spawnParticle(EnumParticleTypes.EXPLOSION_NORMAL, (posX + (double)(rand.nextFloat() * width * 2.0F)) - (double)width, posY + (double)(rand.nextFloat() * height), (posZ + (double)(rand.nextFloat() * width * 2.0F)) - (double)width, rand.nextGaussian() * 0.02D, rand.nextGaussian() * 0.02D, rand.nextGaussian() * 0.02D);
+                        for (int j = 0; j < 10; j++) {
+                            world.spawnParticle(EnumParticleTypes.EXPLOSION_NORMAL, (posX + (double) (rand.nextFloat() * width * 2.0F)) - (double) width, posY + (double) (rand.nextFloat() * height), (posZ + (double) (rand.nextFloat() * width * 2.0F)) - (double) width, rand.nextGaussian() * 0.02D, rand.nextGaussian() * 0.02D, rand.nextGaussian() * 0.02D);
                         }
 
-                        if (!world.isRemote)
-                        {
-                            for (int k = 0; k < value; k++)
-                            {
+                        if (!world.isRemote) {
+                            for (int k = 0; k < value; k++) {
                                 dropItem(Item.getItemById(rand.nextInt(95)), 1);
 
                                 dropItem(Items.IRON_SHOVEL, 1);
@@ -250,60 +212,48 @@ public class EntityBum extends EntityCreepBase implements IMob, IEntityCanChange
 
                         return true;
                     }
-                }
-                else
-                {
-                    if (getTimeToPee() > 0)
-                    {
+                } else {
+                    if (getTimeToPee() > 0) {
                         playSound(CreepsSoundHandler.bumDontWantSound, getSoundVolume(), getSoundPitch());
-                    }
-                    else if (item == Item.getItemFromBlock(Blocks.YELLOW_FLOWER) || item == Item.getItemFromBlock(Blocks.RED_FLOWER))
-                    {
+                    } else if (item == Item.getItemFromBlock(Blocks.YELLOW_FLOWER) || item == Item.getItemFromBlock(Blocks.RED_FLOWER)) {
                         playSound(CreepsSoundHandler.bumThanksSound, getSoundVolume(), getSoundPitch());
 
                         setTimeToPee(rand.nextInt(1900) + 1500);
 
                         itemStack.shrink(1);
-                    }
-                    else if (item == Items.BUCKET)
-                    {
+                    } else if (item == Items.BUCKET) {
                         playSound(CreepsSoundHandler.bumThanksSound, getSoundVolume(), getSoundPitch());
 
                         setTimeToPee(rand.nextInt(1900) + 1500);
 
-                        if(!world.isRemote) {
+                        if (!world.isRemote) {
                             dropItem(CreepsItemHandler.peeBucket, 1);
                         }
 
                         itemStack.shrink(1);
-                    }
-                    else if (item == Items.LAVA_BUCKET)
-                    {
+                    } else if (item == Items.LAVA_BUCKET) {
                         playSound(CreepsSoundHandler.bumThanksSound, getSoundVolume(), getSoundPitch());
 
                         setTimeToPee(rand.nextInt(1900) + 1500);
 
                         itemStack.shrink(1);
 
-                        if (!world.isRemote && rand.nextInt(4) == 0)
-                        {
+                        if (!world.isRemote && rand.nextInt(4) == 0) {
                             BlockPos blockPos = new BlockPos(posX, posY, posZ);
 
                             IBlockState blockState = world.getBlockState(blockPos);
 
                             int randInt = rand.nextInt(3) + 1;
 
-                            for (int i = 0; i < randInt; i++)
-                            {
+                            for (int i = 0; i < randInt; i++) {
                                 Blocks.OBSIDIAN.dropBlockAsItem(world, blockPos, blockState, 0);
                             }
                         }
 
-                        for (int i = 0; i < 15; i++)
-                        {
-                            double d4 = (float)posX + world.rand.nextFloat();
-                            double d7 = (float)posY + world.rand.nextFloat();
-                            double d8 = (float)posZ + world.rand.nextFloat();
+                        for (int i = 0; i < 15; i++) {
+                            double d4 = (float) posX + world.rand.nextFloat();
+                            double d7 = (float) posY + world.rand.nextFloat();
+                            double d8 = (float) posZ + world.rand.nextFloat();
                             double d9 = d4 - posX;
                             double d10 = d7 - posY;
                             double d11 = d8 - posZ;
@@ -320,20 +270,15 @@ public class EntityBum extends EntityCreepBase implements IMob, IEntityCanChange
                             world.spawnParticle(EnumParticleTypes.SMOKE_NORMAL, d4, d7, d8, d9, d10, d11);
                         }
 
-                        if (rand.nextInt(4) == 0)
-                        {
+                        if (rand.nextInt(4) == 0) {
                             player.inventory.setInventorySlotContents(player.inventory.currentItem, new ItemStack(Items.BUCKET));
                         }
-                    }
-                    else if (!getBumGave())
-                    {
+                    } else if (!getBumGave()) {
                         playSound(CreepsSoundHandler.bumPeeSound, getSoundVolume(), getSoundPitch());
                     }
                 }
             }
-        }
-        else
-        {
+        } else {
             playSound(CreepsSoundHandler.bumLeaveMeAloneSound, getSoundVolume(), getSoundPitch());
         }
 
@@ -341,18 +286,15 @@ public class EntityBum extends EntityCreepBase implements IMob, IEntityCanChange
     }
 
     @Override
-    public void onLivingUpdate()
-    {
+    public void onLivingUpdate() {
         super.onLivingUpdate();
 
         setTimeToPee(getTimeToPee() - 1);
 
-        if (getAttackTarget() == null && getTimeToPee() < 0 && !getBumGave() && MoreCreepsConfig.publicUrination)
-        {
+        if (getAttackTarget() == null && getTimeToPee() < 0 && !getBumGave() && MoreCreepsConfig.publicUrination) {
             isJumping = false;
 
-            if (bumRotation == 999.0f)
-            {
+            if (bumRotation == 999.0f) {
                 bumRotation = rotationYaw;
             }
 
@@ -362,18 +304,15 @@ public class EntityBum extends EntityCreepBase implements IMob, IEntityCanChange
 
             updateMoveSpeed();
 
-            if (!onGround)
-            {
+            if (!onGround) {
                 motionY -= 0.5d;
             }
 
-            if (world.isRemote)
-            {
+            if (world.isRemote) {
                 MoreCreepsAndWeirdos.proxy.pee(this);
             }
 
-            if (getTimeToPee() < -200)
-            {
+            if (getTimeToPee() < -200) {
                 setTimeToPee(rand.nextInt(600) + 600);
 
                 bumRotation = 999.0f;
@@ -384,12 +323,9 @@ public class EntityBum extends EntityCreepBase implements IMob, IEntityCanChange
 
                 int l = MathHelper.floor(posZ);
 
-                for (int i1 = -1; i1 < 2; i1++)
-                {
-                    for (int j1 = -1; j1 < 2; j1++)
-                    {
-                        if (rand.nextInt(3) != 0)
-                        {
+                for (int i1 = -1; i1 < 2; i1++) {
+                    for (int j1 = -1; j1 < 2; j1++) {
+                        if (rand.nextInt(3) != 0) {
                             continue;
                         }
 
@@ -397,18 +333,15 @@ public class EntityBum extends EntityCreepBase implements IMob, IEntityCanChange
 
                         Block l1 = world.getBlockState(new BlockPos(j + j1, k, l - i1)).getBlock();
 
-                        if (rand.nextInt(2) == 0)
-                        {
-                            if ((k1 == Blocks.GRASS || k1 == Blocks.DIRT) && l1 == Blocks.AIR)
-                            {
+                        if (rand.nextInt(2) == 0) {
+                            if ((k1 == Blocks.GRASS || k1 == Blocks.DIRT) && l1 == Blocks.AIR) {
                                 world.setBlockState(new BlockPos(j + j1, k, l - i1), Blocks.YELLOW_FLOWER.getDefaultState());
                             }
 
                             continue;
                         }
 
-                        if ((k1 == Blocks.GRASS || k1 == Blocks.DIRT) && l1 == Blocks.AIR)
-                        {
+                        if ((k1 == Blocks.GRASS || k1 == Blocks.DIRT) && l1 == Blocks.AIR) {
                             world.setBlockState(new BlockPos(j + j1, k, l - i1), Blocks.RED_FLOWER.getDefaultState());
                         }
                     }
@@ -418,8 +351,7 @@ public class EntityBum extends EntityCreepBase implements IMob, IEntityCanChange
     }
 
     @Override
-    public void writeEntityToNBT(NBTTagCompound compound)
-    {
+    public void writeEntityToNBT(NBTTagCompound compound) {
         super.writeEntityToNBT(compound);
 
         NBTTagCompound props = compound.getCompoundTag("MoreCreepsBum");
@@ -434,35 +366,29 @@ public class EntityBum extends EntityCreepBase implements IMob, IEntityCanChange
     }
 
     @Override
-    public void readEntityFromNBT(NBTTagCompound compound)
-    {
+    public void readEntityFromNBT(NBTTagCompound compound) {
         super.readEntityFromNBT(compound);
 
         NBTTagCompound props = compound.getCompoundTag("MoreCreepsBum");
 
-        if (props.hasKey("BumGave"))
-        {
+        if (props.hasKey("BumGave")) {
             setBumGave(props.getBoolean("BumGave"));
         }
 
-        if (props.hasKey("AngerLevel"))
-        {
+        if (props.hasKey("AngerLevel")) {
             setAngerLevel(props.getInteger("AngerLevel"));
         }
 
-        if (props.hasKey("TimeToPee"))
-        {
+        if (props.hasKey("TimeToPee")) {
             setTimeToPee(props.getInteger("TimeToPee"));
         }
     }
 
     @Override
-    public boolean attackEntityFrom(@Nonnull DamageSource source, float amount)
-    {
+    public boolean attackEntityFrom(@Nonnull DamageSource source, float amount) {
         boolean flag = super.attackEntityFrom(source, amount);
 
-        if (flag)
-        {
+        if (flag) {
             setTimeToPee(rand.nextInt(900) + 500);
 
             bumRotation = 999.0f;
@@ -472,23 +398,27 @@ public class EntityBum extends EntityCreepBase implements IMob, IEntityCanChange
     }
 
     @Override
-    public float maxShrink() { return 0.4f; }
+    public float maxShrink() {
+        return 0.4f;
+    }
 
     @Override
-    public float getShrinkRayAmount() { return 0.2f; }
+    public float getShrinkRayAmount() {
+        return 0.2f;
+    }
 
     @Override
     public void onShrink(EntityShrink source) {
 
     }
+
     @Override
     public float maxGrowth() {
         return 4.0f;
     }
 
     @Override
-    public float getGrowRayAmount()
-    {
+    public float getGrowRayAmount() {
         return 0.2F;
     }
 

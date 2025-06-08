@@ -29,8 +29,7 @@ import net.minecraft.world.World;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-public class EntityRocketGiraffe extends EntityCreepBase implements IEntityCanChangeSize
-{
+public class EntityRocketGiraffe extends EntityCreepBase implements IEntityCanChangeSize {
     private static final String[] names = {
             "Rory", "Stan", "Clarence", "FirePower", "Lightning", "Rocket Jockey", "Rocket Ralph", "Tim"
     };
@@ -39,8 +38,7 @@ public class EntityRocketGiraffe extends EntityCreepBase implements IEntityCanCh
 
     private int gallopTime = 0;
 
-    public EntityRocketGiraffe(World worldIn)
-    {
+    public EntityRocketGiraffe(World worldIn) {
         super(worldIn);
 
         setCreepTypeName("Rocket Giraffe");
@@ -49,41 +47,34 @@ public class EntityRocketGiraffe extends EntityCreepBase implements IEntityCanCh
 
         baseSpeed = 0.325d;
 
-        baseHealth = (float)rand.nextInt(50) + 30.0f;
+        baseHealth = (float) rand.nextInt(50) + 30.0f;
 
         updateAttributes();
     }
 
     @Override
-    protected String[] getTamedNames()
-    {
+    protected String[] getTamedNames() {
         return names;
     }
 
     @Override
-    protected void entityInit()
-    {
+    protected void entityInit() {
         super.entityInit();
 
         dataManager.register(tamedCookies, rand.nextInt(7) + 1);
     }
 
     @Override
-    protected void updateTexture()
-    {
-        if (isTamed())
-        {
+    protected void updateTexture() {
+        if (isTamed()) {
             setTexture("textures/entity/rocketgiraffetamed.png");
-        }
-        else
-        {
+        } else {
             setTexture("textures/entity/rocketgiraffe.png");
         }
     }
 
     @Override
-    public void initEntityAI()
-    {
+    public void initEntityAI() {
         clearAITasks();
 
         NodeProcessor nodeProcessor = getNavigator().getNodeProcessor();
@@ -108,10 +99,8 @@ public class EntityRocketGiraffe extends EntityCreepBase implements IEntityCanCh
     }
 
     @Override
-    protected SoundEvent getAmbientSound()
-    {
-        if (rand.nextInt(10) == 0)
-        {
+    protected SoundEvent getAmbientSound() {
+        if (rand.nextInt(10) == 0) {
             return CreepsSoundHandler.giraffeSound;
         }
 
@@ -119,36 +108,30 @@ public class EntityRocketGiraffe extends EntityCreepBase implements IEntityCanCh
     }
 
     @Override
-    protected SoundEvent getHurtSound(DamageSource damageSource)
-    {
+    protected SoundEvent getHurtSound(DamageSource damageSource) {
         return CreepsSoundHandler.giraffeHurtSound;
     }
 
     @Override
-    protected SoundEvent getDeathSound()
-    {
+    protected SoundEvent getDeathSound() {
         return CreepsSoundHandler.giraffeDeadSound;
     }
 
     @Override
-    public int getMaxSpawnedInChunk()
-    {
+    public int getMaxSpawnedInChunk() {
         return 1;
     }
 
     @Override
-    public void onLivingUpdate()
-    {
+    public void onLivingUpdate() {
         ignoreFrustumCheck = true;
 
         super.onLivingUpdate();
     }
 
     @Override
-    public boolean isEntityInsideOpaqueBlock()
-    {
-        if (getFirstPassenger() != null)
-        {
+    public boolean isEntityInsideOpaqueBlock() {
+        if (getFirstPassenger() != null) {
             return false;
         }
 
@@ -156,52 +139,44 @@ public class EntityRocketGiraffe extends EntityCreepBase implements IEntityCanCh
     }
 
     @Override
-    protected void dropItemsOnDeath()
-    {
-        if (rand.nextInt(10) == 0)
-        {
+    protected void dropItemsOnDeath() {
+        if (rand.nextInt(10) == 0) {
             dropItem(CreepsItemHandler.rocket, rand.nextInt(5) + 1);
         }
     }
 
     @Override
-    public void onDeath(@Nonnull DamageSource damageSource)
-    {
+    public void onDeath(@Nonnull DamageSource damageSource) {
         smoke();
 
         super.onDeath(damageSource);
     }
 
     @Override
-    public boolean isTamable()
-    {
+    public boolean isTamable() {
         return true;
     }
 
     @Override
-    public boolean isRideable()
-    {
+    public boolean isRideable() {
         return true;
     }
 
     @Override
-    public void updatePassenger(@Nonnull Entity passenger)
-    {
-        if (isPassenger(passenger) && passenger instanceof EntityPlayer)
-        {
-            double d = Math.cos(((double)rotationYaw * Math.PI) / 180D) * 0.20000000000000001D;
-            double d1 = Math.sin(((double)rotationYaw * Math.PI) / 180D) * 0.20000000000000001D;
+    public void updatePassenger(@Nonnull Entity passenger) {
+        if (isPassenger(passenger) && passenger instanceof EntityPlayer) {
+            double d = Math.cos(((double) rotationYaw * Math.PI) / 180D) * 0.20000000000000001D;
+            double d1 = Math.sin(((double) rotationYaw * Math.PI) / 180D) * 0.20000000000000001D;
 
             float size = getModelSize();
 
             float f = 1.8F - (1.0F - size) * 2.0F;
 
-            if (size > 1.0f)
-            {
+            if (size > 1.0f) {
                 f *= 1.1f;
             }
 
-            passenger.setPosition(posX + d, posY + (double)f, posZ + d1);
+            passenger.setPosition(posX + d, posY + (double) f, posZ + d1);
 
             return;
         }
@@ -210,18 +185,15 @@ public class EntityRocketGiraffe extends EntityCreepBase implements IEntityCanCh
     }
 
     @Override
-    public void travel(float strafe, float vertical, float forward)
-    {
-        if (isBeingRidden() && canBeSteered())
-        {
+    public void travel(float strafe, float vertical, float forward) {
+        if (isBeingRidden() && canBeSteered()) {
             Entity controllingPassenger = getControllingPassenger();
 
-            if (!(controllingPassenger instanceof EntityLivingBase))
-            {
+            if (!(controllingPassenger instanceof EntityLivingBase)) {
                 return;
             }
 
-            EntityLivingBase riddenByEntity = (EntityLivingBase)controllingPassenger;
+            EntityLivingBase riddenByEntity = (EntityLivingBase) controllingPassenger;
 
             baseSpeed = 1.95d;
 
@@ -237,60 +209,48 @@ public class EntityRocketGiraffe extends EntityCreepBase implements IEntityCanCh
 
             double moveSpeed = riddenByEntity.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).getBaseValue();
 
-            if (moveSpeed > 0.01d && moveSpeed < 10.0d)
-            {
-                f = (float)moveSpeed;
+            if (moveSpeed > 0.01d && moveSpeed < 10.0d) {
+                f = (float) moveSpeed;
             }
 
-            forward = (riddenByEntity.moveForward / f) * (float)getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).getBaseValue() * 1.95f;
+            forward = (riddenByEntity.moveForward / f) * (float) getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).getBaseValue() * 1.95f;
 
-            strafe = (riddenByEntity.moveStrafing / f) * (float)getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).getBaseValue() * 1.95f;
+            strafe = (riddenByEntity.moveStrafing / f) * (float) getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).getBaseValue() * 1.95f;
 
-            if (onGround && (forward != 0.0f || strafe != 0.0f))
-            {
+            if (onGround && (forward != 0.0f || strafe != 0.0f)) {
                 motionY += 0.16100040078163147d;
             }
 
-            if (forward == 0.0f && strafe == 0.0f)
-            {
+            if (forward == 0.0f && strafe == 0.0f) {
                 isJumping = false;
 
                 gallopTime = 0;
             }
 
-            if (forward != 0.0f && gallopTime++ > 10)
-            {
+            if (forward != 0.0f && gallopTime++ > 10) {
                 gallopTime = 0;
 
-                if (handleWaterMovement())
-                {
+                if (handleWaterMovement()) {
                     playSound(CreepsSoundHandler.giraffeSplashSound, getSoundVolume(), 1.2f);
-                }
-                else
-                {
+                } else {
                     playSound(CreepsSoundHandler.giraffeGallopSound, getSoundVolume(), 1.2f);
                 }
             }
 
-            if (onGround && !isJumping)
-            {
-                if (riddenByEntity instanceof EntityPlayer && MoreCreepsAndWeirdos.proxy.isJumpKeyDown((EntityPlayer)riddenByEntity))
-                {
+            if (onGround && !isJumping) {
+                if (riddenByEntity instanceof EntityPlayer && MoreCreepsAndWeirdos.proxy.isJumpKeyDown((EntityPlayer) riddenByEntity)) {
                     isJumping = true;
                 }
 
-                if (isJumping)
-                {
+                if (isJumping) {
                     motionY += 0.37000000476837158d;
                 }
             }
 
-            if (onGround && isJumping)
-            {
+            if (onGround && isJumping) {
                 double d = Math.abs(Math.sqrt(motionX * motionX + motionZ * motionZ));
 
-                if (d > 0.13d)
-                {
+                if (d > 0.13d) {
                     double d2 = 0.13d / d;
 
                     motionX = motionX * d2;
@@ -301,9 +261,7 @@ public class EntityRocketGiraffe extends EntityCreepBase implements IEntityCanCh
                 motionX *= 2.95d;
                 motionZ *= 2.95d;
             }
-        }
-        else
-        {
+        } else {
             baseSpeed = 0.2d;
 
             updateMoveSpeed();
@@ -313,57 +271,42 @@ public class EntityRocketGiraffe extends EntityCreepBase implements IEntityCanCh
     }
 
     @Override
-    public boolean processInteract(EntityPlayer player, EnumHand hand)
-    {
-        if (hand == EnumHand.OFF_HAND)
-        {
+    public boolean processInteract(EntityPlayer player, EnumHand hand) {
+        if (hand == EnumHand.OFF_HAND) {
             return super.processInteract(player, hand);
-        }
-        else if (isTamed())
-        {
-            if (isPlayerOwner(player))
-            {
-                if (isBeingRidden())
-                {
+        } else if (isTamed()) {
+            if (isPlayerOwner(player)) {
+                if (isBeingRidden()) {
                     ItemStack itemStack = player.getHeldItem(hand);
 
-                    if (!itemStack.isEmpty() && itemStack.getItem() == CreepsItemHandler.rocket)
-                    {
+                    if (!itemStack.isEmpty() && itemStack.getItem() == CreepsItemHandler.rocket) {
                         itemStack.shrink(1);
 
                         playSound(CreepsSoundHandler.rocketFireSound, 1.0f, getSoundPitch());
 
                         EntityRocket rocket = new EntityRocket(world, player, 0.0f);
 
-                        if (!world.isRemote)
-                        {
+                        if (!world.isRemote) {
                             world.spawnEntity(rocket);
                         }
 
                         return true;
                     }
-                }
-                else if (player.isSneaking())
-                {
-                    if (!world.isRemote)
-                    {
-                        CreepsPacketHandler.INSTANCE.sendTo(new MessageOpenGuiTamableEntityName(getEntityId()), (EntityPlayerMP)player);
+                } else if (player.isSneaking()) {
+                    if (!world.isRemote) {
+                        CreepsPacketHandler.INSTANCE.sendTo(new MessageOpenGuiTamableEntityName(getEntityId()), (EntityPlayerMP) player);
                     }
 
                     return true;
                 }
             }
-        }
-        else if (!isBeingRidden())
-        {
+        } else if (!isBeingRidden()) {
             ItemStack itemStack = player.getHeldItem(hand);
 
-            if (!itemStack.isEmpty())
-            {
+            if (!itemStack.isEmpty()) {
                 Item item = itemStack.getItem();
 
-                if (item == Items.COOKIE)
-                {
+                if (item == Items.COOKIE) {
                     playSound(CreepsSoundHandler.giraffeChewSound, getSoundVolume(), getSoundPitch());
 
                     itemStack.shrink(1);
@@ -380,15 +323,11 @@ public class EntityRocketGiraffe extends EntityCreepBase implements IEntityCanCh
 
                     setTamedCookies(cookieCount);
 
-                    if (cookieCount > 0)
-                    {
-                        if (!world.isRemote)
-                        {
+                    if (cookieCount > 0) {
+                        if (!world.isRemote) {
                             player.sendMessage(new TextComponentString("You need \2476" + cookieCount + " cookie" + ((cookieCount == 1) ? "" : "s") + " \247fto tame this Rocket Giraffe."));
                         }
-                    }
-                    else
-                    {
+                    } else {
                         tame(player);
                     }
 
@@ -396,9 +335,7 @@ public class EntityRocketGiraffe extends EntityCreepBase implements IEntityCanCh
 
                     return true;
                 }
-            }
-            else if (!world.isRemote)
-            {
+            } else if (!world.isRemote) {
                 int cookieCount = getTamedCookies();
 
                 player.sendMessage(new TextComponentString("You need \2476" + cookieCount + " cookie" + ((cookieCount == 1) ? "" : "s") + " \247fto tame this Rocket Giraffe."));
@@ -409,12 +346,9 @@ public class EntityRocketGiraffe extends EntityCreepBase implements IEntityCanCh
     }
 
     @Override
-    public boolean canPlayerRide(EntityPlayer player)
-    {
-        if (isPlayerOwner(player) && getModelSize() < 1.0f)
-        {
-            if (!world.isRemote)
-            {
+    public boolean canPlayerRide(EntityPlayer player) {
+        if (isPlayerOwner(player) && getModelSize() < 1.0f) {
+            if (!world.isRemote) {
                 player.sendMessage(new TextComponentString("Your Rocket Giraffe is too small to ride!"));
             }
 
@@ -424,19 +358,16 @@ public class EntityRocketGiraffe extends EntityCreepBase implements IEntityCanCh
         return super.canPlayerRide(player);
     }
 
-    protected void setTamedCookies(int i)
-    {
-        dataManager.set(tamedCookies, i);
-    }
-
-    public int getTamedCookies()
-    {
+    public int getTamedCookies() {
         return dataManager.get(tamedCookies);
     }
 
+    protected void setTamedCookies(int i) {
+        dataManager.set(tamedCookies, i);
+    }
+
     @Override
-    public void writeEntityToNBT(NBTTagCompound compound)
-    {
+    public void writeEntityToNBT(NBTTagCompound compound) {
         super.writeEntityToNBT(compound);
 
         NBTTagCompound props = compound.getCompoundTag("MoreCreepsRocketGiraffe");
@@ -447,22 +378,19 @@ public class EntityRocketGiraffe extends EntityCreepBase implements IEntityCanCh
     }
 
     @Override
-    public void readEntityFromNBT(NBTTagCompound compound)
-    {
+    public void readEntityFromNBT(NBTTagCompound compound) {
         super.readEntityFromNBT(compound);
 
         NBTTagCompound props = compound.getCompoundTag("MoreCreepsRocketGiraffe");
 
-        if (props.hasKey("TamedCookies"))
-        {
+        if (props.hasKey("TamedCookies")) {
             setTamedCookies(props.getInteger("TamedCookies"));
         }
     }
 
     @Override
-    protected void doAttackJump(Entity entity)
-    {
-        rotationYaw = ((float)Math.toDegrees(Math.atan2(entity.posZ - posZ, entity.posX - posX))) - 90.0f;
+    protected void doAttackJump(Entity entity) {
+        rotationYaw = ((float) Math.toDegrees(Math.atan2(entity.posZ - posZ, entity.posX - posX))) - 90.0f;
 
         double d0 = entity.posX - posX;
 
@@ -480,43 +408,45 @@ public class EntityRocketGiraffe extends EntityCreepBase implements IEntityCanCh
     }
 
     @Override
-    public boolean attackEntityAsMob(@Nonnull Entity entity)
-    {
+    public boolean attackEntityAsMob(@Nonnull Entity entity) {
         // TODO: camel spit
 
         return super.attackEntityAsMob(entity);
     }
 
     @Override
-    protected SoundEvent getTamedSound()
-    {
+    protected SoundEvent getTamedSound() {
         return CreepsSoundHandler.giraffeTamedSound;
     }
 
-    @Override @Nullable
-    public Entity getControllingPassenger()
-    {
+    @Override
+    @Nullable
+    public Entity getControllingPassenger() {
         return getFirstPassenger();
     }
 
     @Override
-    public float maxShrink() { return 0.4f; }
+    public float maxShrink() {
+        return 0.4f;
+    }
 
     @Override
-    public float getShrinkRayAmount() { return 0.15f; }
+    public float getShrinkRayAmount() {
+        return 0.15f;
+    }
 
     @Override
     public void onShrink(EntityShrink source) {
 
     }
+
     @Override
     public float maxGrowth() {
         return 4.0f;
     }
 
     @Override
-    public float getGrowRayAmount()
-    {
+    public float getGrowRayAmount() {
         return 0.15F;
     }
 

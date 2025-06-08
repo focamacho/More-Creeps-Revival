@@ -15,6 +15,7 @@ public class ModelS extends ModelBase {
     private final ModelRenderer RightEye;
     private final ModelRenderer LeftEye;
     private final ModelRenderer Hat;
+
     public ModelS() {
         textureWidth = 64;
         textureHeight = 64;
@@ -72,12 +73,12 @@ public class ModelS extends ModelBase {
 
     @Override
     public void setRotationAngles(float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch, float scaleFactor, Entity entityIn) {
-        LeftLeg.rotateAngleX = MathHelper.cos(limbSwing * 0.6662f + (float)Math.PI) * 1.4f * limbSwingAmount * 0.5f;
+        LeftLeg.rotateAngleX = MathHelper.cos(limbSwing * 0.6662f + (float) Math.PI) * 1.4f * limbSwingAmount * 0.5f;
         RightLeg.rotateAngleX = MathHelper.cos(limbSwing * 0.6662f) * 1.4f * limbSwingAmount * 0.5f;
         RightLeg.rotateAngleZ = 0.0f;
         LeftLeg.rotateAngleZ = 0.0f;
 
-        RightArm.rotateAngleX = MathHelper.cos(limbSwing * 0.6662f + (float)Math.PI) * 1.4f * limbSwingAmount * 0.5f;
+        RightArm.rotateAngleX = MathHelper.cos(limbSwing * 0.6662f + (float) Math.PI) * 1.4f * limbSwingAmount * 0.5f;
         LeftArm.rotateAngleX = MathHelper.cos(limbSwing * 0.6662f) * 1.4f * limbSwingAmount * 0.5f;
         RightArm.rotateAngleZ = 0.0f;
         LeftArm.rotateAngleZ = 0.0f;

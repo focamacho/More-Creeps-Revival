@@ -10,15 +10,12 @@ import net.minecraft.world.World;
 
 import javax.annotation.Nonnull;
 
-public class ItemGun extends CreepsItem
-{
-    public ItemGun()
-    {
+public class ItemGun extends CreepsItem {
+    public ItemGun() {
         this("gun", false);
     }
 
-    public ItemGun(String itemName, boolean noCreativeTab)
-    {
+    public ItemGun(String itemName, boolean noCreativeTab) {
         super(itemName, noCreativeTab);
 
         setMaxStackSize(1);
@@ -26,17 +23,16 @@ public class ItemGun extends CreepsItem
         setMaxDamage(128);
     }
 
-    @Override @Nonnull
-    public ActionResult<ItemStack> onItemRightClick(World world, EntityPlayer player, @Nonnull EnumHand hand)
-    {
+    @Override
+    @Nonnull
+    public ActionResult<ItemStack> onItemRightClick(World world, EntityPlayer player, @Nonnull EnumHand hand) {
         player.playSound(CreepsSoundHandler.bulletSound, getSoundVolume(), getSoundPitch());
 
         player.getHeldItem(hand).damageItem(2, player);
 
         EntityBullet bullet = new EntityBullet(world, player);
 
-        if (!world.isRemote)
-        {
+        if (!world.isRemote) {
             world.spawnEntity(bullet);
         }
 
@@ -44,8 +40,7 @@ public class ItemGun extends CreepsItem
     }
 
     @Override
-    public boolean isFull3D()
-    {
+    public boolean isFull3D() {
         return true;
     }
 }

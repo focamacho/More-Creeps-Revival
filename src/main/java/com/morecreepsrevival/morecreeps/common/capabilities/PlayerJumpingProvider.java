@@ -8,32 +8,26 @@ import net.minecraftforge.common.capabilities.ICapabilitySerializable;
 
 import javax.annotation.Nonnull;
 
-public class PlayerJumpingProvider implements ICapabilitySerializable<NBTBase>
-{
+public class PlayerJumpingProvider implements ICapabilitySerializable<NBTBase> {
     @CapabilityInject(IPlayerJumping.class)
     public static Capability<IPlayerJumping> capability;
 
     private IPlayerJumping instance;
 
-    public PlayerJumpingProvider()
-    {
-        if (capability != null)
-        {
+    public PlayerJumpingProvider() {
+        if (capability != null) {
             instance = capability.getDefaultInstance();
         }
     }
 
     @Override
-    public boolean hasCapability(@Nonnull Capability<?> capabilityIn, EnumFacing facing)
-    {
+    public boolean hasCapability(@Nonnull Capability<?> capabilityIn, EnumFacing facing) {
         return (capabilityIn == capability);
     }
 
     @Override
-    public <T> T getCapability(@Nonnull Capability<T> capabilityIn, EnumFacing facing)
-    {
-        if (capabilityIn == capability)
-        {
+    public <T> T getCapability(@Nonnull Capability<T> capabilityIn, EnumFacing facing) {
+        if (capabilityIn == capability) {
             return capability.cast(instance);
         }
 
@@ -41,14 +35,12 @@ public class PlayerJumpingProvider implements ICapabilitySerializable<NBTBase>
     }
 
     @Override
-    public NBTBase serializeNBT()
-    {
+    public NBTBase serializeNBT() {
         return capability.getStorage().writeNBT(capability, instance, null);
     }
 
     @Override
-    public void deserializeNBT(NBTBase nbtBase)
-    {
+    public void deserializeNBT(NBTBase nbtBase) {
         capability.getStorage().readNBT(capability, instance, null, nbtBase);
     }
 }

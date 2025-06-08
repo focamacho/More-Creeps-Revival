@@ -1,23 +1,18 @@
 package com.morecreepsrevival.morecreeps.client.models;
 
-import com.morecreepsrevival.morecreeps.common.items.CreepsItemHandler;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.model.ModelRenderer;
+import net.minecraft.client.particle.Particle;
 import net.minecraft.client.particle.ParticleBreaking;
 import net.minecraft.entity.Entity;
-import net.minecraft.util.math.MathHelper;
-import net.minecraftforge.client.event.ColorHandlerEvent;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
-import net.minecraft.client.particle.Particle;
+import net.minecraft.util.math.MathHelper;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
-import java.util.Random;
-
-public class ModelRobotTed extends ModelBase
-{
+public class ModelRobotTed extends ModelBase {
     public ModelRenderer tedhead;
     public ModelRenderer body;
     public ModelRenderer body2;
@@ -45,18 +40,15 @@ public class ModelRobotTed extends ModelBase
 
     ModelRenderer[] models;
 
-    public ModelRobotTed()
-    {
+    public ModelRobotTed() {
         this(0.0f);
     }
 
-    public ModelRobotTed(float f)
-    {
+    public ModelRobotTed(float f) {
         this(f, 0.0f);
     }
 
-    public ModelRobotTed(float f, float f1)
-    {
+    public ModelRobotTed(float f, float f1) {
         float f2 = 0.0F;
         tedhead = new ModelRenderer(this, 0, 0);
         tedhead.addBox(-2.5F, -6F, -3F, 5, 6, 6, f2);
@@ -129,8 +121,7 @@ public class ModelRobotTed extends ModelBase
     }
 
     @Override
-    public void render(Entity entity, float f, float f1, float f2, float f3, float f4, float f5)
-    {
+    public void render(Entity entity, float f, float f1, float f2, float f3, float f4, float f5) {
         float bounceAmount = 0.1f;
 
         long currentMS = System.currentTimeMillis();
@@ -154,8 +145,7 @@ public class ModelRobotTed extends ModelBase
 
         boolean wichLeg = true;
 
-        for(int i = 0; i < 8; ++i)
-        {
+        for (int i = 0; i < 8; ++i) {
             spawnSugar(shouldNotSugarSpawn, entity, sProgress, f3, wichLeg);
 
             wichLeg = !wichLeg;
@@ -179,30 +169,28 @@ public class ModelRobotTed extends ModelBase
     }
 
     @Override
-    public void setRotationAngles(float f, float f1, float f2, float f3, float f4, float f5, Entity entity)
-    {
-        tedhead.rotateAngleY = f3 / (180F / (float)Math.PI);
-        tedhead.rotateAngleX = f4 / (180F / (float)Math.PI);
-        hornR.rotateAngleY = f3 / (180F / (float)Math.PI);
-        hornR.rotateAngleX = f4 / (180F / (float)Math.PI);
-        hornL.rotateAngleY = f3 / (180F / (float)Math.PI);
-        hornL.rotateAngleX = f4 / (180F / (float)Math.PI);
-        visor.rotateAngleY = f3 / (180F / (float)Math.PI);
-        visor.rotateAngleX = f4 / (180F / (float)Math.PI);
-        eyeL.rotateAngleY = f3 / (180F / (float)Math.PI);
-        eyeL.rotateAngleX = f4 / (180F / (float)Math.PI);
-        eyeR.rotateAngleY = f3 / (180F / (float)Math.PI);
-        eyeR.rotateAngleX = f4 / (180F / (float)Math.PI);
-        arm1R.rotateAngleX = MathHelper.cos(f * 0.6662F + (float)Math.PI) * 3F * f1 * 0.5F - 0.5F;
+    public void setRotationAngles(float f, float f1, float f2, float f3, float f4, float f5, Entity entity) {
+        tedhead.rotateAngleY = f3 / (180F / (float) Math.PI);
+        tedhead.rotateAngleX = f4 / (180F / (float) Math.PI);
+        hornR.rotateAngleY = f3 / (180F / (float) Math.PI);
+        hornR.rotateAngleX = f4 / (180F / (float) Math.PI);
+        hornL.rotateAngleY = f3 / (180F / (float) Math.PI);
+        hornL.rotateAngleX = f4 / (180F / (float) Math.PI);
+        visor.rotateAngleY = f3 / (180F / (float) Math.PI);
+        visor.rotateAngleX = f4 / (180F / (float) Math.PI);
+        eyeL.rotateAngleY = f3 / (180F / (float) Math.PI);
+        eyeL.rotateAngleX = f4 / (180F / (float) Math.PI);
+        eyeR.rotateAngleY = f3 / (180F / (float) Math.PI);
+        eyeR.rotateAngleX = f4 / (180F / (float) Math.PI);
+        arm1R.rotateAngleX = MathHelper.cos(f * 0.6662F + (float) Math.PI) * 3F * f1 * 0.5F - 0.5F;
         arm1L.rotateAngleX = MathHelper.cos(f * 0.6662F) * 3F * f1 * 0.5F - 0.5F;
-        arm2R.rotateAngleX = MathHelper.cos(f * 0.6662F + (float)Math.PI) * 3F * f1 * 0.5F - 0.95F;
+        arm2R.rotateAngleX = MathHelper.cos(f * 0.6662F + (float) Math.PI) * 3F * f1 * 0.5F - 0.95F;
         arm2L.rotateAngleX = MathHelper.cos(f * 0.6662F) * 3F * f1 * 0.5F - 0.95F;
     }
 
     @SideOnly(Side.CLIENT)
-    private void setBounce(float bounce)
-    {
-        if(Minecraft.getMinecraft().isGamePaused()) return;
+    private void setBounce(float bounce) {
+        if (Minecraft.getMinecraft().isGamePaused()) return;
 
         for (ModelRenderer current : models) {
             current.offsetY += bounce - lastOffsetModification;
@@ -210,12 +198,12 @@ public class ModelRobotTed extends ModelBase
 
         lastOffsetModification = bounce;
     }
-    @SideOnly(Side.CLIENT)
-    private void spawnSugar(boolean shouldNot, Entity entity, float ychange, float entityYaw, boolean rightLeg)
-    {
-        if(Minecraft.getMinecraft().isGamePaused()) return;
 
-        if(shouldNot) return;
+    @SideOnly(Side.CLIENT)
+    private void spawnSugar(boolean shouldNot, Entity entity, float ychange, float entityYaw, boolean rightLeg) {
+        if (Minecraft.getMinecraft().isGamePaused()) return;
+
+        if (shouldNot) return;
 
         double xMov = (sugarRandom.nextInt(8) - 4 + 1) * 0.06;
         double zMov = (sugarRandom.nextInt(8) - 4 + 1) * 0.06;
@@ -227,8 +215,7 @@ public class ModelRobotTed extends ModelBase
         //double legAngleZ = MathHelper.cos(yaw) * 0.75;
 
 
-
-        double legMiddleX = entity.posX + xVariation+ (legR.offsetX + (legR.offsetX - legL.offsetX) * 0.5d);
+        double legMiddleX = entity.posX + xVariation + (legR.offsetX + (legR.offsetX - legL.offsetX) * 0.5d);
         double legMiddleZ = entity.posZ + zVariation + (legR.offsetZ + (legR.offsetZ - legL.offsetZ) * 0.5d);
         double legY = entity.posY - ychange;
 

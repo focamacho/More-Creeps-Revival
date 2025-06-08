@@ -22,16 +22,14 @@ import net.minecraft.world.World;
 
 import javax.annotation.Nonnull;
 
-public class EntityBigBaby extends EntityCreepBase implements IMob, IEntityCanChangeSize
-{
+public class EntityBigBaby extends EntityCreepBase implements IMob, IEntityCanChangeSize {
     private static final DataParameter<Integer> skin = EntityDataManager.createKey(EntityBigBaby.class, DataSerializers.VARINT);
 
     private static final DataParameter<Integer> skinTimer = EntityDataManager.createKey(EntityBigBaby.class, DataSerializers.VARINT);
 
     private static final DataParameter<Boolean> skinDirection = EntityDataManager.<Boolean>createKey(EntityBigBaby.class, DataSerializers.BOOLEAN);
 
-    public EntityBigBaby(World worldIn)
-    {
+    public EntityBigBaby(World worldIn) {
         super(worldIn);
 
         setCreepTypeName("Big Baby");
@@ -42,7 +40,7 @@ public class EntityBigBaby extends EntityCreepBase implements IMob, IEntityCanCh
 
         setModelSize(6.0f);
 
-        baseHealth = (float)rand.nextInt(40) + 40.0f;
+        baseHealth = (float) rand.nextInt(40) + 40.0f;
 
         baseSpeed = 0.25d;
 
@@ -52,8 +50,7 @@ public class EntityBigBaby extends EntityCreepBase implements IMob, IEntityCanCh
     }
 
     @Override
-    protected void entityInit()
-    {
+    protected void entityInit() {
         super.entityInit();
 
         dataManager.register(skin, 0);
@@ -64,8 +61,7 @@ public class EntityBigBaby extends EntityCreepBase implements IMob, IEntityCanCh
     }
 
     @Override
-    protected void initEntityAI()
-    {
+    protected void initEntityAI() {
         clearAITasks();
 
         NodeProcessor nodeProcessor = getNavigator().getNodeProcessor();
@@ -94,89 +90,73 @@ public class EntityBigBaby extends EntityCreepBase implements IMob, IEntityCanCh
     }
 
     @Override
-    protected void updateTexture()
-    {
+    protected void updateTexture() {
         setTexture("textures/entity/bigbaby" + dataManager.get(skin) + ".png");
     }
 
     @Override
-    public int getMaxSpawnedInChunk()
-    {
+    public int getMaxSpawnedInChunk() {
         return 1;
     }
 
     @Override
-    protected void dropItemsOnDeath()
-    {
+    protected void dropItemsOnDeath() {
         dropItem(Items.PORKCHOP, rand.nextInt(6) + 5);
     }
 
     @Override
-    protected SoundEvent getAmbientSound()
-    {
+    protected SoundEvent getAmbientSound() {
         return CreepsSoundHandler.bigBabySound;
     }
 
     @Override
-    protected SoundEvent getHurtSound(DamageSource damageSource)
-    {
+    protected SoundEvent getHurtSound(DamageSource damageSource) {
         return CreepsSoundHandler.bigBabyHurtSound;
     }
 
     @Override
-    protected SoundEvent getDeathSound()
-    {
+    protected SoundEvent getDeathSound() {
         return CreepsSoundHandler.bigBabyHurtSound;
     }
 
     @Override
-    public float getEyeHeight()
-    {
+    public float getEyeHeight() {
         return (height * 0.15f);
     }
 
     @Override
-    public void onUpdate()
-    {
+    public void onUpdate() {
         super.onUpdate();
 
-        if (getHammerSwing() < 0.0f)
-        {
+        if (getHammerSwing() < 0.0f) {
             addHammerSwing(0.1000055f);
-        }
-        else
-        {
+        } else {
             setHammerSwing(0.0f);
         }
     }
 
     @Override
-    public void onLivingUpdate()
-    {
+    public void onLivingUpdate() {
         super.onLivingUpdate();
 
         dataManager.set(skinTimer, dataManager.get(skinTimer) + 1);
 
-        if (dataManager.get(skinTimer) > 60)
-        {
+        if (dataManager.get(skinTimer) > 60) {
             dataManager.set(skinTimer, 0);
 
             int iSkin = dataManager.get(skin);
 
             iSkin += (getSkinDirection() ? 1 : -1);
 
-            if (getAttackTarget() != null)
-            {
+            if (getAttackTarget() != null) {
                 iSkin = 0;
             }
 
-            if (iSkin < 0 || iSkin > 4)
-            {
+            if (iSkin < 0 || iSkin > 4) {
                 iSkin = 0;
             }
 
-            if (iSkin == 0 || iSkin == 4)
-            {
+            if (iSkin == 0 || iSkin == 4) {
                 setSkinDirection(!getSkinDirection());
             }
 
@@ -187,31 +167,24 @@ public class EntityBigBaby extends EntityCreepBase implements IMob, IEntityCanCh
     }
 
     @Override
-    public boolean processInteract(EntityPlayer player, EnumHand hand)
-    {
+    public boolean processInteract(EntityPlayer player, EnumHand hand) {
         ItemStack itemStack = player.getHeldItem(hand);
 
-        if (itemStack.getItem() == CreepsItemHandler.babyJarEmpty)
-        {
-            if (getModelSize() < 1.0f)
-            {
+        if (itemStack.getItem() == CreepsItemHandler.babyJarEmpty) {
+            if (getModelSize() < 1.0f) {
                 setDead();
 
                 player.inventory.setInventorySlotContents(player.inventory.currentItem, new ItemStack(CreepsItemHandler.babyJarFull));
 
                 playSound(CreepsSoundHandler.babyTakeHomeSound, 1.0f, 1.0f);
 
-                if (!world.isRemote)
-                {
+                if (!world.isRemote) {
                     player.sendMessage(new TextComponentString("Now turn that baby into a Schlump on the floor!"));
                 }
-            }
-            else
-            {
+            } else {
                 playSound(CreepsSoundHandler.babyShrinkSound, 1.0f, 1.0f);
 
-                if (!world.isRemote)
-                {
+                if (!world.isRemote) {
                     player.sendMessage(new TextComponentString("That baby is too large."));
                 }
             }
@@ -223,44 +196,44 @@ public class EntityBigBaby extends EntityCreepBase implements IMob, IEntityCanCh
     }
 
     @Override
-    public boolean attackEntityAsMob(@Nonnull Entity entity)
-    {
-        if (getHammerSwing() == 0.0f)
-        {
+    public boolean attackEntityAsMob(@Nonnull Entity entity) {
+        if (getHammerSwing() == 0.0f) {
             setHammerSwing(-1.1f);
         }
 
         return super.attackEntityAsMob(entity);
     }
 
-    private void setSkinDirection(boolean b)
-    {
+    private boolean getSkinDirection() {
+        return ((Boolean) dataManager.get(skinDirection)).booleanValue();
+    }
+
+    private void setSkinDirection(boolean b) {
         dataManager.set(skinDirection, Boolean.valueOf(b));
     }
 
-    private boolean getSkinDirection()
-    {
-        return ((Boolean)dataManager.get(skinDirection)).booleanValue();
+    @Override
+    public float maxShrink() {
+        return 0.25f;
     }
 
     @Override
-    public float maxShrink() { return 0.25f; }
-
-    @Override
-    public float getShrinkRayAmount() { return 0.25f; }
+    public float getShrinkRayAmount() {
+        return 0.25f;
+    }
 
     @Override
     public void onShrink(EntityShrink source) {
 
     }
+
     @Override
     public float maxGrowth() {
         return 8.0f;
     }
 
     @Override
-    public float getGrowRayAmount()
-    {
+    public float getGrowRayAmount() {
         return 0.25F;
     }
 

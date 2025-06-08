@@ -16,8 +16,7 @@ import net.minecraft.util.math.Vec2f;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
-public class EntityTrophy extends EntityCreepBase
-{
+public class EntityTrophy extends EntityCreepBase {
     private static final int defaultLifetime = 75;
     private static final DataParameter<Integer> partyTime = EntityDataManager.createKey(EntityTrophy.class, DataSerializers.VARINT);
 
@@ -25,8 +24,7 @@ public class EntityTrophy extends EntityCreepBase
 
     private static final DataParameter<Float> rotationDegrees = EntityDataManager.createKey(EntityTrophy.class, DataSerializers.FLOAT);
 
-    public EntityTrophy(World world)
-    {
+    public EntityTrophy(World world) {
         super(world);
 
         setCreepName("Trophy");
@@ -47,8 +45,7 @@ public class EntityTrophy extends EntityCreepBase
     }
 
     @Override
-    protected void entityInit()
-    {
+    protected void entityInit() {
         super.entityInit();
 
         dataManager.register(partyTime, rand.nextInt(30) + 40);
@@ -64,41 +61,35 @@ public class EntityTrophy extends EntityCreepBase
     }
 
     @Override
-    protected SoundEvent getAmbientSound()
-    {
+    protected SoundEvent getAmbientSound() {
         return null;
     }
 
     @Override
-    protected SoundEvent getHurtSound(DamageSource damageSource)
-    {
+    protected SoundEvent getHurtSound(DamageSource damageSource) {
         return null;
     }
 
     @Override
-    protected SoundEvent getDeathSound()
-    {
+    protected SoundEvent getDeathSound() {
         return CreepsSoundHandler.trophySmashSound;
     }
 
     @Override
-    protected boolean canDespawn()
-    {
+    protected boolean canDespawn() {
         return false;
     }
 
     @Override
-    protected void updateTexture()
-    {
+    protected void updateTexture() {
         setTexture("textures/entity/trophy.png");
     }
 
     @Override
-    public void onLivingUpdate()
-    {
+    public void onLivingUpdate() {
         //super.onLivingUpdate();
         float rotationCurr = dataManager.get(rotationDegrees);
-        if (rotationCurr < 360f)dataManager.set(rotationDegrees, rotationCurr + 9f);
+        if (rotationCurr < 360f) dataManager.set(rotationDegrees, rotationCurr + 9f);
         else dataManager.set(rotationDegrees, rotationCurr - 351f);
 
         this.setRotationYawHead(rotationCurr);
@@ -109,28 +100,24 @@ public class EntityTrophy extends EntityCreepBase
 
         this.motionX = 0f;
         this.motionZ = 0f;
-        if(this.motionY > 0f) this.motionY = 0f;
+        if (this.motionY > 0f) this.motionY = 0f;
 
-        if(world.isRemote) return;
+        if (world.isRemote) return;
 
-        if (dataManager.get(partyTime) > 1)
-        {
+        if (dataManager.get(partyTime) > 1) {
             dataManager.set(partyTime, dataManager.get(partyTime) - 1);
 
             spawnConfetti();
         }
 
-        if (dataManager.get(trophyLifespan) > 0)
-        {
+        if (dataManager.get(trophyLifespan) > 0) {
             dataManager.set(trophyLifespan, dataManager.get(trophyLifespan) - 1);
 
-            if (dataManager.get(trophyLifespan) < 1)
-            {
+            if (dataManager.get(trophyLifespan) < 1) {
                 setDead();
                 int amt = rand.nextInt(25) + 10;
 
-                for (int i = 0; i < amt; i++)
-                {
+                for (int i = 0; i < amt; i++) {
                     dropItem(CreepsItemHandler.money, 1);
                 }
             }
@@ -138,44 +125,39 @@ public class EntityTrophy extends EntityCreepBase
     }
 
     @Override
-    protected void dropItemsOnDeath()
-    {
+    protected void dropItemsOnDeath() {
         int amt = rand.nextInt(25) + 10;
 
-        for (int i = 0; i < amt; i++)
-        {
+        for (int i = 0; i < amt; i++) {
             dropItem(CreepsItemHandler.money, 1);
         }
     }
 
-    private void spawnConfetti()
-    {
+    private void spawnConfetti() {
         // TODO: confetti
 
-        for(int i = 0; i < 20; ++i)
-        {
+        for (int i = 0; i < 20; ++i) {
             double factor1 = CreepsUtil.GetRandomUnitMinus(rand);
             double factor2 = CreepsUtil.GetRandomUnitMinus(rand);
 
-            Vec2f movDir = new Vec2f((float)factor1, (float)factor2);
+            Vec2f movDir = new Vec2f((float) factor1, (float) factor2);
 
             Item selecteditem = Item.REGISTRY.getRandomObject(rand);
 
-            Particle particle =  CreepsUtil.SpawnEatingParticle(
+            Particle particle = CreepsUtil.SpawnEatingParticle(
                     world,
                     posX, posY + 1, posZ,
                     movDir.x * 0.11F, 0.6D, movDir.y * 0.11F,
                     1.5f, selecteditem
             );
 
-            if(particle == null) break;
+            if (particle == null) break;
 
             particle.setMaxAge(80);
         }
     }
 
-    public void positionCorrectlyAround(EntityPlayer player)
-    {
+    public void positionCorrectlyAround(EntityPlayer player) {
         World world = player.world;
 
         Vec3d plook = player.getLook(1.0f);
@@ -183,45 +165,37 @@ public class EntityTrophy extends EntityCreepBase
         int result = -1;
         int ychange = 0;
 
-        for(int i = 1; i <= 10; ++i)
-        {
+        for (int i = 1; i <= 10; ++i) {
             double xv = player.posX + plook.x * i;
-            double yv = 0.01 + ((int)player.posY);
+            double yv = 0.01 + ((int) player.posY);
             double zv = player.posZ + plook.z * i;
-;
+            ;
             BlockPos p0 = new BlockPos(xv, yv + 1d, zv);
-            BlockPos p1 = new BlockPos(xv, yv-1d, zv);
-            BlockPos p2 = new BlockPos(xv, yv-2d, zv);
+            BlockPos p1 = new BlockPos(xv, yv - 1d, zv);
+            BlockPos p2 = new BlockPos(xv, yv - 2d, zv);
             BlockPos p3 = new BlockPos(xv, yv + 2d, zv);
 
-            if(
+            if (
                     !world.isBlockLoaded(p0) || !world.isBlockLoaded(p1) ||
-                    !world.isBlockLoaded(p2) || !world.isBlockLoaded(p3)
+                            !world.isBlockLoaded(p2) || !world.isBlockLoaded(p3)
             ) break;
 
-            if(!world.isAirBlock(p0)) break;
+            if (!world.isAirBlock(p0)) break;
 
-            if(world.isAirBlock(new BlockPos(xv, yv, zv)))
-            {
-                if(world.isAirBlock(p1))
-                {
-                    if(world.isAirBlock(p2)) break;
+            if (world.isAirBlock(new BlockPos(xv, yv, zv))) {
+                if (world.isAirBlock(p1)) {
+                    if (world.isAirBlock(p2)) break;
 
                     ychange = -1;
                     result = i;
                     continue;
-                }
-                else
-                {
+                } else {
                     ychange = 0;
                     result = i;
                     continue;
                 }
-            }
-            else
-            {
-                if(world.isAirBlock(p3))
-                {
+            } else {
+                if (world.isAirBlock(p3)) {
                     ychange = 1;
                     result = i;
 
@@ -232,11 +206,10 @@ public class EntityTrophy extends EntityCreepBase
             break;
         }
 
-        if(result == -1) this.setPosition(player.posX, player.posY, player.posZ);
-        else
-        {
+        if (result == -1) this.setPosition(player.posX, player.posY, player.posZ);
+        else {
             this.setPosition(player.posX + plook.x * result,
-                    0.001 + ((int)player.posY) + ychange,
+                    0.001 + ((int) player.posY) + ychange,
                     player.posZ + plook.z * result);
         }
     }

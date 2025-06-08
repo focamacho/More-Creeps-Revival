@@ -14,8 +14,7 @@ import net.minecraft.world.World;
 
 import javax.annotation.Nonnull;
 
-public class EntityPony extends EntityCreepBase
-{
+public class EntityPony extends EntityCreepBase {
     private static final DataParameter<Boolean> adult = EntityDataManager.<Boolean>createKey(EntityPony.class, DataSerializers.BOOLEAN);
 
     private static final DataParameter<Integer> sicky = EntityDataManager.createKey(EntityPony.class, DataSerializers.VARINT);
@@ -42,8 +41,7 @@ public class EntityPony extends EntityCreepBase
             0, 50, 100, 250, 500, 800, 1200, 1700, 2200, 2700, 3300, 3900, 4700, 5400, 6200, 7000, 7900, 8800, 9750, 10750, 12500, 17500, 22500, 30000, 40000, 50000, 60000, 75000, 90000, 105000, 120000, 140000, 160000, 180000, 200000, 225000, 250000, 275000, 300000, 325000, 350000, 375000, 400000, 450000, 500000, 550000, 600000, 650000, 700000, 800000, 900000, 1000000
     };
 
-    public EntityPony(World worldIn)
-    {
+    public EntityPony(World worldIn) {
         super(worldIn);
 
         setCreepTypeName("Pony");
@@ -56,8 +54,7 @@ public class EntityPony extends EntityCreepBase
     }
 
     @Override
-    protected void entityInit()
-    {
+    protected void entityInit() {
         super.entityInit();
 
         dataManager.register(adult, Boolean.valueOf(false));
@@ -67,59 +64,48 @@ public class EntityPony extends EntityCreepBase
         dataManager.register(ponyBreed, 0);
     }
 
-    public boolean getAdult()
-    {
-        return ((Boolean)dataManager.get(adult)).booleanValue();
+    public boolean getAdult() {
+        return ((Boolean) dataManager.get(adult)).booleanValue();
     }
 
-    private void setAdult(boolean b)
-    {
+    private void setAdult(boolean b) {
         dataManager.set(adult, Boolean.valueOf(b));
     }
 
-    public int getSicky()
-    {
+    public int getSicky() {
         return dataManager.get(sicky);
     }
 
-    private void setSicky(int i)
-    {
+    private void setSicky(int i) {
         dataManager.set(sicky, i);
     }
 
-    public int getPonyBreed()
-    {
+    public int getPonyBreed() {
         return dataManager.get(ponyBreed);
     }
 
-    private void setPonyBreed(int i)
-    {
+    private void setPonyBreed(int i) {
         dataManager.set(ponyBreed, i);
     }
 
     @Override
-    protected String[] getAvailableTextures()
-    {
+    protected String[] getAvailableTextures() {
         return textures;
     }
 
     @Override
-    protected String[] getTamedNames()
-    {
+    protected String[] getTamedNames() {
         return names;
     }
 
     @Override
-    public int getLevelDamage()
-    {
+    public int getLevelDamage() {
         return levelDamages[getLevel()];
     }
 
     @Override
-    protected SoundEvent getAmbientSound()
-    {
-        if (!isRiding() && rand.nextInt(5) == 0)
-        {
+    protected SoundEvent getAmbientSound() {
+        if (!isRiding() && rand.nextInt(5) == 0) {
             return CreepsSoundHandler.ponySound;
         }
 
@@ -127,22 +113,18 @@ public class EntityPony extends EntityCreepBase
     }
 
     @Override
-    protected SoundEvent getHurtSound(@Nonnull DamageSource damageSource)
-    {
+    protected SoundEvent getHurtSound(@Nonnull DamageSource damageSource) {
         return CreepsSoundHandler.ponySound;
     }
 
     @Override
-    protected SoundEvent getDeathSound()
-    {
+    protected SoundEvent getDeathSound() {
         return CreepsSoundHandler.ponyDeathSound;
     }
 
     @Override
-    public double getYOffset()
-    {
-        if (getRidingEntity() instanceof EntityPonyCloud)
-        {
+    public double getYOffset() {
+        if (getRidingEntity() instanceof EntityPonyCloud) {
             return getRidingYOffset() + 5.0d;
         }
 
@@ -150,22 +132,20 @@ public class EntityPony extends EntityCreepBase
     }
 
     @Override
-    public boolean isTamable()
-    {
+    public boolean isTamable() {
         return true;
     }
 
     @Override
     public boolean processInteract(EntityPlayer player, EnumHand hand) {
 
-        if (hand == EnumHand.OFF_HAND)
-        {
+        if (hand == EnumHand.OFF_HAND) {
             return super.processInteract(player, hand);
         }
 
         ItemStack itemStack = player.getHeldItem(hand);
 
-        if(!itemStack.isEmpty()) {
+        if (!itemStack.isEmpty()) {
             Item item = itemStack.getItem();
 
 

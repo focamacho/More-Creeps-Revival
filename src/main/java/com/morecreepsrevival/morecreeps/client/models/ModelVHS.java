@@ -6,8 +6,6 @@ import net.minecraft.client.model.ModelRenderer;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.math.MathHelper;
 
-import javax.annotation.Nonnull;
-
 public class ModelVHS extends ModelBase {
 
     public ModelRenderer body;
@@ -18,6 +16,7 @@ public class ModelVHS extends ModelBase {
     public boolean heldItemLeft;
     public boolean heldItemRight;
     public boolean isSneak;
+
     public ModelVHS() {
         textureWidth = 96;
         textureHeight = 96;
@@ -59,12 +58,12 @@ public class ModelVHS extends ModelBase {
 
     @Override
     public void setRotationAngles(float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch, float scaleFactor, Entity entityIn) {
-        leftLeg.rotateAngleX = MathHelper.cos(limbSwing * 0.6662f + (float)Math.PI) * 1.4f * limbSwingAmount * 0.5f;
+        leftLeg.rotateAngleX = MathHelper.cos(limbSwing * 0.6662f + (float) Math.PI) * 1.4f * limbSwingAmount * 0.5f;
         rightLeg.rotateAngleX = MathHelper.cos(limbSwing * 0.6662f) * 1.4f * limbSwingAmount * 0.5f;
         rightLeg.rotateAngleZ = 0.0f;
         leftLeg.rotateAngleZ = 0.0f;
 
-        rightArm.rotateAngleX = MathHelper.cos(limbSwing * 0.6662f + (float)Math.PI) * 1.4f * limbSwingAmount * 0.5f;
+        rightArm.rotateAngleX = MathHelper.cos(limbSwing * 0.6662f + (float) Math.PI) * 1.4f * limbSwingAmount * 0.5f;
         leftArm.rotateAngleX = MathHelper.cos(limbSwing * 0.6662f) * 1.4f * limbSwingAmount * 0.5f;
         rightArm.rotateAngleZ = 0.0f;
         leftArm.rotateAngleZ = 0.0f;

@@ -11,10 +11,8 @@ import net.minecraft.util.DamageSource;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.world.World;
 
-public class EntityRobotTodd extends EntityCreepBase implements IMob, IEntityCanChangeSize
-{
-    public EntityRobotTodd(World worldIn)
-    {
+public class EntityRobotTodd extends EntityCreepBase implements IMob, IEntityCanChangeSize {
+    public EntityRobotTodd(World worldIn) {
         super(worldIn);
 
         setCreepTypeName("Robot Todd");
@@ -27,7 +25,7 @@ public class EntityRobotTodd extends EntityCreepBase implements IMob, IEntityCan
 
         baseSpeed = 0.25d;
 
-        baseHealth = (float)rand.nextInt(20) + 25.0f;
+        baseHealth = (float) rand.nextInt(20) + 25.0f;
 
         baseAttackDamage = 2.0d;
 
@@ -35,20 +33,17 @@ public class EntityRobotTodd extends EntityCreepBase implements IMob, IEntityCan
     }
 
     @Override
-    public int getMaxSpawnedInChunk()
-    {
+    public int getMaxSpawnedInChunk() {
         return 1;
     }
 
     @Override
-    protected void updateTexture()
-    {
+    protected void updateTexture() {
         setTexture("textures/entity/robottodd1.png");
     }
 
     @Override
-    protected void initEntityAI()
-    {
+    protected void initEntityAI() {
         clearAITasks();
 
         NodeProcessor nodeProcessor = getNavigator().getNodeProcessor();
@@ -85,50 +80,49 @@ public class EntityRobotTodd extends EntityCreepBase implements IMob, IEntityCan
     }
 
     @Override
-    protected void dropItemsOnDeath()
-    {
-        if (rand.nextInt(5) == 0)
-        {
+    protected void dropItemsOnDeath() {
+        if (rand.nextInt(5) == 0) {
             dropItem(CreepsItemHandler.battery, rand.nextInt(2) + 1);
         }
     }
 
     @Override
-    protected SoundEvent getAmbientSound()
-    {
+    protected SoundEvent getAmbientSound() {
         return CreepsSoundHandler.toddInsultSound;
     }
 
     @Override
-    protected SoundEvent getHurtSound(DamageSource damageSource)
-    {
+    protected SoundEvent getHurtSound(DamageSource damageSource) {
         return CreepsSoundHandler.robotHurtSound;
     }
 
     @Override
-    protected SoundEvent getDeathSound()
-    {
+    protected SoundEvent getDeathSound() {
         return CreepsSoundHandler.toddDeadSound;
     }
 
     @Override
-    public float maxShrink() { return 0.3f; }
+    public float maxShrink() {
+        return 0.3f;
+    }
 
     @Override
-    public float getShrinkRayAmount() { return 0.25f; }
+    public float getShrinkRayAmount() {
+        return 0.25f;
+    }
 
     @Override
     public void onShrink(EntityShrink source) {
 
     }
+
     @Override
     public float maxGrowth() {
         return 4.0f;
     }
 
     @Override
-    public float getGrowRayAmount()
-    {
+    public float getGrowRayAmount() {
         return 0.25F;
     }
 

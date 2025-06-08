@@ -7,22 +7,18 @@ import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.entity.layers.LayerRenderer;
 
-public class LayerGooGoatSlime implements LayerRenderer<EntityGooGoat>
-{
+public class LayerGooGoatSlime implements LayerRenderer<EntityGooGoat> {
     private final RenderGooGoat renderer;
 
     private final ModelBase model = new ModelGooGoat();
 
-    public LayerGooGoatSlime(RenderGooGoat rendererIn)
-    {
+    public LayerGooGoatSlime(RenderGooGoat rendererIn) {
         renderer = rendererIn;
     }
 
     @Override
-    public void doRenderLayer(EntityGooGoat entity, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch, float scale)
-    {
-        if (!entity.isInvisible())
-        {
+    public void doRenderLayer(EntityGooGoat entity, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch, float scale) {
+        if (!entity.isInvisible()) {
             GlStateManager.color(1.0f, 1.0f, 1.0f, 1.0f);
 
             GlStateManager.enableNormalize();
@@ -42,8 +38,7 @@ public class LayerGooGoatSlime implements LayerRenderer<EntityGooGoat>
     }
 
     @Override
-    public boolean shouldCombineTextures()
-    {
+    public boolean shouldCombineTextures() {
         return true;
     }
 }

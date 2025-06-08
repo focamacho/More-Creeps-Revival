@@ -5,8 +5,7 @@ import net.minecraft.client.model.ModelRenderer;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.math.MathHelper;
 
-public class ModelBum extends ModelBase
-{
+public class ModelBum extends ModelBase {
     public ModelRenderer bipedHead;
     public ModelRenderer bipedBody;
     public ModelRenderer bipedRightArm;
@@ -14,18 +13,15 @@ public class ModelBum extends ModelBase
     public ModelRenderer bipedRightLeg;
     public ModelRenderer bipedLeftLeg;
 
-    public ModelBum()
-    {
+    public ModelBum() {
         this(0.0f);
     }
 
-    public ModelBum(float f)
-    {
+    public ModelBum(float f) {
         this(f, 0.0f);
     }
 
-    public ModelBum(float f, float f1)
-    {
+    public ModelBum(float f, float f1) {
         bipedHead = new ModelRenderer(this, 0, 0);
         bipedHead.addBox(-4F, -8F, -4F, 8, 8, 8, f);
         bipedHead.setRotationPoint(0.0F, 0.0F + f1, 0.0F);
@@ -49,8 +45,7 @@ public class ModelBum extends ModelBase
     }
 
     @Override
-    public void render(Entity entity, float f, float f1, float f2, float f3, float f4, float f5)
-    {
+    public void render(Entity entity, float f, float f1, float f2, float f3, float f4, float f5) {
         setRotationAngles(f, f1, f2, f3, f4, f5, entity);
         bipedHead.render(f5);
         bipedBody.render(f5);
@@ -61,12 +56,11 @@ public class ModelBum extends ModelBase
     }
 
     @Override
-    public void setRotationAngles(float f, float f1, float f2, float f3, float f4, float f5, Entity entity)
-    {
-        bipedHead.rotateAngleY = f3 / (180F / (float)Math.PI);
-        bipedHead.rotateAngleX = f4 / (180F / (float)Math.PI);
+    public void setRotationAngles(float f, float f1, float f2, float f3, float f4, float f5, Entity entity) {
+        bipedHead.rotateAngleY = f3 / (180F / (float) Math.PI);
+        bipedHead.rotateAngleX = f4 / (180F / (float) Math.PI);
         bipedRightLeg.rotateAngleX = MathHelper.cos(f * 0.6662F) * 1.4F * f1;
-        bipedLeftLeg.rotateAngleX = MathHelper.cos(f * 0.6662F + (float)Math.PI) * 1.4F * f1;
+        bipedLeftLeg.rotateAngleX = MathHelper.cos(f * 0.6662F + (float) Math.PI) * 1.4F * f1;
         bipedRightLeg.rotateAngleY = 0.0F;
         bipedLeftLeg.rotateAngleY = 0.0F;
         bipedLeftArm.rotateAngleX = MathHelper.cos(f * 0.6662F) * 2.0F * f1 * 0.5F;

@@ -4,8 +4,7 @@ import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.model.ModelRenderer;
 import net.minecraft.entity.Entity;
 
-public class ModelFloobShip extends ModelBase
-{
+public class ModelFloobShip extends ModelBase {
     public ModelRenderer headFloobship;
     public ModelRenderer headFloobship1;
     public ModelRenderer body;
@@ -14,18 +13,15 @@ public class ModelFloobShip extends ModelBase
     public ModelRenderer leg3;
     public ModelRenderer leg4;
 
-    public ModelFloobShip()
-    {
+    public ModelFloobShip() {
         this(11);
     }
 
-    public ModelFloobShip(int i)
-    {
+    public ModelFloobShip(int i) {
         this(i, 0.0f);
     }
 
-    public ModelFloobShip(int i, float f)
-    {
+    public ModelFloobShip(int i, float f) {
         headFloobship = new ModelRenderer(this, 0, 0);
         headFloobship.addBox(-4F, -6F, -4F, 8, 4, 8, f);
         headFloobship.setRotationPoint(0.0F, i - 2, 0.0F);
@@ -54,8 +50,7 @@ public class ModelFloobShip extends ModelBase
     }
 
     @Override
-    public void render(Entity entity, float f, float f1, float f2, float f3, float f4, float f5)
-    {
+    public void render(Entity entity, float f, float f1, float f2, float f3, float f4, float f5) {
         setRotationAngles(f, f1, f2, f3, f4, f5, entity);
         headFloobship.render(f5);
         headFloobship1.render(f5);
@@ -67,8 +62,7 @@ public class ModelFloobShip extends ModelBase
     }
 
     @Override
-    public void setRotationAngles(float f, float f1, float f2, float f3, float f4, float f5, Entity entity)
-    {
+    public void setRotationAngles(float f, float f1, float f2, float f3, float f4, float f5, Entity entity) {
         headFloobship.rotateAngleY = f2 / 10F;
         headFloobship1.rotateAngleX = 0.0F;
         headFloobship1.rotateAngleY = 0.0F;

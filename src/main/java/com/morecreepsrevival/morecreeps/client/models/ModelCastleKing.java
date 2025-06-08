@@ -8,8 +8,7 @@ import net.minecraft.util.math.MathHelper;
 
 import javax.annotation.Nonnull;
 
-public class ModelCastleKing extends ModelBiped
-{
+public class ModelCastleKing extends ModelBiped {
     public ModelRenderer bipedHead;
     public ModelRenderer bipedBody;
     public ModelRenderer bipedRightArm;
@@ -20,18 +19,15 @@ public class ModelCastleKing extends ModelBiped
     public ModelRenderer rightshoe;
     public ModelRenderer leftshoe;
 
-    public ModelCastleKing()
-    {
+    public ModelCastleKing() {
         this(0.0f);
     }
 
-    public ModelCastleKing(float f)
-    {
+    public ModelCastleKing(float f) {
         this(f, 0.0f);
     }
 
-    public ModelCastleKing(float f, float f1)
-    {
+    public ModelCastleKing(float f, float f1) {
         float f2 = 0.0F;
         crown = new ModelRenderer(this, 40, 2);
         crown.addBox(-3F, -12F, -3F, 6, 4, 6, 0.0F);
@@ -63,8 +59,7 @@ public class ModelCastleKing extends ModelBiped
     }
 
     @Override
-    public void render(@Nonnull Entity entity, float f, float f1, float f2, float f3, float f4, float f5)
-    {
+    public void render(@Nonnull Entity entity, float f, float f1, float f2, float f3, float f4, float f5) {
         setRotationAngles(f, f1, f2, f3, f4, f, entity);
         bipedHead.render(f5);
         bipedBody.render(f5);
@@ -78,29 +73,24 @@ public class ModelCastleKing extends ModelBiped
     }
 
     @Override
-    public void setRotationAngles(float f, float f1, float f2, float f3, float f4, float f5, @Nonnull Entity entity)
-    {
-        crown.rotateAngleY = bipedHead.rotateAngleY = f3 / (180F / (float)Math.PI);
-        crown.rotateAngleX = bipedHead.rotateAngleX = f4 / (180F / (float)Math.PI);
+    public void setRotationAngles(float f, float f1, float f2, float f3, float f4, float f5, @Nonnull Entity entity) {
+        crown.rotateAngleY = bipedHead.rotateAngleY = f3 / (180F / (float) Math.PI);
+        crown.rotateAngleX = bipedHead.rotateAngleX = f4 / (180F / (float) Math.PI);
         rightshoe.rotateAngleX = bipedRightLeg.rotateAngleX = MathHelper.cos(f * 0.6662F) * 1.4F * f1;
-        leftshoe.rotateAngleX = bipedLeftLeg.rotateAngleX = MathHelper.cos(f * 0.6662F + (float)Math.PI) * 1.4F * f1;
+        leftshoe.rotateAngleX = bipedLeftLeg.rotateAngleX = MathHelper.cos(f * 0.6662F + (float) Math.PI) * 1.4F * f1;
         bipedRightLeg.rotateAngleY = 0.0F;
         bipedLeftLeg.rotateAngleY = 0.0F;
 
         float hammerSwing = 0.0f;
 
-        if (entity instanceof EntityCastleKing)
-        {
-            hammerSwing = ((EntityCastleKing)entity).getHammerSwing();
+        if (entity instanceof EntityCastleKing) {
+            hammerSwing = ((EntityCastleKing) entity).getHammerSwing();
         }
 
-        if (hammerSwing != 0.0F)
-        {
+        if (hammerSwing != 0.0F) {
             bipedRightArm.rotateAngleX = hammerSwing;
-        }
-        else
-        {
-            bipedRightArm.rotateAngleX = MathHelper.cos(f * 0.6662F + (float)Math.PI) * 2.0F * f1 * 0.5F;
+        } else {
+            bipedRightArm.rotateAngleX = MathHelper.cos(f * 0.6662F + (float) Math.PI) * 2.0F * f1 * 0.5F;
         }
 
         bipedLeftArm.rotateAngleX = MathHelper.cos(f * 0.6662F) * 2.0F * f1 * 0.5F;

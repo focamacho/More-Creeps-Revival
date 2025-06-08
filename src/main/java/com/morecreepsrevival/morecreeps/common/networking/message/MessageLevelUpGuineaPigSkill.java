@@ -12,44 +12,37 @@ import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 
-public class MessageLevelUpGuineaPigSkill implements IMessage
-{
+public class MessageLevelUpGuineaPigSkill implements IMessage {
     private int entityId;
 
     private String skill;
 
-    public MessageLevelUpGuineaPigSkill()
-    {
+    public MessageLevelUpGuineaPigSkill() {
     }
 
-    public MessageLevelUpGuineaPigSkill(int entityIdIn, String skillIn)
-    {
+    public MessageLevelUpGuineaPigSkill(int entityIdIn, String skillIn) {
         entityId = entityIdIn;
 
         skill = skillIn;
     }
 
     @Override
-    public void toBytes(ByteBuf buf)
-    {
+    public void toBytes(ByteBuf buf) {
         buf.writeInt(entityId);
 
         ByteBufUtils.writeUTF8String(buf, skill);
     }
 
     @Override
-    public void fromBytes(ByteBuf buf)
-    {
+    public void fromBytes(ByteBuf buf) {
         entityId = buf.readInt();
 
         skill = ByteBufUtils.readUTF8String(buf);
     }
 
-    public static class MessageHandler implements IMessageHandler<MessageLevelUpGuineaPigSkill, IMessage>
-    {
+    public static class MessageHandler implements IMessageHandler<MessageLevelUpGuineaPigSkill, IMessage> {
         @Override
-        public IMessage onMessage(MessageLevelUpGuineaPigSkill message, MessageContext context)
-        {
+        public IMessage onMessage(MessageLevelUpGuineaPigSkill message, MessageContext context) {
             EntityPlayerMP player = context.getServerHandler().player;
 
             WorldServer world = player.getServerWorld();
@@ -57,12 +50,10 @@ public class MessageLevelUpGuineaPigSkill implements IMessage
             world.addScheduledTask(() -> {
                 Entity entity = world.getEntityByID(message.entityId);
 
-                if (entity instanceof EntityGuineaPig)
-                {
-                    EntityGuineaPig guineaPig = (EntityGuineaPig)entity;
+                if (entity instanceof EntityGuineaPig) {
+                    EntityGuineaPig guineaPig = (EntityGuineaPig) entity;
 
-                    if (guineaPig.isPlayerOwner(player) && guineaPig.canLevelSkill(message.skill) && InventoryHelper.takeItem(player.inventory, Items.WHEAT, 5))
-                    {
+                    if (guineaPig.isPlayerOwner(player) && guineaPig.canLevelSkill(message.skill) && InventoryHelper.takeItem(player.inventory, Items.WHEAT, 5)) {
                         guineaPig.levelUpSkill(message.skill);
                     }
                 }

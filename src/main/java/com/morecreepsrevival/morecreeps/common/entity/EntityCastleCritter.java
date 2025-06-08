@@ -12,10 +12,8 @@ import net.minecraft.util.DamageSource;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.world.World;
 
-public class EntityCastleCritter extends EntityCreepBase implements IMob, IEntityCanChangeSize
-{
-    public EntityCastleCritter(World worldIn)
-    {
+public class EntityCastleCritter extends EntityCreepBase implements IMob, IEntityCanChangeSize {
+    public EntityCastleCritter(World worldIn) {
         super(worldIn);
 
         setCreepTypeName("Castle Critter");
@@ -34,8 +32,7 @@ public class EntityCastleCritter extends EntityCreepBase implements IMob, IEntit
     }
 
     @Override
-    public void initEntityAI()
-    {
+    public void initEntityAI() {
         clearAITasks();
 
         NodeProcessor nodeProcessor = getNavigator().getNodeProcessor();
@@ -60,36 +57,29 @@ public class EntityCastleCritter extends EntityCreepBase implements IMob, IEntit
     }
 
     @Override
-    protected void updateTexture()
-    {
+    protected void updateTexture() {
         setTexture("textures/entity/castlecritter.png");
     }
 
     @Override
-    protected boolean shouldJumpWhileAttacking(Entity entity)
-    {
+    protected boolean shouldJumpWhileAttacking(Entity entity) {
         return true;
     }
 
     @Override
-    protected void dropItemsOnDeath()
-    {
-        if (rand.nextInt(10) == 0)
-        {
+    protected void dropItemsOnDeath() {
+        if (rand.nextInt(10) == 0) {
             dropItem(Items.PORKCHOP, rand.nextInt(3) + 1);
         }
 
-        if (rand.nextInt(10) == 0)
-        {
+        if (rand.nextInt(10) == 0) {
             dropItem(Items.BONE, rand.nextInt(3) + 1);
         }
     }
 
     @Override
-    protected SoundEvent getAmbientSound()
-    {
-        if (rand.nextInt(5) == 0)
-        {
+    protected SoundEvent getAmbientSound() {
+        if (rand.nextInt(5) == 0) {
             return CreepsSoundHandler.castleCritterSound;
         }
 
@@ -97,47 +87,47 @@ public class EntityCastleCritter extends EntityCreepBase implements IMob, IEntit
     }
 
     @Override
-    protected SoundEvent getHurtSound(DamageSource damageSource)
-    {
+    protected SoundEvent getHurtSound(DamageSource damageSource) {
         return CreepsSoundHandler.castleCritterHurtSound;
     }
 
     @Override
-    protected SoundEvent getDeathSound()
-    {
+    protected SoundEvent getDeathSound() {
         return CreepsSoundHandler.castleCritterDeathSound;
     }
 
     @Override
-    public int getMaxSpawnedInChunk()
-    {
+    public int getMaxSpawnedInChunk() {
         return 2;
     }
 
     @Override
-    public boolean getCanSpawnHere()
-    {
+    public boolean getCanSpawnHere() {
         return true;
     }
 
     @Override
-    public float maxShrink() { return 0.4f; }
+    public float maxShrink() {
+        return 0.4f;
+    }
 
     @Override
-    public float getShrinkRayAmount() { return 0.2f; }
+    public float getShrinkRayAmount() {
+        return 0.2f;
+    }
 
     @Override
     public void onShrink(EntityShrink source) {
 
     }
+
     @Override
     public float maxGrowth() {
         return 4.0f;
     }
 
     @Override
-    public float getGrowRayAmount()
-    {
+    public float getGrowRayAmount() {
         return 0.2F;
     }
 

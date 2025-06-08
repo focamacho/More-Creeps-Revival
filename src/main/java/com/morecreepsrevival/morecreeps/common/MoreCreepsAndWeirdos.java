@@ -1,21 +1,21 @@
 package com.morecreepsrevival.morecreeps.common;
 
 import com.morecreepsrevival.morecreeps.client.gui.GuiUpdate;
+import com.morecreepsrevival.morecreeps.common.capabilities.CreepsCapabilityHandler;
 import com.morecreepsrevival.morecreeps.common.capabilities.IPlayerJumping;
 import com.morecreepsrevival.morecreeps.common.capabilities.PlayerJumpingProvider;
+import com.morecreepsrevival.morecreeps.common.config.MoreCreepsConfig;
 import com.morecreepsrevival.morecreeps.common.entity.*;
 import com.morecreepsrevival.morecreeps.common.items.CreepsItemHandler;
+import com.morecreepsrevival.morecreeps.common.networking.CreepsPacketHandler;
 import com.morecreepsrevival.morecreeps.common.networking.message.MessageDismountEntity;
+import com.morecreepsrevival.morecreeps.common.networking.message.MessagePlayWelcomeSound;
 import com.morecreepsrevival.morecreeps.common.networking.message.MessageSetJumping;
 import com.morecreepsrevival.morecreeps.common.sounds.CreepsSoundHandler;
 import com.morecreepsrevival.morecreeps.common.world.JailManager;
 import com.morecreepsrevival.morecreeps.common.world.WorldGenCastle;
-import com.morecreepsrevival.morecreeps.proxy.IProxy;
-import com.morecreepsrevival.morecreeps.common.capabilities.CreepsCapabilityHandler;
-import com.morecreepsrevival.morecreeps.common.networking.message.MessagePlayWelcomeSound;
-import com.morecreepsrevival.morecreeps.common.config.MoreCreepsConfig;
-import com.morecreepsrevival.morecreeps.common.networking.CreepsPacketHandler;
 import com.morecreepsrevival.morecreeps.common.world.WorldGenStructures;
+import com.morecreepsrevival.morecreeps.proxy.IProxy;
 import net.minecraft.client.Minecraft;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.Entity;
@@ -24,6 +24,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.Biomes;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.world.biome.Biome;
 import net.minecraftforge.client.event.GuiScreenEvent;
@@ -36,20 +37,22 @@ import net.minecraftforge.event.world.WorldEvent;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.common.SidedProxy;
-import net.minecraftforge.fml.common.Mod.Instance;
-import net.minecraftforge.fml.common.Mod.EventHandler;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
+import net.minecraftforge.fml.common.Mod.EventHandler;
+import net.minecraftforge.fml.common.Mod.Instance;
+import net.minecraftforge.fml.common.SidedProxy;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
-import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.common.event.FMLServerStoppingEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.InputEvent;
 import net.minecraftforge.fml.common.gameevent.PlayerEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
-import net.minecraftforge.fml.common.registry.*;
+import net.minecraftforge.fml.common.registry.EntityEntry;
+import net.minecraftforge.fml.common.registry.EntityEntryBuilder;
+import net.minecraftforge.fml.common.registry.ForgeRegistries;
+import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.lwjgl.input.Mouse;
@@ -59,9 +62,9 @@ import java.time.LocalDate;
 import java.time.temporal.TemporalAdjusters;
 import java.util.*;
 
-@Mod(modid = MoreCreepsAndWeirdos.modid, name = MoreCreepsAndWeirdos.name, version = MoreCreepsAndWeirdos.version, updateJSON = MoreCreepsAndWeirdos.updateJSON, useMetadata = true) @EventBusSubscriber(modid = MoreCreepsAndWeirdos.modid)
-public class MoreCreepsAndWeirdos
-{
+@Mod(modid = MoreCreepsAndWeirdos.modid, name = MoreCreepsAndWeirdos.name, version = MoreCreepsAndWeirdos.version, updateJSON = MoreCreepsAndWeirdos.updateJSON, useMetadata = true)
+@EventBusSubscriber(modid = MoreCreepsAndWeirdos.modid)
+public class MoreCreepsAndWeirdos {
     public static final String modid = "morecreeps";
 
     public static final String name = "More Creeps And Weirdos Revival";
@@ -69,27 +72,12 @@ public class MoreCreepsAndWeirdos
     public static final String version = "1.0.25";
 
     public static final String updateJSON = "https://www.morecreepsrevival.com/update.json";
-
-    @SidedProxy(clientSide = "com.morecreepsrevival.morecreeps.proxy.ClientProxy", serverSide = "com.morecreepsrevival.morecreeps.proxy.ServerProxy")
-    public static IProxy proxy;
-
-    @Instance(modid)
-    public static MoreCreepsAndWeirdos instance;
-
-    private static int entityId = 0;
-
-    private static final Random rand = new Random();
-
-    private static boolean checkedVersion = false;
-
-    public static final CreativeTabs creativeTab = new CreativeTabs("creepsTab")
-    {
-        public ItemStack getTabIconItem()
-        {
+    public static final CreativeTabs creativeTab = new CreativeTabs("creepsTab") {
+        public ItemStack getTabIconItem() {
             return new ItemStack(CreepsItemHandler.floobAchievement);
         }
     };
-
+    private static final Random rand = new Random();
     private static final String[] welcomeMessages = {
             "Now, go out there and have some fun!",
             "Don't let those stinky Floobs push you around!",
@@ -127,30 +115,16 @@ public class MoreCreepsAndWeirdos
             "Your pet loses a level if resurrected with a LifeGem.",
             "Sneaky Sal will sometimes sell goods at a discount."
     };
-
-    @EventHandler
-    public void preInit(FMLPreInitializationEvent event)
-    {
-        MoreCreepsConfig.preInit(event);
-
-        proxy.preInit(event);
-    }
-
-    @EventHandler
-    public void init(FMLInitializationEvent event)
-    {
-        CreepsPacketHandler.registerMessages();
-
-        CreepsCapabilityHandler.registerCapabilities();
-
-        GameRegistry.registerWorldGenerator(new WorldGenStructures(), 0);
-
-        proxy.init(event);
-    }
+    @SidedProxy(clientSide = "com.morecreepsrevival.morecreeps.proxy.ClientProxy", serverSide = "com.morecreepsrevival.morecreeps.proxy.ServerProxy")
+    public static IProxy proxy;
+    @Instance(modid)
+    public static MoreCreepsAndWeirdos instance;
+    private static int entityId = 0;
+    private static boolean checkedVersion = false;
+    public boolean test = false;
 
     @SubscribeEvent
-    public static void registerEntities(RegistryEvent.Register<EntityEntry> event)
-    {
+    public static void registerEntities(RegistryEvent.Register<EntityEntry> event) {
         event.getRegistry().registerAll(
                 createEntity(EntityGuineaPig.class, "guineapig", MoreCreepsConfig.calculateSpawnRate(MoreCreepsConfig.guineaPigSpawnAmt), 1, 4, EnumCreatureType.CREATURE, 0xA38447, 0xF7F0E1, getBiomesForType(Type.FOREST, Type.PLAINS, Type.MOUNTAIN, Type.HILLS)),
                 createEntity(EntityTombstone.class, "tombstone", 0, 0, 0, EnumCreatureType.AMBIENT),
@@ -203,70 +177,58 @@ public class MoreCreepsAndWeirdos
                 createEntity(EntityRocket.class, "rocket", 0, 0, 0, EnumCreatureType.AMBIENT),
                 createEntity(EntityEvilEgg.class, "evilegg", 0, 0, 0, EnumCreatureType.AMBIENT),
                 createEntity(EntityGooDonut.class, "goodonut", 0, 0, 0, EnumCreatureType.AMBIENT),
-                createEntity(EntityHunchback.class, "hunchback", MoreCreepsConfig.calculateSpawnRate(MoreCreepsConfig.hunchbackSpawnAmt), 1, 1, EnumCreatureType.CREATURE,0x00FF1C, 0xFEFFE9, getBiomesNotType(Type.COLD, Type.SNOWY, Type.NETHER, Type.END)),
+                createEntity(EntityHunchback.class, "hunchback", MoreCreepsConfig.calculateSpawnRate(MoreCreepsConfig.hunchbackSpawnAmt), 1, 1, EnumCreatureType.CREATURE, 0x00FF1C, 0xFEFFE9, getBiomesNotType(Type.COLD, Type.SNOWY, Type.NETHER, Type.END)),
                 createEntity(EntityHunchbackSkeleton.class, "hunchbackskeleton", 0, 0, 0, EnumCreatureType.MONSTER, 0x00FF1C, 0xFF0000),
                 createEntity(EntityBum.class, "bum", MoreCreepsConfig.calculateSpawnRate(MoreCreepsConfig.bumSpawnAmt), 1, 1, EnumCreatureType.MONSTER, 0x2B723D, 0xFFEC15, getBiomesForType(Type.FOREST, Type.HILLS, Type.PLAINS)),
-                createEntity(EntityEvilSnowman.class, "evilsnowman", 0, 0, 0, EnumCreatureType.MONSTER,0xFFFFFF, 0x000000),
+                createEntity(EntityEvilSnowman.class, "evilsnowman", 0, 0, 0, EnumCreatureType.MONSTER, 0xFFFFFF, 0x000000),
                 createEntity(EntityPreacher.class, "preacher", MoreCreepsConfig.calculateSpawnRate(MoreCreepsConfig.preacherSpawnAmt), 1, 1, EnumCreatureType.MONSTER, 0x433F3F, 0xFFFFFF, getBiomesNotType(Type.COLD, Type.SNOWY, Type.NETHER, Type.END)),
                 createEntity(EntityGrowbotGregg.class, "growbot_gregg", MoreCreepsConfig.calculateSpawnRate(MoreCreepsConfig.growbotGreggSpawnAmt), 1, 1, EnumCreatureType.CREATURE, 0xFC61FF, 0xFF0000, getBiomesNotType(Type.COLD, Type.SNOWY, Type.NETHER, Type.END)),
                 createEntity(EntityGrow.class, "grow", 0, 0, 0, EnumCreatureType.AMBIENT),
                 createEntity(EntityCamelJockey.class, "cameljockey", MoreCreepsConfig.calculateSpawnRate(MoreCreepsConfig.camelJockeySpawnAmt), 1, 1, EnumCreatureType.MONSTER, getBiomesForType(Type.BEACH, Type.DRY, Type.HOT, Type.DEAD)),
-                createEntity(EntityInvisibleMan.class, "invisible_man", MoreCreepsConfig.calculateSpawnRate(MoreCreepsConfig.invisibleManSpawnAmt), 1, 1, EnumCreatureType.MONSTER,0xFFFFFF, 0xFF0000, getBiomesNotType(Type.COLD, Type.SNOWY, Type.NETHER, Type.END)),
+                createEntity(EntityInvisibleMan.class, "invisible_man", MoreCreepsConfig.calculateSpawnRate(MoreCreepsConfig.invisibleManSpawnAmt), 1, 1, EnumCreatureType.MONSTER, 0xFFFFFF, 0xFF0000, getBiomesNotType(Type.COLD, Type.SNOWY, Type.NETHER, Type.END)),
                 createEntity(EntityPonyGirl.class, "ponygirl", MoreCreepsConfig.calculateSpawnRate(MoreCreepsConfig.ponyGirlSpawnAmt), 1, 1, EnumCreatureType.CREATURE, 0x74706A, 0x373532/*, getBiomesNotType(Type.COLD, Type.SNOWY, Type.NETHER, Type.END)*/),
                 createEntity(EntityPony.class, "pony", 0, 0, 0, EnumCreatureType.CREATURE),
                 createEntity(EntityPonyCloud.class, "ponycloud", 0, 0, 0, EnumCreatureType.AMBIENT),
-                createEntity(EntityRockMonster.class, "rock_monster", MoreCreepsConfig.calculateSpawnRate(MoreCreepsConfig.rockMonsterSpawnAmt), 1, 1, EnumCreatureType.MONSTER, 0x74706A, 0x373532,  getBiomesForType(Type.MOUNTAIN, Type.DRY, Type.MOUNTAIN, Type.PLAINS)),
-                createEntity(EntityVHS.class, "vhs", MoreCreepsConfig.calculateSpawnRate(MoreCreepsConfig.vhsSpawnAmt), 1, 1, EnumCreatureType.MONSTER, 0x858585, 0x4D4D4D,  getBiomesNotType(Type.COLD, Type.SNOWY, Type.NETHER, Type.END)),
-                createEntity(EntityS.class, "s", MoreCreepsConfig.calculateSpawnRate(MoreCreepsConfig.moneyManSSpawnAmt), 1, 1, EnumCreatureType.MONSTER, 0x1F1F1F, 0x87AE73,  getBiomesNotType(Type.COLD, Type.SNOWY, Type.NETHER, Type.END)),
+                createEntity(EntityRockMonster.class, "rock_monster", MoreCreepsConfig.calculateSpawnRate(MoreCreepsConfig.rockMonsterSpawnAmt), 1, 1, EnumCreatureType.MONSTER, 0x74706A, 0x373532, getBiomesForType(Type.MOUNTAIN, Type.DRY, Type.MOUNTAIN, Type.PLAINS)),
+                createEntity(EntityVHS.class, "vhs", MoreCreepsConfig.calculateSpawnRate(MoreCreepsConfig.vhsSpawnAmt), 1, 1, EnumCreatureType.MONSTER, 0x858585, 0x4D4D4D, getBiomesNotType(Type.COLD, Type.SNOWY, Type.NETHER, Type.END)),
+                createEntity(EntityS.class, "s", MoreCreepsConfig.calculateSpawnRate(MoreCreepsConfig.moneyManSSpawnAmt), 1, 1, EnumCreatureType.MONSTER, 0x1F1F1F, 0x87AE73, getBiomesNotType(Type.COLD, Type.SNOWY, Type.NETHER, Type.END)),
                 createEntity(EntityDesertLizard.class, "desert_lizard", MoreCreepsConfig.calculateSpawnRate(MoreCreepsConfig.desertLizardSpawnAmt), 1, 1, EnumCreatureType.MONSTER, 0x1C5300, 0x609445, getBiomesForType(Type.HOT, Type.DEAD, Type.DRY, Type.SAVANNA, Type.SANDY)),
-                createEntity(EntityHippo.class, "hippo", MoreCreepsConfig.calculateSpawnRate(MoreCreepsConfig.hippoSpawnAmt),1 , 1, EnumCreatureType.CREATURE, 0x858585, 0x4D4D4D, getBiomesForType(Type.PLAINS, Type.HOT, Type.WET, Type.BEACH, Type.SAVANNA, Type.SWAMP, Type.RIVER))
+                createEntity(EntityHippo.class, "hippo", MoreCreepsConfig.calculateSpawnRate(MoreCreepsConfig.hippoSpawnAmt), 1, 1, EnumCreatureType.CREATURE, 0x858585, 0x4D4D4D, getBiomesForType(Type.PLAINS, Type.HOT, Type.WET, Type.BEACH, Type.SAVANNA, Type.SWAMP, Type.RIVER))
         );
     }
 
-    public boolean test = false;
-
-    public static EntityEntry createEntity(Class<? extends Entity> classz, String name, int weight, int min, int max, EnumCreatureType creatureType, int primaryColor, int secondaryColor, Biome... biomes)
-    {
+    public static EntityEntry createEntity(Class<? extends Entity> classz, String name, int weight, int min, int max, EnumCreatureType creatureType, int primaryColor, int secondaryColor, Biome... biomes) {
         EntityEntryBuilder<?> builder = EntityEntryBuilder.create().entity(classz).name(modid + "." + name).id(new ResourceLocation(modid, name), entityId++).tracker(40, 1, true);
 
-        if (EntityCreepBase.class.isAssignableFrom(classz))
-        {
+        if (EntityCreepBase.class.isAssignableFrom(classz)) {
             builder.spawn(creatureType, weight, min, max, biomes);
         }
 
-        if (primaryColor > -1 && secondaryColor > -1)
-        {
+        if (primaryColor > -1 && secondaryColor > -1) {
             builder.egg(primaryColor, secondaryColor);
         }
 
         return builder.build();
     }
 
-    public static EntityEntry createEntity(Class<? extends Entity> classz, String name, int weight, int min, int max, EnumCreatureType creatureType, int primaryColor, int secondaryColor)
-    {
+    public static EntityEntry createEntity(Class<? extends Entity> classz, String name, int weight, int min, int max, EnumCreatureType creatureType, int primaryColor, int secondaryColor) {
         return createEntity(classz, name, weight, min, max, creatureType, primaryColor, secondaryColor, Biomes.VOID);
     }
 
-    public static EntityEntry createEntity(Class<? extends Entity> classz, String name, int weight, int min, int max, EnumCreatureType creatureType, Biome... biomes)
-    {
+    public static EntityEntry createEntity(Class<? extends Entity> classz, String name, int weight, int min, int max, EnumCreatureType creatureType, Biome... biomes) {
         return createEntity(classz, name, weight, min, max, creatureType, -1, -1, biomes);
     }
 
-    public static EntityEntry createEntity(Class<? extends Entity> classz, String name, int weight, int min, int max, EnumCreatureType creatureType)
-    {
+    public static EntityEntry createEntity(Class<? extends Entity> classz, String name, int weight, int min, int max, EnumCreatureType creatureType) {
         return createEntity(classz, name, weight, min, max, creatureType, -1, -1, Biomes.VOID);
     }
 
-    public static Biome[] getBiomesForType(Type... types)
-    {
+    public static Biome[] getBiomesForType(Type... types) {
         ArrayList<Biome> biomes = new ArrayList<>();
 
-        for (Type type : types)
-        {
-            for (Biome biome : BiomeDictionary.getBiomes(type))
-            {
-                if ((MoreCreepsConfig.spawnInNonVanillaBiomes && MoreCreepsConfig.hasBiome(Objects.requireNonNull(biome.getRegistryName()).toString())) || Objects.requireNonNull(biome.getRegistryName()).getResourceDomain().equals("minecraft"))
-                {
+        for (Type type : types) {
+            for (Biome biome : BiomeDictionary.getBiomes(type)) {
+                if ((MoreCreepsConfig.spawnInNonVanillaBiomes && MoreCreepsConfig.hasBiome(Objects.requireNonNull(biome.getRegistryName()).toString())) || Objects.requireNonNull(biome.getRegistryName()).getResourceDomain().equals("minecraft")) {
                     biomes.add(biome);
                 }
             }
@@ -276,36 +238,30 @@ public class MoreCreepsAndWeirdos
 
         Biome[] biomesArray = new Biome[size];
 
-        for (int i = 0; i < size; i++)
-        {
+        for (int i = 0; i < size; i++) {
             biomesArray[i] = biomes.get(i);
         }
 
         return biomesArray;
     }
 
-    public static Biome[] getBiomesNotType(Type... types)
-    {
+    public static Biome[] getBiomesNotType(Type... types) {
         ArrayList<Biome> biomes = new ArrayList<>();
 
         HashSet<Type> typesHash = new HashSet<>(Arrays.asList(types));
 
-        for (Biome biome : ForgeRegistries.BIOMES.getValuesCollection())
-        {
+        for (Biome biome : ForgeRegistries.BIOMES.getValuesCollection()) {
             boolean skip = false;
 
-            for (Type type : BiomeDictionary.getTypes(biome))
-            {
-                if (typesHash.contains(type))
-                {
+            for (Type type : BiomeDictionary.getTypes(biome)) {
+                if (typesHash.contains(type)) {
                     skip = true;
 
                     break;
                 }
             }
 
-            if (!skip && ((MoreCreepsConfig.spawnInNonVanillaBiomes && MoreCreepsConfig.hasBiome(Objects.requireNonNull(biome.getRegistryName()).toString())) || Objects.requireNonNull(biome.getRegistryName()).getResourceDomain().equals("minecraft")))
-            {
+            if (!skip && ((MoreCreepsConfig.spawnInNonVanillaBiomes && MoreCreepsConfig.hasBiome(Objects.requireNonNull(biome.getRegistryName()).toString())) || Objects.requireNonNull(biome.getRegistryName()).getResourceDomain().equals("minecraft"))) {
                 biomes.add(biome);
             }
         }
@@ -314,26 +270,22 @@ public class MoreCreepsAndWeirdos
 
         Biome[] biomesArray = new Biome[size];
 
-        for (int i = 0; i < size; i++)
-        {
+        for (int i = 0; i < size; i++) {
             biomesArray[i] = biomes.get(i);
         }
 
         return biomesArray;
     }
 
-    public static Biome[] getAllBiomes()
-    {
+    public static Biome[] getAllBiomes() {
         Collection<Biome> biomes = ForgeRegistries.BIOMES.getValuesCollection();
 
         Biome[] biomesArray = new Biome[biomes.size()];
 
         int i = 0;
 
-        for (Biome biome : biomes)
-        {
-            if ((MoreCreepsConfig.spawnInNonVanillaBiomes && MoreCreepsConfig.hasBiome(Objects.requireNonNull(biome.getRegistryName()).toString())) || Objects.requireNonNull(biome.getRegistryName()).getResourceDomain().equals("minecraft"))
-            {
+        for (Biome biome : biomes) {
+            if ((MoreCreepsConfig.spawnInNonVanillaBiomes && MoreCreepsConfig.hasBiome(Objects.requireNonNull(biome.getRegistryName()).toString())) || Objects.requireNonNull(biome.getRegistryName()).getResourceDomain().equals("minecraft")) {
                 biomesArray[i++] = biome;
             }
         }
@@ -341,24 +293,16 @@ public class MoreCreepsAndWeirdos
         return biomesArray;
     }
 
-    @EventHandler
-    public void postInit(FMLPostInitializationEvent event)
-    {
-        proxy.postInit(event);
-    }
-
-    @SubscribeEvent @SideOnly(Side.SERVER)
-    public static void loadWorld(WorldEvent.Load event)
-    {
+    @SubscribeEvent
+    @SideOnly(Side.SERVER)
+    public static void loadWorld(WorldEvent.Load event) {
         JailManager.tryCasheStructure(event.getWorld());
         WorldGenCastle.tryCasheStructure(event.getWorld());
     }
 
     @SubscribeEvent
-    public static void playerLoggedIn(PlayerEvent.PlayerLoggedInEvent event)
-    {
-        if (MoreCreepsConfig.sendVersionInfo)
-        {
+    public static void playerLoggedIn(PlayerEvent.PlayerLoggedInEvent event) {
+        if (MoreCreepsConfig.sendVersionInfo) {
             event.player.sendMessage(new TextComponentString("\2476" + name + " \247ev" + version + " [BETA] \2476loaded."));
         }
 
@@ -367,25 +311,22 @@ public class MoreCreepsAndWeirdos
             event.player.sendMessage(new TextComponentString(welcomeMessages[rand.nextInt(welcomeMessages.length)]));
         }*/
 
-        if (MoreCreepsConfig.sendDiscordLink)
-        {
+        if (MoreCreepsConfig.sendDiscordLink) {
             event.player.sendMessage(new TextComponentString("More Creeps and Weirdos Revival is a Work-in-Progress Mod!" +
                     " Some Content may not be finished! If you encounter a bug" +
                     " come join us on Discord, https://discord.gg/r3kdyTy"));
         }
 
-        if (MoreCreepsConfig.playWelcomeSound)
-        {
-            CreepsPacketHandler.INSTANCE.sendTo(new MessagePlayWelcomeSound(), (EntityPlayerMP)event.player);
+        if (MoreCreepsConfig.playWelcomeSound) {
+            CreepsPacketHandler.INSTANCE.sendTo(new MessagePlayWelcomeSound(), (EntityPlayerMP) event.player);
         }
     }
 
     @SubscribeEvent
-    public static void playerArchievementEvent(AdvancementEvent event)
-    {
+    public static void playerArchievementEvent(AdvancementEvent event) {
         EntityPlayer player = event.getEntityPlayer();
 
-        if(player.world.isRemote) return;
+        if (player.world.isRemote) return;
 
         //((EntityPlayerMP) player).getAdvancements().getProgress()
 
@@ -393,7 +334,7 @@ public class MoreCreepsAndWeirdos
 
         String advancementname = event.getAdvancement().getId().getResourcePath();
 
-        if(!domain.equals("morecreeps") || advancementname.equals("root")) return;
+        if (!domain.equals("morecreeps") || advancementname.equals("root")) return;
 
         EntityTrophy trophy = new EntityTrophy(player.world);
 
@@ -405,21 +346,17 @@ public class MoreCreepsAndWeirdos
     }
 
     @SubscribeEvent
-    public static void playerTick(TickEvent.PlayerTickEvent event)
-    {
-        if (event.side != Side.CLIENT)
-        {
+    public static void playerTick(TickEvent.PlayerTickEvent event) {
+        if (event.side != Side.CLIENT) {
             return;
         }
 
         IPlayerJumping capability = event.player.getCapability(PlayerJumpingProvider.capability, null);
 
-        if (capability != null)
-        {
+        if (capability != null) {
             boolean isJumping = proxy.isJumpKeyDown(event.player);
 
-            if (isJumping != capability.getJumping())
-            {
+            if (isJumping != capability.getJumping()) {
                 CreepsPacketHandler.INSTANCE.sendToServer(new MessageSetJumping(isJumping));
 
                 capability.setJumping(isJumping);
@@ -428,16 +365,12 @@ public class MoreCreepsAndWeirdos
     }
 
     @SubscribeEvent
-    public static void mouseInputEvent(InputEvent.MouseInputEvent event)
-    {
+    public static void mouseInputEvent(InputEvent.MouseInputEvent event) {
         Minecraft minecraft = Minecraft.getMinecraft();
 
-        if (Mouse.getEventButton() == 1)
-        {
-            for (Entity entity : minecraft.player.getPassengers())
-            {
-                if (entity instanceof EntityBubbleScum && ((EntityBubbleScum)entity).getUnmountTimer() < 1)
-                {
+        if (Mouse.getEventButton() == 1) {
+            for (Entity entity : minecraft.player.getPassengers()) {
+                if (entity instanceof EntityBubbleScum && ((EntityBubbleScum) entity).getUnmountTimer() < 1) {
                     entity.dismountRidingEntity();
 
                     CreepsPacketHandler.INSTANCE.sendToServer(new MessageDismountEntity(entity.getEntityId()));
@@ -448,43 +381,59 @@ public class MoreCreepsAndWeirdos
         }
     }
 
-    public static boolean isBlackFriday()
-    {
+    public static boolean isBlackFriday() {
         LocalDate now = LocalDate.now();
 
         return LocalDate.of(now.getYear(), 11, 1).with(TemporalAdjusters.dayOfWeekInMonth(4, DayOfWeek.THURSDAY)).with(TemporalAdjusters.next(DayOfWeek.FRIDAY)).equals(now);
     }
 
-    @SubscribeEvent @SideOnly(Side.CLIENT)
-    public static void handleDrawScreenEventPost(GuiScreenEvent.DrawScreenEvent.Post event)
-    {
+    @SubscribeEvent
+    @SideOnly(Side.CLIENT)
+    public static void handleDrawScreenEventPost(GuiScreenEvent.DrawScreenEvent.Post event) {
         ForgeVersion.CheckResult result = ForgeVersion.getResult(Loader.instance().activeModContainer());
 
-        if (result.status != ForgeVersion.Status.PENDING && !MoreCreepsAndWeirdos.checkedVersion)
-        {
+        if (result.status != ForgeVersion.Status.PENDING && !MoreCreepsAndWeirdos.checkedVersion) {
             MoreCreepsAndWeirdos.checkedVersion = true;
 
-            if (result.status == ForgeVersion.Status.OUTDATED && result.target != null && MoreCreepsConfig.shouldShowUpdateGuiForVersion(result.target.toString()))
-            {
+            if (result.status == ForgeVersion.Status.OUTDATED && result.target != null && MoreCreepsConfig.shouldShowUpdateGuiForVersion(result.target.toString())) {
                 Minecraft.getMinecraft().displayGuiScreen(new GuiUpdate(result));
             }
         }
     }
 
     @EventHandler
-    public static void serverStopping(FMLServerStoppingEvent event)
-    {
-        for (EntityPlayerMP player : FMLCommonHandler.instance().getMinecraftServerInstance().getPlayerList().getPlayers())
-        {
-            for (Entity entity : player.getPassengers())
-            {
-                if (entity instanceof EntityCreepBase)
-                {
-                    EntityCreepBase creep = (EntityCreepBase)entity;
+    public static void serverStopping(FMLServerStoppingEvent event) {
+        for (EntityPlayerMP player : FMLCommonHandler.instance().getMinecraftServerInstance().getPlayerList().getPlayers()) {
+            for (Entity entity : player.getPassengers()) {
+                if (entity instanceof EntityCreepBase) {
+                    EntityCreepBase creep = (EntityCreepBase) entity;
 
                     creep.cloneEntity();
                 }
             }
         }
+    }
+
+    @EventHandler
+    public void preInit(FMLPreInitializationEvent event) {
+        MoreCreepsConfig.preInit(event);
+
+        proxy.preInit(event);
+    }
+
+    @EventHandler
+    public void init(FMLInitializationEvent event) {
+        CreepsPacketHandler.registerMessages();
+
+        CreepsCapabilityHandler.registerCapabilities();
+
+        GameRegistry.registerWorldGenerator(new WorldGenStructures(), 0);
+
+        proxy.init(event);
+    }
+
+    @EventHandler
+    public void postInit(FMLPostInitializationEvent event) {
+        proxy.postInit(event);
     }
 }

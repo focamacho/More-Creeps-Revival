@@ -9,36 +9,29 @@ import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 
-public class MessageRipOffSal implements IMessage
-{
+public class MessageRipOffSal implements IMessage {
     private int entityId;
 
-    public MessageRipOffSal()
-    {
+    public MessageRipOffSal() {
     }
 
-    public MessageRipOffSal(int entityIdIn)
-    {
+    public MessageRipOffSal(int entityIdIn) {
         entityId = entityIdIn;
     }
 
     @Override
-    public void toBytes(ByteBuf buf)
-    {
+    public void toBytes(ByteBuf buf) {
         buf.writeInt(entityId);
     }
 
     @Override
-    public void fromBytes(ByteBuf buf)
-    {
+    public void fromBytes(ByteBuf buf) {
         entityId = buf.readInt();
     }
 
-    public static class MessageHandler implements IMessageHandler<MessageRipOffSal, IMessage>
-    {
+    public static class MessageHandler implements IMessageHandler<MessageRipOffSal, IMessage> {
         @Override
-        public IMessage onMessage(MessageRipOffSal message, MessageContext context)
-        {
+        public IMessage onMessage(MessageRipOffSal message, MessageContext context) {
             EntityPlayerMP player = context.getServerHandler().player;
 
             WorldServer world = player.getServerWorld();
@@ -46,9 +39,8 @@ public class MessageRipOffSal implements IMessage
             world.addScheduledTask(() -> {
                 Entity entity = world.getEntityByID(message.entityId);
 
-                if (entity instanceof EntitySneakySal)
-                {
-                    ((EntitySneakySal)entity).ripOff();
+                if (entity instanceof EntitySneakySal) {
+                    ((EntitySneakySal) entity).ripOff();
                 }
             });
 

@@ -1,10 +1,9 @@
 package com.morecreepsrevival.morecreeps.common.capabilities;
 
-public interface ILawyerFine
-{
-    void setFine(int fineIn);
-
+public interface ILawyerFine {
     int getFine();
+
+    void setFine(int fineIn);
 
     void addFine(int fineToAdd);
 

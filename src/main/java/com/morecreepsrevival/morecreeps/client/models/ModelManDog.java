@@ -5,8 +5,7 @@ import net.minecraft.client.model.ModelRenderer;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.math.MathHelper;
 
-public class ModelManDog extends ModelBase
-{
+public class ModelManDog extends ModelBase {
     public ModelRenderer bipedHead;
     public ModelRenderer leftEar;
     public ModelRenderer rightEar;
@@ -27,13 +26,11 @@ public class ModelManDog extends ModelBase
     public boolean heldItemLeft;
     public boolean heldItemRight;
     public boolean isSneak;
-
+    public boolean superfly;
     private float mouthopen;
     private float mouthangle;
-    public boolean superfly;
 
-    public ModelManDog()
-    {
+    public ModelManDog() {
         this(0.0f);
 
         mouthopen = 1.0f;
@@ -41,13 +38,11 @@ public class ModelManDog extends ModelBase
         mouthangle = 0.0f;
     }
 
-    public ModelManDog(float f)
-    {
+    public ModelManDog(float f) {
         this(f, 0.0f);
     }
 
-    public ModelManDog(float f, float f1)
-    {
+    public ModelManDog(float f, float f1) {
         heldItemLeft = false;
 
         heldItemRight = false;
@@ -108,8 +103,7 @@ public class ModelManDog extends ModelBase
     }
 
     @Override
-    public void render(Entity entity, float f, float f1, float f2, float f3, float f4, float f5)
-    {
+    public void render(Entity entity, float f, float f1, float f2, float f3, float f4, float f5) {
         setRotationAngles(f, f1, f2, f3, f4, f5, entity);
 
         bipedHead.render(f5);
@@ -129,11 +123,10 @@ public class ModelManDog extends ModelBase
     }
 
     @Override
-    public void setRotationAngles(float f, float f1, float f2, float f3, float f4, float f5, Entity entity)
-    {
+    public void setRotationAngles(float f, float f1, float f2, float f3, float f4, float f5, Entity entity) {
         bipedBody.rotateAngleX = bipedBody.rotateAngleX + mouthangle;
-        bipedHead.rotateAngleY = f3 / (180F / (float)Math.PI);
-        bipedHead.rotateAngleX = f4 / (180F / (float)Math.PI) + 0.35F;
+        bipedHead.rotateAngleY = f3 / (180F / (float) Math.PI);
+        bipedHead.rotateAngleX = f4 / (180F / (float) Math.PI) + 0.35F;
         leftEar.rotateAngleY = bipedHead.rotateAngleY;
         leftEar.rotateAngleX = bipedHead.rotateAngleX + 0.3F;
         leftEar.rotateAngleZ = bipedHead.rotateAngleZ + 0.0F;
@@ -144,51 +137,46 @@ public class ModelManDog extends ModelBase
         snouttop.rotateAngleX = bipedHead.rotateAngleX;
         snoutbot.rotateAngleY = bipedHead.rotateAngleY;
         snoutbot.rotateAngleX = bipedHead.rotateAngleX + mouthangle;
-        mouthangle += (double)mouthopen * 0.002D;
+        mouthangle += (double) mouthopen * 0.002D;
 
-        if ((double)mouthangle > 0.12D || (double)mouthangle < -0.12D)
-        {
+        if ((double) mouthangle > 0.12D || (double) mouthangle < -0.12D) {
             mouthopen *= -1F;
         }
 
         nose.rotateAngleY = bipedHead.rotateAngleY;
         nose.rotateAngleX = bipedHead.rotateAngleX;
-        bipedRightArm.rotateAngleX = (MathHelper.cos(f * 0.6662F + (float)Math.PI) * 2.0F * f1 * 0.5F + mouthangle) - 0.5F;
+        bipedRightArm.rotateAngleX = (MathHelper.cos(f * 0.6662F + (float) Math.PI) * 2.0F * f1 * 0.5F + mouthangle) - 0.5F;
         bipedLeftArm.rotateAngleX = MathHelper.cos(f * 0.6662F) * 2.0F * f1 * 0.5F - mouthangle - 0.5F;
         bipedRightArm.rotateAngleZ = 0.0F;
         bipedLeftArm.rotateAngleZ = 0.0F;
         bipedRightLeg.rotateAngleX = MathHelper.cos(f * 0.6662F) * 1.4F * f1;
-        bipedLeftLeg.rotateAngleX = MathHelper.cos(f * 0.6662F + (float)Math.PI) * 1.4F * f1;
+        bipedLeftLeg.rotateAngleX = MathHelper.cos(f * 0.6662F + (float) Math.PI) * 1.4F * f1;
         bipedRightLeg.rotateAngleZ = 0.15F;
         bipedLeftLeg.rotateAngleZ = -0.15F;
 
-        if (isRiding)
-        {
-            bipedRightArm.rotateAngleX += -((float)Math.PI / 5F);
-            bipedLeftArm.rotateAngleX += -((float)Math.PI / 5F);
-            bipedRightLeg.rotateAngleX = -((float)Math.PI * 2F / 5F);
-            bipedLeftLeg.rotateAngleX = -((float)Math.PI * 2F / 5F);
-            bipedRightLeg.rotateAngleY = ((float)Math.PI / 10F);
-            bipedLeftLeg.rotateAngleY = -((float)Math.PI / 10F);
+        if (isRiding) {
+            bipedRightArm.rotateAngleX += -((float) Math.PI / 5F);
+            bipedLeftArm.rotateAngleX += -((float) Math.PI / 5F);
+            bipedRightLeg.rotateAngleX = -((float) Math.PI * 2F / 5F);
+            bipedLeftLeg.rotateAngleX = -((float) Math.PI * 2F / 5F);
+            bipedRightLeg.rotateAngleY = ((float) Math.PI / 10F);
+            bipedLeftLeg.rotateAngleY = -((float) Math.PI / 10F);
         }
 
-        if (heldItemLeft)
-        {
-            bipedLeftArm.rotateAngleX = bipedLeftArm.rotateAngleX * 0.5F - ((float)Math.PI / 10F);
+        if (heldItemLeft) {
+            bipedLeftArm.rotateAngleX = bipedLeftArm.rotateAngleX * 0.5F - ((float) Math.PI / 10F);
         }
 
-        if (heldItemRight)
-        {
-            bipedRightArm.rotateAngleX = bipedRightArm.rotateAngleX * 0.5F - ((float)Math.PI / 10F);
+        if (heldItemRight) {
+            bipedRightArm.rotateAngleX = bipedRightArm.rotateAngleX * 0.5F - ((float) Math.PI / 10F);
         }
 
         bipedRightArm.rotateAngleY = 0.0F;
         bipedLeftArm.rotateAngleY = 0.0F;
 
-        if (swingProgress > -9990F)
-        {
+        if (swingProgress > -9990F) {
             float f6 = swingProgress;
-            bipedBody.rotateAngleY = MathHelper.sin(MathHelper.sqrt(f6) * (float)Math.PI * 2.0F) * 0.2F;
+            bipedBody.rotateAngleY = MathHelper.sin(MathHelper.sqrt(f6) * (float) Math.PI * 2.0F) * 0.2F;
             bipedRightArm.rotationPointZ = MathHelper.sin(bipedBody.rotateAngleY) * 5F;
             bipedRightArm.rotationPointX = -MathHelper.cos(bipedBody.rotateAngleY) * 5F;
             bipedLeftArm.rotationPointZ = -MathHelper.sin(bipedBody.rotateAngleY) * 5F;
@@ -200,15 +188,14 @@ public class ModelManDog extends ModelBase
             f6 *= f6;
             f6 *= f6;
             f6 = 1.0F - f6;
-            float f8 = MathHelper.sin(f6 * (float)Math.PI);
-            float f9 = MathHelper.sin(swingProgress * (float)Math.PI) * -(bipedHead.rotateAngleX - 0.7F) * 0.75F;
-            bipedRightArm.rotateAngleX -= (double)f8 * 1.2D + (double)f9;
+            float f8 = MathHelper.sin(f6 * (float) Math.PI);
+            float f9 = MathHelper.sin(swingProgress * (float) Math.PI) * -(bipedHead.rotateAngleX - 0.7F) * 0.75F;
+            bipedRightArm.rotateAngleX -= (double) f8 * 1.2D + (double) f9;
             bipedRightArm.rotateAngleY += bipedBody.rotateAngleY * 2.0F;
-            bipedRightArm.rotateAngleZ = MathHelper.sin(swingProgress * (float)Math.PI) * -0.4F;
+            bipedRightArm.rotateAngleZ = MathHelper.sin(swingProgress * (float) Math.PI) * -0.4F;
         }
 
-        if (isSneak)
-        {
+        if (isSneak) {
             bipedBody.rotateAngleX = 0.5F;
             bipedRightLeg.rotateAngleX -= 0.0F;
             bipedLeftLeg.rotateAngleX -= 0.0F;
@@ -219,9 +206,7 @@ public class ModelManDog extends ModelBase
             bipedRightLeg.rotationPointY = 9F;
             bipedLeftLeg.rotationPointY = 9F;
             bipedHead.rotationPointY = 1.0F;
-        }
-        else
-        {
+        } else {
             bipedBody.rotateAngleX = 0.0F;
             bipedRightLeg.rotationPointZ = 0.0F;
             bipedLeftLeg.rotationPointZ = 0.0F;
@@ -230,9 +215,8 @@ public class ModelManDog extends ModelBase
             bipedHead.rotationPointY = 0.0F;
         }
 
-        if (superfly)
-        {
-            float f7 = (float)Math.PI;
+        if (superfly) {
+            float f7 = (float) Math.PI;
             bipedBody.rotateAngleX = f7 / 2.0F;
             bipedLeftLeg.rotateAngleX = f7 / 2.0F + mouthangle;
             bipedLeftLeg.rotationPointY = 0.0F;
@@ -246,9 +230,7 @@ public class ModelManDog extends ModelBase
             bipedLeftArm.rotateAngleZ -= MathHelper.cos(f2 * 0.09F) * 0.05F + 0.15F + mouthangle;
             bipedRightArm.rotateAngleX += MathHelper.sin(f2 * 0.067F) * 0.05F - 0.5F;
             bipedLeftArm.rotateAngleX += MathHelper.sin(f2 * 0.067F) * 0.05F - 0.5F;
-        }
-        else
-        {
+        } else {
             bipedRightArm.rotateAngleZ += MathHelper.cos(f2 * 0.09F) * 0.05F + 0.25F + mouthangle;
             bipedLeftArm.rotateAngleZ -= MathHelper.cos(f2 * 0.09F) * 0.05F + 0.25F + mouthangle;
             bipedRightArm.rotateAngleX += MathHelper.sin(f2 * 0.067F) * 0.05F;
@@ -262,8 +244,7 @@ public class ModelManDog extends ModelBase
         renderEars(0.01F);
     }
 
-    public void renderEars(float f)
-    {
+    public void renderEars(float f) {
         bipedEars.rotateAngleY = bipedHead.rotateAngleY;
         bipedEars.rotateAngleX = bipedHead.rotateAngleX;
         bipedEars.rotationPointX = 0.0F;

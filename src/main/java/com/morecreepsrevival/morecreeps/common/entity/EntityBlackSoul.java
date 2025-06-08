@@ -11,14 +11,12 @@ import net.minecraft.util.DamageSource;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.world.World;
 
-public class EntityBlackSoul extends EntityCreepBase implements IMob, IEntityCanChangeSize
-{
+public class EntityBlackSoul extends EntityCreepBase implements IMob, IEntityCanChangeSize {
     private static final String[] textures = {
             "textures/entity/blacksoul"
     };
 
-    public EntityBlackSoul(World world)
-    {
+    public EntityBlackSoul(World world) {
         super(world);
 
         setCreepTypeName("Black Soul");
@@ -37,8 +35,7 @@ public class EntityBlackSoul extends EntityCreepBase implements IMob, IEntityCan
     }
 
     @Override
-    protected void initEntityAI()
-    {
+    protected void initEntityAI() {
         clearAITasks();
 
         NodeProcessor nodeProcessor = getNavigator().getNodeProcessor();
@@ -67,59 +64,53 @@ public class EntityBlackSoul extends EntityCreepBase implements IMob, IEntityCan
     }
 
     @Override
-    protected void dropItemsOnDeath()
-    {
-        if (rand.nextInt(50) == 0)
-        {
+    protected void dropItemsOnDeath() {
+        if (rand.nextInt(50) == 0) {
             dropItem(Items.DIAMOND, rand.nextInt(2) + 1);
-        }
-        else
-        {
+        } else {
             dropItem(Items.COAL, rand.nextInt(5) + 1);
         }
     }
 
     @Override
-    protected boolean shouldBurnInDay()
-    {
+    protected boolean shouldBurnInDay() {
         return true;
     }
 
     @Override
-    protected SoundEvent getHurtSound(DamageSource damageSource)
-    {
+    protected SoundEvent getHurtSound(DamageSource damageSource) {
         return CreepsSoundHandler.blackSoulHurtSound;
     }
 
     @Override
-    protected SoundEvent getDeathSound()
-    {
+    protected SoundEvent getDeathSound() {
         return CreepsSoundHandler.blackSoulDeathSound;
     }
 
     @Override
-    protected SoundEvent getAmbientSound()
-    {
+    protected SoundEvent getAmbientSound() {
         return CreepsSoundHandler.blackSoulSound;
     }
 
     @Override
-    protected String[] getAvailableTextures()
-    {
+    protected String[] getAvailableTextures() {
         return textures;
     }
 
     @Override
-    protected float getSoundPitch()
-    {
+    protected float getSoundPitch() {
         return ((rand.nextFloat() - rand.nextFloat()) * 0.2f + 1.0f + (0.6f - getModelSize()) * 2.0f);
     }
 
     @Override
-    public float maxShrink() { return 0.3f; }
+    public float maxShrink() {
+        return 0.3f;
+    }
 
     @Override
-    public float getShrinkRayAmount() { return 0.2f; }
+    public float getShrinkRayAmount() {
+        return 0.2f;
+    }
 
     @Override
     public void onShrink(EntityShrink source) {
@@ -132,8 +123,7 @@ public class EntityBlackSoul extends EntityCreepBase implements IMob, IEntityCan
     }
 
     @Override
-    public float getGrowRayAmount()
-    {
+    public float getGrowRayAmount() {
         return 0.2F;
     }
 

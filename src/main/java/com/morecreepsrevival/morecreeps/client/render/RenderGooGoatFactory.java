@@ -5,11 +5,9 @@ import net.minecraft.client.renderer.entity.Render;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraftforge.fml.client.registry.IRenderFactory;
 
-public class RenderGooGoatFactory implements IRenderFactory<EntityGooGoat>
-{
+public class RenderGooGoatFactory implements IRenderFactory<EntityGooGoat> {
     @Override
-    public Render<? super EntityGooGoat> createRenderFor(RenderManager renderManager)
-    {
+    public Render<? super EntityGooGoat> createRenderFor(RenderManager renderManager) {
         return new RenderGooGoat<>(renderManager);
     }
 }

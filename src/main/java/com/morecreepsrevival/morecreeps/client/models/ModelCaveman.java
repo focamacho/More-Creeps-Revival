@@ -6,8 +6,7 @@ import net.minecraft.client.model.ModelRenderer;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.math.MathHelper;
 
-public class ModelCaveman extends ModelBase
-{
+public class ModelCaveman extends ModelBase {
     public boolean heldItemLeft;
     public boolean heldItemRight;
     public boolean isSneak;
@@ -30,18 +29,15 @@ public class ModelCaveman extends ModelBase
     public ModelRenderer girlhair;
     public ModelRenderer flower;
 
-    public ModelCaveman()
-    {
+    public ModelCaveman() {
         this(0.0f);
     }
 
-    public ModelCaveman(float f)
-    {
+    public ModelCaveman(float f) {
         this(f, 0.0f);
     }
 
-    public ModelCaveman(float f, float f1)
-    {
+    public ModelCaveman(float f, float f1) {
         bipedBody = new ModelRenderer(this, 17, 0);
         bipedBody.addBox(-3F, 0.0F, -2F, 6, 9, 4);
         bipedBody.setRotationPoint(0.0F, 7F, 0.0F);
@@ -128,8 +124,7 @@ public class ModelCaveman extends ModelBase
     }
 
     @Override
-    public void render(Entity entity, float f, float f1, float f2, float f3, float f4, float f5)
-    {
+    public void render(Entity entity, float f, float f1, float f2, float f3, float f4, float f5) {
         setRotationAngles(f, f1, f2, f3, f4, f5, entity);
 
         bipedBody.render(f5);
@@ -142,66 +137,53 @@ public class ModelCaveman extends ModelBase
         club2.render(f5);
         club3.render(f5);
 
-        EntityCaveman caveman = (EntityCaveman)entity;
+        EntityCaveman caveman = (EntityCaveman) entity;
 
         int frozen = caveman.getFrozenLevel();
 
-        if (frozen > 4)
-        {
+        if (frozen > 4) {
             ice1.render(f5);
         }
 
-        if (frozen > 3)
-        {
+        if (frozen > 3) {
             ice5.render(f5);
         }
 
-        if (frozen > 2)
-        {
+        if (frozen > 2) {
             ice3.render(f5);
         }
 
-        if (frozen > 1)
-        {
+        if (frozen > 1) {
             ice4.render(f5);
         }
 
-        if (frozen > 0)
-        {
+        if (frozen > 0) {
             ice2.render(f5);
         }
 
-        if (caveman.getCaveGirl())
-        {
+        if (caveman.getCaveGirl()) {
             bust.render(f5);
             girlhair.render(f5);
             flower.render(f5);
-        }
-        else
-        {
+        } else {
             beard.render(f5);
         }
     }
 
     @Override
-    public void setRotationAngles(float f, float f1, float f2, float f3, float f4, float f5, Entity entity)
-    {
-        girlhair.rotateAngleY = flower.rotateAngleY = beard.rotateAngleY = bipedHead.rotateAngleY = f3 / (180F / (float)Math.PI);
-        girlhair.rotateAngleX = flower.rotateAngleX = beard.rotateAngleX = bipedHead.rotateAngleX = f4 / (180F / (float)Math.PI);
+    public void setRotationAngles(float f, float f1, float f2, float f3, float f4, float f5, Entity entity) {
+        girlhair.rotateAngleY = flower.rotateAngleY = beard.rotateAngleY = bipedHead.rotateAngleY = f3 / (180F / (float) Math.PI);
+        girlhair.rotateAngleX = flower.rotateAngleX = beard.rotateAngleX = bipedHead.rotateAngleX = f4 / (180F / (float) Math.PI);
         bust.rotateAngleY = bipedBody.rotateAngleY;
         bust.rotateAngleX = bipedBody.rotateAngleX;
 
-        EntityCaveman caveman = (EntityCaveman)entity;
+        EntityCaveman caveman = (EntityCaveman) entity;
 
-        if (caveman.getFrozenLevel() < 1)
-        {
-            if (caveman.getHammerSwing() != 0.0F)
-            {
+        if (caveman.getFrozenLevel() < 1) {
+            if (caveman.getHammerSwing() != 0.0F) {
                 club1.rotateAngleX = club2.rotateAngleX = club3.rotateAngleX = bipedRightArm.rotateAngleX = caveman.getHammerSwing();
-            }
-            else
-            {
-                club1.rotateAngleX = club2.rotateAngleX = club3.rotateAngleX = bipedRightArm.rotateAngleX = MathHelper.cos(f * 0.6662F + (float)Math.PI) * 2.0F * f1 * 0.5F;
+            } else {
+                club1.rotateAngleX = club2.rotateAngleX = club3.rotateAngleX = bipedRightArm.rotateAngleX = MathHelper.cos(f * 0.6662F + (float) Math.PI) * 2.0F * f1 * 0.5F;
             }
 
             bipedLeftArm.rotateAngleX = MathHelper.cos(f * 0.6662F) * 2.0F * f1 * 0.5F;
@@ -214,7 +196,7 @@ public class ModelCaveman extends ModelBase
             club1.rotateAngleZ = club2.rotateAngleZ = club3.rotateAngleZ = bipedRightArm.rotateAngleZ;
             club1.rotateAngleX = club2.rotateAngleX = club3.rotateAngleX = bipedRightArm.rotateAngleX;
             bipedRightLeg.rotateAngleX = MathHelper.cos(f * 0.6662F) * 1.4F * f1;
-            bipedLeftLeg.rotateAngleX = MathHelper.cos(f * 0.6662F + (float)Math.PI) * 1.4F * f1;
+            bipedLeftLeg.rotateAngleX = MathHelper.cos(f * 0.6662F + (float) Math.PI) * 1.4F * f1;
         }
     }
 }
