@@ -130,9 +130,6 @@ public class EntityCreepBase extends EntityCreature implements IEntityOwnable {
     @Override
     protected void setSize(float width, float height) {
         super.setSize(width * currentSize, height * currentSize);
-
-        widthActual = width;
-        heightActual = height;
     }
 
     @Override
@@ -964,6 +961,18 @@ public class EntityCreepBase extends EntityCreature implements IEntityOwnable {
     }
 
     @Override
+    public void notifyDataManagerChange(DataParameter<?> parameter) {
+        super.notifyDataManagerChange(parameter);
+
+        if(parameter.equals(size)) {
+            if (currentSize != dataManager.get(size)) {
+                currentSize = dataManager.get(size);
+                setSize(widthActual, heightActual);
+            }
+        }
+    }
+
+    @Override
     public boolean canBeSteered() {
         return (isRideable() && getControllingPassenger() instanceof EntityLivingBase);
     }
@@ -971,12 +980,6 @@ public class EntityCreepBase extends EntityCreature implements IEntityOwnable {
     @Override
     public void onLivingUpdate() {
         super.onLivingUpdate();
-
-        float networkedSize = dataManager.get(size);
-        if (currentSize != networkedSize) {
-            currentSize = networkedSize;
-            setSize(widthActual, heightActual);
-        }
 
         updateArmSwingProgress();
 

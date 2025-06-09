@@ -9,7 +9,9 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.projectile.EntityThrowable;
 import net.minecraft.init.Blocks;
 import net.minecraft.util.EnumParticleTypes;
-import net.minecraft.util.math.*;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.World;
 
 import javax.annotation.Nonnull;
@@ -36,19 +38,13 @@ public class EntityShrink extends EntityThrowable {
         setSize(0.0325f, 0.01125f);
 
         hitX = -1;
-
         hitY = -1;
-
         hitZ = -1;
 
         aoLightValueZPos = false;
-
         aoLightValueScratchXYNN = 0;
-
         playerFire = false;
-
         shrinkSize = 1.0f;
-
         vibrate = 1;
     }
 
@@ -58,9 +54,7 @@ public class EntityShrink extends EntityThrowable {
         setLocationAndAngles(entity.posX, entity.posY + (double) entity.getEyeHeight(), entity.posZ, entity.rotationYaw, entity.rotationPitch);
 
         posX -= MathHelper.cos((rotationYaw / 180.0f) * (float) Math.PI) * 0.16f;
-
         posY += 0.20000000149011612d;
-
         posZ -= MathHelper.sin((rotationYaw / 180.0f) * (float) Math.PI) * 0.16f;
 
         if (entity instanceof EntityPlayer) {
@@ -70,9 +64,7 @@ public class EntityShrink extends EntityThrowable {
         setPosition(posX, posY, posZ);
 
         motionX = -MathHelper.sin((rotationYaw / 180.0f) * (float) Math.PI) * MathHelper.cos((rotationPitch / 180.0f) * (float) Math.PI);
-
         motionZ = MathHelper.cos((rotationYaw / 180.0f) * (float) Math.PI) * MathHelper.cos((rotationPitch / 180.0f) * (float) Math.PI);
-
         motionY = -MathHelper.sin((rotationPitch / 180.0f) * (float) Math.PI);
 
         float f1 = 1.0f;
@@ -100,40 +92,98 @@ public class EntityShrink extends EntityThrowable {
         float f2 = MathHelper.sqrt(d * d + d1 * d1 + d2 * d2);
 
         d /= f2;
-
         d1 /= f2;
-
         d2 /= f2;
 
         d += rand.nextGaussian() * 0.0074999998323619366d * (double) f1;
-
         d1 += rand.nextGaussian() * 0.0074999998323619366d * (double) f1;
-
         d2 += rand.nextGaussian() * 0.0074999998323619366d * (double) f1;
 
         d *= f;
-
         d1 *= f;
-
         d2 *= f;
 
         motionX = d;
-
         motionY = d1;
-
         motionZ = d2;
-
         float f3 = MathHelper.sqrt(d * d + d2 * d2);
 
         prevRotationYaw = rotationYaw = (float) ((Math.atan2(d, d2) * 180.0d) / Math.PI);
-
         prevRotationPitch = rotationPitch = (float) ((Math.atan2(d1, f3) * 180.0d) / Math.PI);
-
         aoLightValueScratchXYZNNP = 0;
     }
 
     @Override
-    protected void onImpact(@Nonnull RayTraceResult rayTraceResult) {
+    protected void onImpact(@Nonnull RayTraceResult rtr) {
+        if(isDead || rtr.entityHit instanceof EntityPlayer)
+             return;
+
+        if (rtr.entityHit != null) {
+            if (rtr.entityHit instanceof EntityLiving) {
+                boolean flag = false;
+                Entity Hit = rtr.entityHit;
+
+                if (Hit instanceof EntityCreepBase && Hit instanceof IEntityCanChangeSize) {
+                    EntityCreepBase entityCreep = (EntityCreepBase) Hit;
+                    IEntityCanChangeSize entitySizable = (IEntityCanChangeSize) Hit;
+
+                    float currentSize = entityCreep.getModelSize();
+                    if (currentSize > entitySizable.maxShrink()) {
+                        float shrink = entitySizable.getShrinkRayAmount();
+                        entityCreep.shrinkModelSize(shrink);
+
+                        // Calculate the difference between the old model size and new
+                        // Then, apply it to the hitbox size.
+                        float shrinkDifference = 100 - (entityCreep.getModelSize() * 100f / currentSize);
+                        entityCreep.shrinkHitboxSize(entityCreep.currentSize / 100f * shrinkDifference);
+
+                        entitySizable.onShrink(this);
+                    } else {
+                        entityCreep.setDead();
+                        flag = true;
+                    }
+                }
+
+                if (flag) {
+                    smoke();
+                    playSound(CreepsSoundHandler.shrinkKillSound, 1.0f, 1.0f / (rand.nextFloat() * 0.1f + 0.95f));
+                }
+            }
+        } else {
+            BlockPos hitBlockPos = rtr.getBlockPos();
+
+            hitX = hitBlockPos.getX();
+
+            hitY = hitBlockPos.getY();
+
+            hitZ = hitBlockPos.getZ();
+
+            blockHit = world.getBlockState(hitBlockPos);
+
+            motionX = (float) (rtr.hitVec.x - posX);
+
+            motionY = (float) (rtr.hitVec.y - posY);
+
+            motionZ = (float) (rtr.hitVec.z - posZ);
+
+            float f1 = MathHelper.sqrt(motionX * motionX + motionY * motionY + motionZ * motionZ);
+
+            posX -= (motionX / (double) f1) * 0.05000000074505806d;
+
+            posY -= (motionY / (double) f1) * 0.05000000074505806d;
+
+            posZ -= (motionZ / (double) f1) * 0.05000000074505806d;
+
+            aoLightValueZPos = true;
+
+            if (blockHit.getBlock() == Blocks.ICE) {
+                world.setBlockState(hitBlockPos, Blocks.FLOWING_WATER.getDefaultState());
+            }
+        }
+
+        playSound(CreepsSoundHandler.raygunSound, 0.2f, 1.0f / (rand.nextFloat() * 0.1f + 0.95f));
+
+        setDead();
     }
 
     @Override
@@ -179,130 +229,6 @@ public class EntityShrink extends EntityThrowable {
             }
         } else {
             aoLightValueScratchXYNN++;
-        }
-
-        Vec3d vec3d = new Vec3d(posX, posY, posZ);
-
-        Vec3d vec3d1 = new Vec3d(posX + motionX, posY + motionY, posZ + motionZ);
-
-        RayTraceResult rtr = world.rayTraceBlocks(vec3d, vec3d1);
-
-        vec3d = new Vec3d(posX, posY, posZ);
-
-        vec3d1 = new Vec3d(posX + motionX, posY + motionY, posZ + motionZ);
-
-        if (rtr != null) {
-            vec3d1 = new Vec3d(rtr.hitVec.x, rtr.hitVec.y, rtr.hitVec.z);
-        }
-
-        Entity entity = null;
-
-        double d = 0.0d;
-
-        for (Entity entity1 : world.getEntitiesWithinAABBExcludingEntity(this, getEntityBoundingBox().grow(motionX, motionY, motionZ).expand(1.0d, 1.0d, 1.0d))) {
-            if (!entity1.canBeCollidedWith() || ((entity1 == lightValueOwn || (lightValueOwn != null && entity1 == lightValueOwn.getRidingEntity())) && aoLightValueScratchXYNN < 5) || aoLightValueScratchXYZNNN) {
-                if (motionZ != 0.0d || !((motionX == 0.0d) & (motionY == 0.0d))) {
-                    continue;
-                }
-
-                setDead();
-
-                break;
-            }
-
-            float f4 = 0.3f;
-
-            AxisAlignedBB axisAlignedBB = entity1.getEntityBoundingBox().expand(f4, f4, f4);
-
-            RayTraceResult rtr1 = axisAlignedBB.calculateIntercept(vec3d, vec3d1);
-
-            if (rtr1 == null) {
-                continue;
-            }
-
-            double d2 = vec3d.distanceTo(rtr1.hitVec);
-
-            if (d2 < d || d == 0.0d) {
-                entity = entity1;
-
-                d = d2;
-            }
-        }
-
-        if (entity != null) {
-            rtr = new RayTraceResult(entity);
-        }
-
-        if (rtr != null) {
-            if (rtr.entityHit != null) {
-                if (rtr.entityHit instanceof EntityLiving) {
-                    boolean flag = false;
-                    Entity Hit = rtr.entityHit;
-
-                    if (Hit instanceof EntityCreepBase && Hit instanceof IEntityCanChangeSize) {
-
-                        EntityCreepBase entityCreep = (EntityCreepBase) Hit;
-                        IEntityCanChangeSize entitySizable = (IEntityCanChangeSize) Hit;
-
-                        if (entityCreep.getModelSize() > entitySizable.maxShrink()) {
-                            float shrink = entitySizable.getShrinkRayAmount();
-                            entityCreep.shrinkModelSize(shrink);
-                            entityCreep.shrinkHitboxSize(shrink);
-
-                            entitySizable.onShrink(this);
-                        } else {
-                            entityCreep.setDead();
-                            flag = true;
-                        }
-                    }
-
-                    if (flag) {
-                        smoke();
-
-                        playSound(CreepsSoundHandler.shrinkKillSound, 1.0f, 1.0f / (rand.nextFloat() * 0.1f + 0.95f));
-
-                        setDead();
-                    }
-                } else {
-                    setDead();
-                }
-            } else {
-                BlockPos hitBlockPos = rtr.getBlockPos();
-
-                hitX = hitBlockPos.getX();
-
-                hitY = hitBlockPos.getY();
-
-                hitZ = hitBlockPos.getZ();
-
-                blockHit = world.getBlockState(hitBlockPos);
-
-                motionX = (float) (rtr.hitVec.x - posX);
-
-                motionY = (float) (rtr.hitVec.y - posY);
-
-                motionZ = (float) (rtr.hitVec.z - posZ);
-
-                float f1 = MathHelper.sqrt(motionX * motionX + motionY * motionY + motionZ * motionZ);
-
-                posX -= (motionX / (double) f1) * 0.05000000074505806d;
-
-                posY -= (motionY / (double) f1) * 0.05000000074505806d;
-
-                posZ -= (motionZ / (double) f1) * 0.05000000074505806d;
-
-                aoLightValueZPos = true;
-
-                if (blockHit.getBlock() == Blocks.ICE) {
-                    world.setBlockState(hitBlockPos, Blocks.FLOWING_WATER.getDefaultState());
-                }
-
-                setDead();
-            }
-
-            playSound(CreepsSoundHandler.raygunSound, 0.2f, 1.0f / (rand.nextFloat() * 0.1f + 0.95f));
-
-            setDead();
         }
 
         posX += motionX;
