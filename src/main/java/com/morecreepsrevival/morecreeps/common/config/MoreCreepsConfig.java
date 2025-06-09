@@ -42,7 +42,6 @@ public class MoreCreepsConfig {
     public static int floobShipSpawnAmt = 0;
     public static boolean sendWelcomeMessage = true;
     public static boolean sendVersionInfo = true;
-    public static boolean sendDiscordLink = true;
     public static int horseHeadSpawnAmt = 0;
     public static int digBugSpawnAmt = 0;
     public static int bubbleScumSpawnAmt = 0;
@@ -87,8 +86,6 @@ public class MoreCreepsConfig {
             sendVersionInfo = config.get(miscProperty, "Send Version Info", true, "Sends the current version of MoreCreeps in the chat when a player joins.").getBoolean();
 
             sendWelcomeMessage = config.get(miscProperty, "Send Welcome Message", true, "Sends a welcome message in the chat to each player joining.").getBoolean();
-
-            sendDiscordLink = config.get(miscProperty, "Send Discord Link", true, "Sends a link to the official MoreCreeps Discord when a player joins.").getBoolean();
 
             classicMode = config.get(miscProperty, "Classic Mode", true, "Keep this on if you want to play the mod the way Freakstritch intended it. Turning this off will add additional content the original mod didn't have.").getBoolean();
 

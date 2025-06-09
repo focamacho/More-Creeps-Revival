@@ -268,12 +268,6 @@ public class MoreCreepsAndWeirdos {
             event.player.sendMessage(new TextComponentTranslation("other.morecreeps.welcome." + rand.nextInt(35)));
         }
 
-        if (MoreCreepsConfig.sendDiscordLink) {
-            event.player.sendMessage(new TextComponentString("More Creeps and Weirdos Revival is a Work-in-Progress Mod!" +
-                    " Some Content may not be finished! If you encounter a bug" +
-                    " come join us on Discord, https://discord.gg/r3kdyTy"));
-        }
-
         if (MoreCreepsConfig.playWelcomeSound) {
             CreepsPacketHandler.INSTANCE.sendTo(new MessagePlayWelcomeSound(), (EntityPlayerMP) event.player);
         }
