@@ -351,6 +351,10 @@ public class MoreCreepsAndWeirdos {
         }
     }
 
+    public static MoreCreepsAndWeirdos getInstance() {
+        return INSTANCE;
+    }
+
     @EventHandler
     public void preInit(FMLPreInitializationEvent event) {
         MoreCreepsConfig.preInit(event);
@@ -372,10 +376,6 @@ public class MoreCreepsAndWeirdos {
     @EventHandler
     public void postInit(FMLPostInitializationEvent event) {
         proxy.postInit(event);
-    }
-
-    public static MoreCreepsAndWeirdos getInstance() {
-        return INSTANCE;
     }
 
 }

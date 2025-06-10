@@ -964,7 +964,7 @@ public class EntityCreepBase extends EntityCreature implements IEntityOwnable {
     public void notifyDataManagerChange(DataParameter<?> parameter) {
         super.notifyDataManagerChange(parameter);
 
-        if(parameter.equals(size)) {
+        if (parameter.equals(size)) {
             if (currentSize != dataManager.get(size)) {
                 currentSize = dataManager.get(size);
                 setSize(widthActual, heightActual);
