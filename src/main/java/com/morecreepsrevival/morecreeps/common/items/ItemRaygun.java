@@ -10,12 +10,15 @@ import net.minecraft.world.World;
 
 import javax.annotation.Nonnull;
 
-public class ItemRaygun extends CreepsItem {
-    public ItemRaygun() {
+public class ItemRaygun extends CreepsItem
+{
+    public ItemRaygun()
+    {
         this("raygun", false);
     }
 
-    public ItemRaygun(String itemName, boolean noCreativeTab) {
+    public ItemRaygun(String itemName, boolean noCreativeTab)
+    {
         super(itemName, noCreativeTab);
 
         setMaxStackSize(1);
@@ -23,9 +26,9 @@ public class ItemRaygun extends CreepsItem {
         setMaxDamage(64);
     }
 
-    @Override
-    @Nonnull
-    public ActionResult<ItemStack> onItemRightClick(World world, EntityPlayer player, @Nonnull EnumHand hand) {
+    @Override @Nonnull
+    public ActionResult<ItemStack> onItemRightClick(World world, EntityPlayer player, @Nonnull EnumHand hand)
+    {
         player.playSound(CreepsSoundHandler.raygunSound, getSoundVolume(), getSoundPitch());
 
         player.getHeldItem(hand).damageItem(2, player);
@@ -34,7 +37,8 @@ public class ItemRaygun extends CreepsItem {
 
         ray.shoot(player, player.rotationPitch, player.rotationYaw, 0.0f, 1.6f, 0.0f);
 
-        if (!world.isRemote) {
+        if (!world.isRemote)
+        {
             world.spawnEntity(ray);
         }
 
@@ -42,7 +46,8 @@ public class ItemRaygun extends CreepsItem {
     }
 
     @Override
-    public boolean isFull3D() {
+    public boolean isFull3D()
+    {
         return true;
     }
 }

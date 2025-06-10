@@ -1,72 +1,60 @@
 package com.morecreepsrevival.morecreeps.common.entity;
 
+import com.morecreepsrevival.morecreeps.common.items.LootTables;
 import com.morecreepsrevival.morecreeps.common.sounds.CreepsSoundHandler;
 import net.minecraft.block.Block;
-import net.minecraft.entity.ai.*;
+import net.minecraft.entity.ai.EntityAIAttackMelee;
+import net.minecraft.entity.ai.EntityAIHurtByTarget;
+import net.minecraft.entity.ai.EntityAILookIdle;
+import net.minecraft.entity.ai.EntityAIMoveToBlock;
+import net.minecraft.entity.ai.EntityAISwimming;
+import net.minecraft.entity.ai.EntityAIWander;
+import net.minecraft.entity.ai.EntityAIWatchClosest;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
+import net.minecraft.init.SoundEvents;
 import net.minecraft.pathfinding.NodeProcessor;
 import net.minecraft.util.DamageSource;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
-public class EntityHippo extends EntityCreepBase implements IEntityCanChangeSize {
-
-    private static final String[] textures = {
-            "textures/entity/hippo2"
-    };
+public class EntityHippo extends EntityCreepBase {
+    private static final String[] textures = new String[]{"textures/entity/hippo2"};
 
     public EntityHippo(World worldin) {
         super(worldin);
-
-        setCreepTypeName("Hippo");
-        setSize(2.5f, 2.0f);
-        setModelSize(2.0f);
-
-        baseHealth = 35f;
-        baseSpeed = 0.2d;
-        baseAttackDamage = 2.0d;
-
-        updateAttributes();
+        this.setCreepTypeName("Hippo");
+        this.setSize(2.5F, 2.0F);
+        this.setModelSize(2.0F);
+        this.baseHealth = 35.0F;
+        this.baseSpeed = 0.2D;
+        this.baseAttackDamage = 2.0D;
+        this.updateAttributes();
     }
 
-    @Override
-    protected void initEntityAI() {
-        clearAITasks();
-
-        NodeProcessor nodeProcessor = getNavigator().getNodeProcessor();
-
+    protected void func_184651_r() {
+        this.clearAITasks();
+        NodeProcessor nodeProcessor = this.getNavigator().getNodeProcessor();
         nodeProcessor.setCanSwim(true);
-
         nodeProcessor.setCanEnterDoors(true);
-
-        tasks.addTask(1, new EntityAISwimming(this));
-
-        tasks.addTask(1, new EntityHippo.GoToWaterGoal(this, 1.0d));
-
-        tasks.addTask(2, new EntityAIWander(this, 1.0d));
-
-        tasks.addTask(3, new EntityAIAttackMelee(this, 1.0d, false));
-
-        tasks.addTask(4, new EntityAIWatchClosest(this, EntityPlayer.class, 8.0f));
-
-        tasks.addTask(5, new EntityAILookIdle(this));
-
-        targetTasks.addTask(1, new EntityAIHurtByTarget(this, false));
+        this.tasks.addTask(1, new EntityAISwimming(this));
+        this.tasks.addTask(1, new EntityHippo.GoToWaterGoal(this, 1.0D));
+        this.tasks.addTask(2, new EntityAIWander(this, 1.0D));
+        this.tasks.addTask(3, new EntityAIAttackMelee(this, 1.0D, false));
+        this.tasks.addTask(4, new EntityAIWatchClosest(this, EntityPlayer.class, 8.0F));
+        this.tasks.addTask(5, new EntityAILookIdle(this));
+        this.targetTasks.addTask(1, new EntityAIHurtByTarget(this, false, new Class[0]));
     }
 
-    @Override
     protected String[] getAvailableTextures() {
         return textures;
     }
 
-    @Override
-    protected void dropItemsOnDeath() {
-        if (rand.nextInt(3) == 1) {
-            dropItem(Items.REEDS, rand.nextInt(5) + 3);
-        }
+    protected ResourceLocation getLootTable() {
+        return LootTables.hippo;
     }
 
     @Override
@@ -84,43 +72,39 @@ public class EntityHippo extends EntityCreepBase implements IEntityCanChangeSize
         return CreepsSoundHandler.hippoAmbientSound;
     }
 
-    @Override
+    protected void playStepSound(BlockPos pos, Block blockIn)
+    {
+        this.playSound(SoundEvents.ENTITY_COW_STEP, 0.45F, 1.0F);
+    }
+
     public int getMaxSpawnedInChunk() {
         return 2;
     }
 
-    @Override
     public float maxShrink() {
-        return 0.3f;
+        return 0.3F;
     }
 
-    @Override
     public float getShrinkRayAmount() {
-        return 0.25f;
+        return 0.25F;
     }
 
-    @Override
     public void onShrink(EntityShrink source) {
-
     }
 
-    @Override
     public float maxGrowth() {
-        return 3.0f;
+        return 3.0F;
     }
 
-    @Override
     public float getGrowRayAmount() {
         return 0.25F;
     }
 
-    @Override
     public void onGrow(EntityGrow source) {
-        this.increaseMoveSpeed(0.15f);
+        this.increaseMoveSpeed(0.15F);
     }
 
     public static class GoToWaterGoal extends EntityAIMoveToBlock {
-
         private final EntityHippo hippo;
         private boolean isAboveDestination2;
         private int timeoutCounter2;
@@ -132,17 +116,15 @@ public class EntityHippo extends EntityCreepBase implements IEntityCanChangeSize
             this.speed = speed;
         }
 
-        @Override
         public boolean shouldContinueExecuting() {
             return !this.hippo.isInWater() && this.timeoutCounter2 <= 1200 && this.shouldMoveTo(this.hippo.world, this.destinationBlock);
         }
 
-        @Override
         public boolean shouldExecute() {
             if (this.hippo.isChild() && !this.hippo.isInWater()) {
-                return shouldExecute2();
+                return this.shouldExecute2();
             } else {
-                return !this.hippo.isInWater() && shouldExecute2();
+                return !this.hippo.isInWater() && this.shouldExecute2();
             }
         }
 
@@ -151,12 +133,11 @@ public class EntityHippo extends EntityCreepBase implements IEntityCanChangeSize
                 --this.runDelay;
                 return false;
             } else {
-                this.runDelay = 200 + hippo.getRNG().nextInt(200);
+                this.runDelay = 200 + this.hippo.getRNG().nextInt(200);
                 return this.searchForDestination2();
             }
         }
 
-        @Override
         public void startExecuting() {
             super.startExecuting();
             this.timeoutCounter2 = 0;
@@ -166,12 +147,11 @@ public class EntityHippo extends EntityCreepBase implements IEntityCanChangeSize
             int i = 24;
             BlockPos blockpos = new BlockPos(this.hippo);
 
-            for (int k = -1; k <= 1; k = k > 0 ? -k : 1 - k) {
-                for (int l = 0; l < i; ++l) {
-                    for (int i1 = 0; i1 <= l; i1 = i1 > 0 ? -i1 : 1 - i1) {
-                        for (int j1 = i1 < l && i1 > -l ? l : 0; j1 <= l; j1 = j1 > 0 ? -j1 : 1 - j1) {
+            for(int k = -1; k <= 1; k = k > 0 ? -k : 1 - k) {
+                for(int l = 0; l < i; ++l) {
+                    for(int i1 = 0; i1 <= l; i1 = i1 > 0 ? -i1 : 1 - i1) {
+                        for(int j1 = i1 < l && i1 > -l ? l : 0; j1 <= l; j1 = j1 > 0 ? -j1 : 1 - j1) {
                             BlockPos blockpos1 = blockpos.add(i1, k - 1, j1);
-
                             if (this.hippo.isWithinHomeDistanceFromPosition(blockpos1) && this.shouldMoveTo(this.hippo.world, blockpos1)) {
                                 this.destinationBlock = blockpos1;
                                 return true;
@@ -184,31 +164,27 @@ public class EntityHippo extends EntityCreepBase implements IEntityCanChangeSize
             return false;
         }
 
-        @Override
         public void updateTask() {
             if (this.hippo.getDistanceSqToCenter(this.destinationBlock.up()) > 1.0D) {
                 this.isAboveDestination2 = false;
                 ++this.timeoutCounter2;
-
                 if (this.timeoutCounter2 % 160 == 0) {
-                    this.hippo.getNavigator().tryMoveToXYZ((double) ((float) this.destinationBlock.getX()) + 0.5D, (double) (this.destinationBlock.getY() + 1), (double) ((float) this.destinationBlock.getZ()) + 0.5D, this.speed);
+                    this.hippo.getNavigator().tryMoveToXYZ((double)((float)this.destinationBlock.getX()) + 0.5D, (double)(this.destinationBlock.getY() + 1), (double)((float)this.destinationBlock.getZ()) + 0.5D, this.speed);
                 }
             } else {
                 this.isAboveDestination2 = true;
                 --this.timeoutCounter2;
             }
+
         }
 
-        @Override
         protected boolean getIsAboveDestination() {
             return this.isAboveDestination2;
         }
 
-        @Override
         protected boolean shouldMoveTo(World worldIn, BlockPos pos) {
             Block block = worldIn.getBlockState(pos).getBlock();
             return block == Blocks.WATER;
         }
     }
-
 }

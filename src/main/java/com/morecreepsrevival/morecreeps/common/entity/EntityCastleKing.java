@@ -20,12 +20,14 @@ import net.minecraft.world.World;
 
 import javax.annotation.Nonnull;
 
-public class EntityCastleKing extends EntityCreepBase {
+public class EntityCastleKing extends EntityCreepBase
+{
     private static final DataParameter<Integer> intruderCheck = EntityDataManager.createKey(EntityCastleKing.class, DataSerializers.VARINT);
 
     private static final DataParameter<Integer> intruderID = EntityDataManager.createKey(EntityCastleKing.class, DataSerializers.VARINT);
 
-    public EntityCastleKing(World worldIn) {
+    public EntityCastleKing(World worldIn)
+    {
         super(worldIn);
 
         setCreepTypeName("Castle King");
@@ -34,7 +36,7 @@ public class EntityCastleKing extends EntityCreepBase {
 
         baseAttackDamage = 4.0d;
 
-        baseHealth = (float) rand.nextInt(60) + 60.0f;
+        baseHealth = (float)rand.nextInt(60) + 60.0f;
 
         setSize(2.0f, 1.6f);
 
@@ -44,7 +46,8 @@ public class EntityCastleKing extends EntityCreepBase {
     }
 
     @Override
-    protected void entityInit() {
+    protected void entityInit()
+    {
         super.entityInit();
 
         dataManager.register(intruderCheck, 25);
@@ -53,7 +56,8 @@ public class EntityCastleKing extends EntityCreepBase {
     }
 
     @Override
-    public void initEntityAI() {
+    public void initEntityAI()
+    {
         clearAITasks();
 
         NodeProcessor nodeProcessor = getNavigator().getNodeProcessor();
@@ -78,21 +82,25 @@ public class EntityCastleKing extends EntityCreepBase {
     }
 
     @Override
-    public void onLivingUpdate() {
+    public void onLivingUpdate()
+    {
         super.onLivingUpdate();
 
         smoke2();
 
-        if (dataManager.get(intruderCheck) > 0) {
+        if (dataManager.get(intruderCheck) > 0)
+        {
             dataManager.set(intruderCheck, dataManager.get(intruderCheck) - 1);
         }
 
-        if (dataManager.get(intruderCheck) < 1) {
+        if (dataManager.get(intruderCheck) < 1)
+        {
             dataManager.set(intruderCheck, 25);
 
             EntityPlayer player = world.getClosestPlayerToEntity(this, 10.0d);
 
-            if (player != null && canEntityBeSeen(player)) {
+            if (player != null && canEntityBeSeen(player))
+            {
                 dataManager.set(intruderID, player.getEntityId());
 
                 baseSpeed = 0.222d;
@@ -103,47 +111,58 @@ public class EntityCastleKing extends EntityCreepBase {
     }
 
     @Override
-    protected void updateTexture() {
+    protected void updateTexture()
+    {
         setTexture("textures/entity/castleking.png");
     }
 
     @Override
-    protected SoundEvent getAmbientSound() {
+    protected SoundEvent getAmbientSound()
+    {
         return CreepsSoundHandler.castleKingSound;
     }
 
     @Override
-    protected SoundEvent getHurtSound(DamageSource damageSource) {
+    protected SoundEvent getHurtSound(DamageSource damageSource)
+    {
         return CreepsSoundHandler.castleKingHurtSound;
     }
 
     @Override
-    protected SoundEvent getDeathSound() {
+    protected SoundEvent getDeathSound()
+    {
         return CreepsSoundHandler.castleKingDeathSound;
     }
 
     @Override
-    public int getMaxSpawnedInChunk() {
+    public int getMaxSpawnedInChunk()
+    {
         return 1;
     }
 
     @Override
-    protected void dropItemsOnDeath() {
+    protected void dropItemsOnDeath()
+    {
         EntityPlayer player = null;
 
-        if (dataManager.get(intruderID) != 0) {
+        if (dataManager.get(intruderID) != 0)
+        {
             Entity entity = world.getEntityByID(dataManager.get(intruderID));
 
-            if (entity instanceof EntityPlayer) {
-                player = (EntityPlayer) entity;
+            if (entity instanceof EntityPlayer)
+            {
+                player = (EntityPlayer)entity;
             }
         }
 
-        if (player != null && InventoryHelper.hasItem(player.inventory, CreepsItemHandler.skyGem) && InventoryHelper.hasItem(player.inventory, CreepsItemHandler.earthGem) && InventoryHelper.hasItem(player.inventory, CreepsItemHandler.fireGem) && InventoryHelper.hasItem(player.inventory, CreepsItemHandler.healingGem) && InventoryHelper.hasItem(player.inventory, CreepsItemHandler.miningGem)) {
+        if (player != null && InventoryHelper.hasItem(player.inventory, CreepsItemHandler.skyGem) && InventoryHelper.hasItem(player.inventory, CreepsItemHandler.earthGem) && InventoryHelper.hasItem(player.inventory, CreepsItemHandler.fireGem) && InventoryHelper.hasItem(player.inventory, CreepsItemHandler.healingGem) && InventoryHelper.hasItem(player.inventory, CreepsItemHandler.miningGem))
+        {
             dropItem(CreepsItemHandler.gemSword, 1);
 
             dropItem(CreepsItemHandler.money, rand.nextInt(100) + 50);
-        } else {
+        }
+        else
+        {
             dropItem(Items.IRON_SWORD, 1);
 
             dropItem(Items.BOOK, 1);
@@ -151,12 +170,15 @@ public class EntityCastleKing extends EntityCreepBase {
     }
 
     @Override
-    protected void dropEquipment(boolean wasRecentlyHit, int lootingModifier) {
+    protected void dropEquipment(boolean wasRecentlyHit, int lootingModifier)
+    {
     }
 
     @Override
-    public boolean attackEntityAsMob(@Nonnull Entity entity) {
-        if (getHammerSwing() == 0.0f) {
+    public boolean attackEntityAsMob(@Nonnull Entity entity)
+    {
+        if (getHammerSwing() == 0.0f)
+        {
             setHammerSwing(-2.6f);
         }
 
@@ -164,7 +186,8 @@ public class EntityCastleKing extends EntityCreepBase {
     }
 
     @Override
-    public boolean getCanSpawnHere() {
+    public boolean getCanSpawnHere()
+    {
         return true;
     }
 }

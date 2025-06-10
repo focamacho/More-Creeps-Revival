@@ -5,9 +5,11 @@ import net.minecraft.client.renderer.entity.Render;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraftforge.fml.client.registry.IRenderFactory;
 
-public class RenderPyramidGuardianFactory implements IRenderFactory<EntityPyramidGuardian> {
+public class RenderPyramidGuardianFactory implements IRenderFactory<EntityPyramidGuardian>
+{
     @Override
-    public Render<? super EntityPyramidGuardian> createRenderFor(RenderManager renderManager) {
+    public Render<? super EntityPyramidGuardian> createRenderFor(RenderManager renderManager)
+    {
         return new RenderPyramidGuardian<>(renderManager);
     }
 }

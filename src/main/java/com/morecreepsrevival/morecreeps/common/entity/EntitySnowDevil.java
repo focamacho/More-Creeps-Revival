@@ -1,8 +1,10 @@
 package com.morecreepsrevival.morecreeps.common.entity;
 
+import com.morecreepsrevival.morecreeps.common.items.LootTables;
 import com.morecreepsrevival.morecreeps.common.networking.CreepsPacketHandler;
 import com.morecreepsrevival.morecreeps.common.networking.message.MessageOpenGuiTamableEntityName;
 import com.morecreepsrevival.morecreeps.common.sounds.CreepsSoundHandler;
+import net.minecraft.block.Block;
 import net.minecraft.entity.EnumCreatureType;
 import net.minecraft.entity.ai.*;
 import net.minecraft.entity.monster.IMob;
@@ -15,10 +17,14 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.pathfinding.NodeProcessor;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.EnumHand;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.EnumSkyBlock;
 import net.minecraft.world.World;
 
-public class EntitySnowDevil extends EntityCreepBase implements IMob, IEntityCanChangeSize {
+public class EntitySnowDevil extends EntityCreepBase implements IMob
+{
     private static final String[] textures = {
             "textures/entity/snowdevil1",
             "textures/entity/snowdevil2"
@@ -33,164 +39,146 @@ public class EntitySnowDevil extends EntityCreepBase implements IMob, IEntityCan
             "Twice As Nice"
     };
 
-    public EntitySnowDevil(World worldIn) {
+    public EntitySnowDevil(World worldIn)
+    {
         super(worldIn);
-
         setCreepTypeName("Snow Devil");
-
         creatureType = EnumCreatureType.MONSTER;
-
-        setSize(width * 1.6f, height * 1f);
-
-        baseHealth = (float) rand.nextInt(50) + 15.0f;
-
+        setSize(width * 1.6f, height * 1.6f);
+        baseHealth = (float)rand.nextInt(50) + 15.0f;
         baseAttackDamage = 3.0d;
-
         baseSpeed = 0.3d;
-
         updateAttributes();
     }
 
     @Override
-    protected String[] getAvailableTextures() {
+    protected String[] getAvailableTextures()
+    {
         return textures;
     }
 
     @Override
-    protected String[] getTamedNames() {
+    protected String[] getTamedNames()
+    {
         return names;
     }
 
     @Override
-    public boolean isTamable() {
+    public boolean isTamable()
+    {
         return true;
     }
 
     @Override
-    public void initEntityAI() {
+    public void initEntityAI()
+    {
         clearAITasks();
-
         NodeProcessor nodeProcessor = getNavigator().getNodeProcessor();
-
         nodeProcessor.setCanSwim(true);
-
         tasks.addTask(1, new EntityAISwimming(this));
-
         tasks.addTask(2, new EntityAIBreakDoor(this));
-
         tasks.addTask(3, new EntityAIAttackMelee(this, 1.0d, true));
-
         tasks.addTask(4, new EntityAIMoveTowardsRestriction(this, 0.5d));
-
         tasks.addTask(5, new EntityAIWanderAvoidWater(this, 1.0d));
-
         tasks.addTask(6, new EntityAIWatchClosest(this, EntityPlayer.class, 8.0f));
-
         tasks.addTask(6, new EntityAILookIdle(this));
-
         targetTasks.addTask(1, new EntityAIHurtByTarget(this, false));
-
         targetTasks.addTask(2, new EntityAINearestAttackableTarget<>(this, EntityPlayer.class, true));
     }
 
     @Override
-    public int getMaxSpawnedInChunk() {
+    protected boolean isDaylightMob() {
+        return true;
+    }
+
+    @Override
+    public boolean getCanSpawnHere() {
+        return super.getCanSpawnHere() && this.world.canSeeSky(new BlockPos(this));
+    }
+
+    @Override
+    public int getMaxSpawnedInChunk()
+    {
         return 2;
     }
 
     @Override
-    protected SoundEvent getAmbientSound() {
+    public float getBlockPathWeight(BlockPos blockPos)
+    {
+        Block block = world.getBlockState(blockPos).getBlock();
+        if (block == Blocks.SNOW_LAYER)
+        {
+            return 10.0f;
+        }
+        return super.getBlockPathWeight(blockPos);
+    }
+
+    protected boolean isValidLightLevel() {
+        return this.world.getLightFor(EnumSkyBlock.BLOCK, new BlockPos(this.posX, this.getEntityBoundingBox().minY, this.posZ)) <= 15;
+    }
+
+    @Override
+    protected SoundEvent getAmbientSound()
+    {
         return CreepsSoundHandler.snowDevilSound;
     }
 
     @Override
-    protected SoundEvent getHurtSound(DamageSource damageSource) {
+    protected SoundEvent getHurtSound(DamageSource damageSource)
+    {
         return CreepsSoundHandler.snowDevilHurtSound;
     }
 
     @Override
-    protected SoundEvent getDeathSound() {
+    protected SoundEvent getDeathSound()
+    {
         return CreepsSoundHandler.snowDevilDeathSound;
     }
 
-    @Override
-    protected void dropItemsOnDeath() {
-        if (rand.nextInt(10) == 0) {
-            dropItem(Item.getItemFromBlock(Blocks.ICE), rand.nextInt(3) + 1);
-
-            dropItem(Item.getItemFromBlock(Blocks.SNOW), rand.nextInt(10) + 1);
-        } else {
-            dropItem(Item.getItemFromBlock(Blocks.SNOW), rand.nextInt(5) + 2);
-        }
+    protected ResourceLocation getLootTable() {
+        return LootTables.snowdevil;
     }
 
     @Override
-    public boolean processInteract(EntityPlayer player, EnumHand hand) {
-        if (hand == EnumHand.OFF_HAND) {
+    public boolean processInteract(EntityPlayer player, EnumHand hand)
+    {
+        if (hand == EnumHand.OFF_HAND)
+        {
             return super.processInteract(player, hand);
-        } else if (isTamed()) {
-            if (player.isSneaking() && isPlayerOwner(player)) {
-                if (!world.isRemote) {
-                    CreepsPacketHandler.INSTANCE.sendTo(new MessageOpenGuiTamableEntityName(getEntityId()), (EntityPlayerMP) player);
+        }
+        else if (isTamed())
+        {
+            if (player.isSneaking() && isPlayerOwner(player))
+            {
+                if (!world.isRemote)
+                {
+                    CreepsPacketHandler.INSTANCE.sendTo(new MessageOpenGuiTamableEntityName(getEntityId()), (EntityPlayerMP)player);
                 }
-
                 return true;
             }
-        } else {
+        }
+        else
+        {
             ItemStack itemStack = player.getHeldItem(hand);
-
-            if (!itemStack.isEmpty()) {
+            if (!itemStack.isEmpty())
+            {
                 Item item = itemStack.getItem();
-
-                if (item == Items.SNOWBALL) {
+                if (item == Items.SNOWBALL)
+                {
                     tame(player);
-
                     addHealth(2);
-
                     itemStack.shrink(1);
-
                     smoke();
-
                     return true;
                 }
             }
         }
-
         return super.processInteract(player, hand);
     }
 
     @Override
-    protected SoundEvent getTamedSound() {
+    protected SoundEvent getTamedSound()
+    {
         return CreepsSoundHandler.snowDevilTamedSound;
-    }
-
-    @Override
-    public float maxShrink() {
-        return 0.4f;
-    }
-
-    @Override
-    public float getShrinkRayAmount() {
-        return 0.2f;
-    }
-
-    @Override
-    public void onShrink(EntityShrink source) {
-
-    }
-
-    @Override
-    public float maxGrowth() {
-        return 4.0f;
-    }
-
-    @Override
-    public float getGrowRayAmount() {
-        return 0.2F;
-    }
-
-    @Override
-    public void onGrow(EntityGrow source) {
-
     }
 }

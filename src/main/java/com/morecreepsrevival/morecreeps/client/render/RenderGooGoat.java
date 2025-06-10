@@ -8,22 +8,26 @@ import net.minecraft.client.renderer.entity.RenderManager;
 
 import javax.annotation.Nullable;
 
-public class RenderGooGoat<T extends EntityGooGoat> extends RenderCreep<T> {
-    public RenderGooGoat(RenderManager renderManager) {
+public class RenderGooGoat<T extends EntityGooGoat> extends RenderCreep<T>
+{
+    public RenderGooGoat(RenderManager renderManager)
+    {
         super(renderManager, new ModelGooGoat(), 0.5f);
 
         addLayer(new LayerGooGoatSlime(this));
     }
 
     @Override
-    protected void doScaling(T entity) {
+    protected void doScaling(T entity)
+    {
         float modelSize = entity.getModelSize();
 
         GlStateManager.scale(modelSize, modelSize, modelSize + 0.5f);
     }
 
     @Override
-    public void doRender(@Nullable T entity, double x, double y, double z, float entityYaw, float partialTicks) {
+    public void doRender(@Nullable T entity, double x, double y, double z, float entityYaw, float partialTicks)
+    {
         GlStateManager.enableNormalize();
 
         GlStateManager.enableBlend();

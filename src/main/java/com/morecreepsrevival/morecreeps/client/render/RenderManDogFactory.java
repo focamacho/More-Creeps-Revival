@@ -5,9 +5,11 @@ import net.minecraft.client.renderer.entity.Render;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraftforge.fml.client.registry.IRenderFactory;
 
-public class RenderManDogFactory implements IRenderFactory<EntityManDog> {
+public class RenderManDogFactory implements IRenderFactory<EntityManDog>
+{
     @Override
-    public Render<? super EntityManDog> createRenderFor(RenderManager renderManager) {
+    public Render<? super EntityManDog> createRenderFor(RenderManager renderManager)
+    {
         return new RenderManDog<>(renderManager);
     }
 }

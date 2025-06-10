@@ -10,10 +10,12 @@ import net.minecraft.world.World;
 
 import javax.annotation.Nonnull;
 
-public class ItemHealingGem extends CreepsItem {
+public class ItemHealingGem extends CreepsItem
+{
     private static final int healAmount = 5;
 
-    public ItemHealingGem() {
+    public ItemHealingGem()
+    {
         super("healing_gem");
 
         setMaxStackSize(1);
@@ -21,17 +23,19 @@ public class ItemHealingGem extends CreepsItem {
         setMaxDamage(16);
     }
 
-    @Override
-    @Nonnull
-    public ActionResult<ItemStack> onItemRightClick(World world, EntityPlayer player, @Nonnull EnumHand hand) {
-        if (player.getHealth() < 20) {
+    @Override @Nonnull
+    public ActionResult<ItemStack> onItemRightClick(World world, EntityPlayer player, @Nonnull EnumHand hand)
+    {
+        if (player.getHealth() < 20)
+        {
             player.playSound(CreepsSoundHandler.healingGemSound, 1.0f, 1.0f);
 
             player.getHeldItem(hand).damageItem(1, player);
 
             player.swingArm(hand);
 
-            for (int i = 0; i < 20; i++) {
+            for (int i = 0; i < 20; i++)
+            {
                 double d = itemRand.nextGaussian() * 0.02D;
                 double d1 = itemRand.nextGaussian() * 0.02D;
                 double d2 = itemRand.nextGaussian() * 0.02D;

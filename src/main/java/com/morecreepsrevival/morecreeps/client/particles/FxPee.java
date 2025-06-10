@@ -3,8 +3,10 @@ package com.morecreepsrevival.morecreeps.client.particles;
 import net.minecraft.client.particle.Particle;
 import net.minecraft.world.World;
 
-public class FxPee extends Particle {
-    public FxPee(World worldIn, double xCoordIn, double yCoordIn, double zCoordIn, double xSpeedIn, double ySpeedIn, double zSpeedIn, double d, double d1) {
+public class FxPee extends Particle
+{
+    public FxPee(World worldIn, double xCoordIn, double yCoordIn, double zCoordIn, double xSpeedIn, double ySpeedIn, double zSpeedIn, double d, double d1)
+    {
         super(worldIn, xCoordIn, yCoordIn, zCoordIn, xSpeedIn, ySpeedIn, zSpeedIn);
 
         setSize(0.3f, 0.3f);

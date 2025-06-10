@@ -7,7 +7,8 @@ import net.minecraft.util.math.MathHelper;
 
 import javax.annotation.Nonnull;
 
-public class ModelPonyGirl extends ModelBiped {
+public class ModelPonyGirl extends ModelBiped
+{
     public ModelRenderer bipedHead;
     public ModelRenderer bipedBody;
     public ModelRenderer bipedRightArm;
@@ -23,7 +24,8 @@ public class ModelPonyGirl extends ModelBiped {
     public boolean heldItemLeft;
     public boolean heldItemRight;
 
-    public ModelPonyGirl() {
+    public ModelPonyGirl()
+    {
         isSneak = false;
         heldItemLeft = false;
         heldItemRight = false;
@@ -70,7 +72,8 @@ public class ModelPonyGirl extends ModelBiped {
     }
 
     @Override
-    public void render(@Nonnull Entity entity, float f, float f1, float f2, float f3, float f4, float f5) {
+    public void render(@Nonnull Entity entity, float f, float f1, float f2, float f3, float f4, float f5)
+    {
         setRotationAngles(f, f1, f2, f3, f4, f, entity);
         this.bipedHead.render(f5);
         this.bipedBody.render(f5);
@@ -85,17 +88,18 @@ public class ModelPonyGirl extends ModelBiped {
     }
 
     @Override
-    public void setRotationAngles(float f, float f1, float f2, float f3, float f4, float f5, @Nonnull Entity entity) {
+    public void setRotationAngles(float f, float f1, float f2, float f3, float f4, float f5, @Nonnull Entity entity)
+    {
         bipedHead.rotateAngleY = f3 / 57.29578f;
         bipedHead.rotateAngleX = f4 / 57.29578f;
 
-        bipedRightArm.rotateAngleX = MathHelper.cos(f * 0.6662f + (float) Math.PI) * 2.0f * f1 * 0.5f;
+        bipedRightArm.rotateAngleX = MathHelper.cos(f * 0.6662f + (float)Math.PI) * 2.0f * f1 * 0.5f;
 
         bipedLeftArm.rotateAngleX = MathHelper.cos(f * 0.6662f) * 2.0f * f1 * 0.5f;
 
         bipedLeftArm.rotateAngleZ = 0.0f;
         bipedRightLeg.rotateAngleX = MathHelper.cos(f * 0.6662f) * 1.4f * f1;
-        bipedLeftLeg.rotateAngleX = MathHelper.cos(f * 0.6662f + (float) Math.PI) * 1.4f * f1;
+        bipedLeftLeg.rotateAngleX = MathHelper.cos(f * 0.6662f + (float)Math.PI) * 1.4f * f1;
         bipedRightLeg.rotateAngleY = 0.0f;
         bipedLeftLeg.rotateAngleY = 0.0f;
 
@@ -104,7 +108,8 @@ public class ModelPonyGirl extends ModelBiped {
         this.rightfoot.rotateAngleY = this.bipedRightLeg.rotateAngleY = 0.0F;
         this.leftfoot.rotateAngleY = this.bipedLeftLeg.rotateAngleY = 0.0F;
 
-        if (false) {
+        if (false)
+        {
             bipedRightArm.rotateAngleX += -0.6283185f;
             bipedLeftArm.rotateAngleX += -0.6283185f;
             bipedRightLeg.rotateAngleX = -1.256637f;
@@ -113,21 +118,24 @@ public class ModelPonyGirl extends ModelBiped {
             bipedLeftLeg.rotateAngleY = -0.3141593f;
         }
 
-        if (heldItemLeft) {
-            bipedLeftArm.rotateAngleX = bipedLeftArm.rotateAngleX * 0.5f - (float) Math.PI;
+        if (heldItemLeft)
+        {
+            bipedLeftArm.rotateAngleX = bipedLeftArm.rotateAngleX * 0.5f - (float)Math.PI;
         }
 
-        if (heldItemRight) {
-            bipedRightArm.rotateAngleX = bipedRightArm.rotateAngleX * 0.5f - (float) Math.PI;
+        if (heldItemRight)
+        {
+            bipedRightArm.rotateAngleX = bipedRightArm.rotateAngleX * 0.5f - (float)Math.PI;
         }
 
         bipedRightArm.rotateAngleY = 0.0f;
         bipedLeftArm.rotateAngleY = 0.0f;
 
-        if (swingProgress > -9990.0f) {
+        if (swingProgress > -9990.0f)
+        {
             float f6 = swingProgress;
 
-            bipedBody.rotateAngleY = MathHelper.sin(MathHelper.sqrt(f6) * (float) Math.PI * 2.0f) * 0.2f;
+            bipedBody.rotateAngleY = MathHelper.sin(MathHelper.sqrt(f6) * (float)Math.PI * 2.0f) * 0.2f;
 
             bipedRightArm.rotationPointZ = MathHelper.sin(bipedBody.rotateAngleY) * 5.0f;
             bipedRightArm.rotationPointX = -MathHelper.cos(bipedBody.rotateAngleY) * 5.0f;
@@ -141,15 +149,16 @@ public class ModelPonyGirl extends ModelBiped {
             f6 *= f6;
             f6 *= f6;
             f6 = 1.0f - f6;
-            float f7 = MathHelper.sin(f6 * (float) Math.PI);
-            float f8 = MathHelper.sin(swingProgress * (float) Math.PI) * -(bipedHead.rotateAngleX - 0.7f) * 0.75f;
+            float f7 = MathHelper.sin(f6 * (float)Math.PI);
+            float f8 = MathHelper.sin(swingProgress * (float)Math.PI) * -(bipedHead.rotateAngleX - 0.7f) * 0.75f;
 
-            bipedRightArm.rotateAngleX = (float) (bipedRightArm.rotateAngleX - f7 * 1.2d + f8);
+            bipedRightArm.rotateAngleX = (float)(bipedRightArm.rotateAngleX - f7 * 1.2d + f8);
             bipedRightArm.rotateAngleY += bipedBody.rotateAngleY * 2.0f;
-            bipedRightArm.rotateAngleZ = MathHelper.sin(swingProgress * (float) Math.PI) * -0.4f;
+            bipedRightArm.rotateAngleZ = MathHelper.sin(swingProgress * (float)Math.PI) * -0.4f;
         }
 
-        if (isSneak) {
+        if (isSneak)
+        {
             bipedBody.rotateAngleX = 0.5f;
             rightfoot.rotateAngleX -= bipedRightLeg.rotateAngleX;
             leftfoot.rotateAngleX -= bipedLeftLeg.rotateAngleX;
@@ -160,7 +169,9 @@ public class ModelPonyGirl extends ModelBiped {
             bipedRightLeg.rotationPointY = 9F;
             bipedLeftLeg.rotationPointY = 9F;
             bipedHead.rotationPointY = 1.0F;
-        } else {
+        }
+        else
+        {
             bipedBody.rotateAngleX = 0.0F;
             bipedRightLeg.rotationPointZ = 0.0F;
             bipedLeftLeg.rotationPointZ = 0.0F;

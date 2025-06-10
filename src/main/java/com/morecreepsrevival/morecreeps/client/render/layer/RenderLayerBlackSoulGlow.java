@@ -7,17 +7,20 @@ import net.minecraft.client.renderer.entity.layers.LayerRenderer;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.util.ResourceLocation;
 
-public class RenderLayerBlackSoulGlow implements LayerRenderer<EntityLivingBase> {
+public class RenderLayerBlackSoulGlow implements LayerRenderer<EntityLivingBase>
+{
     private static final ResourceLocation layerTexture = new ResourceLocation(MoreCreepsAndWeirdos.modid, "textures/entity/blacksoulglow.png");
 
     private final RenderLivingBase<?> renderer;
 
-    public RenderLayerBlackSoulGlow(RenderLivingBase<?> rendererIn) {
+    public RenderLayerBlackSoulGlow(RenderLivingBase<?> rendererIn)
+    {
         renderer = rendererIn;
     }
 
     @Override
-    public void doRenderLayer(EntityLivingBase entity, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch, float scale) {
+    public void doRenderLayer(EntityLivingBase entity, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch, float scale)
+    {
         GlStateManager.depthMask(!entity.isInvisible());
 
         renderer.bindTexture(layerTexture);
@@ -34,7 +37,8 @@ public class RenderLayerBlackSoulGlow implements LayerRenderer<EntityLivingBase>
     }
 
     @Override
-    public boolean shouldCombineTextures() {
+    public boolean shouldCombineTextures()
+    {
         return true;
     }
 }

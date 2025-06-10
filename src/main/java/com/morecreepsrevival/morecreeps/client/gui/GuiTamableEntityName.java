@@ -14,18 +14,26 @@ import org.lwjgl.input.Keyboard;
 
 import java.io.IOException;
 
-public class GuiTamableEntityName extends GuiScreen {
-    private static final int xSize = 256;
-    private static final int ySize = 180;
-    private final static ResourceLocation backgroundTexture = new ResourceLocation(MoreCreepsAndWeirdos.modid, "textures/gui/gui-screen.png");
+public class GuiTamableEntityName extends GuiScreen
+{
     private final EntityCreepBase entity;
-    private final String entityTypeName;
+
     private GuiTextField nameScreen;
 
-    public GuiTamableEntityName(EntityCreepBase entityIn) {
+    private static final int xSize = 256;
+
+    private static final int ySize = 180;
+
+    private final String entityTypeName;
+
+    private final static ResourceLocation backgroundTexture = new ResourceLocation(MoreCreepsAndWeirdos.modid, "textures/gui/gui-screen.png");
+
+    public GuiTamableEntityName(EntityCreepBase entityIn)
+    {
         entity = entityIn;
 
-        switch (entityIn.getCreepTypeName()) {
+        switch (entityIn.getCreepTypeName())
+        {
             case "Zebra":
                 entityTypeName = "Z E B R A";
 
@@ -50,12 +58,14 @@ public class GuiTamableEntityName extends GuiScreen {
     }
 
     @Override
-    public void updateScreen() {
+    public void updateScreen()
+    {
         nameScreen.updateCursorCounter();
     }
 
     @Override
-    public void initGui() {
+    public void initGui()
+    {
         Keyboard.enableRepeatEvents(true);
 
         buttonList.clear();
@@ -74,46 +84,59 @@ public class GuiTamableEntityName extends GuiScreen {
     }
 
     @Override
-    public void onGuiClosed() {
+    public void onGuiClosed()
+    {
         Keyboard.enableRepeatEvents(false);
     }
 
     @Override
-    protected void mouseClicked(int mouseX, int mouseY, int mouseButton) {
-        try {
+    protected void mouseClicked(int mouseX, int mouseY, int mouseButton)
+    {
+        try
+        {
             super.mouseClicked(mouseX, mouseY, mouseButton);
-        } catch (IOException ignore) {
+        }
+        catch (IOException ignore)
+        {
         }
 
         nameScreen.mouseClicked(mouseX, mouseY, mouseButton);
     }
 
     @Override
-    protected void actionPerformed(GuiButton button) {
-        if (!button.enabled) {
+    protected void actionPerformed(GuiButton button)
+    {
+        if (!button.enabled)
+        {
             return;
         }
 
         mc.displayGuiScreen(null);
 
-        if (button.id == 0) {
+        if (button.id == 0)
+        {
             CreepsPacketHandler.INSTANCE.sendToServer(new MessageChangeTamedEntityName(entity.getEntityId(), nameScreen.getText()));
         }
     }
 
     @Override
-    protected void keyTyped(char c, int i) {
+    protected void keyTyped(char c, int i)
+    {
         nameScreen.textboxKeyTyped(c, i);
 
-        if (i == 1) {
+        if (i == 1)
+        {
             mc.displayGuiScreen(null);
-        } else if (c == '\r') {
+        }
+        else if (c == '\r')
+        {
             actionPerformed(buttonList.get(0));
         }
     }
 
     @Override
-    public void drawScreen(int mouseX, int mouseY, float partialTicks) {
+    public void drawScreen(int mouseX, int mouseY, float partialTicks)
+    {
         drawDefaultBackground();
 
         GlStateManager.color(1.0f, 1.0f, 1.0f, 1.0f);
@@ -130,7 +153,8 @@ public class GuiTamableEntityName extends GuiScreen {
     }
 
     @Override
-    public boolean doesGuiPauseGame() {
+    public boolean doesGuiPauseGame()
+    {
         return false;
     }
 }

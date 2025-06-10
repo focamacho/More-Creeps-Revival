@@ -5,9 +5,11 @@ import net.minecraft.client.renderer.entity.Render;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraftforge.fml.client.registry.IRenderFactory;
 
-public class RenderBlorpFactory implements IRenderFactory<EntityBlorp> {
+public class RenderBlorpFactory implements IRenderFactory<EntityBlorp>
+{
     @Override
-    public Render<? super EntityBlorp> createRenderFor(RenderManager renderManager) {
+    public Render<? super EntityBlorp> createRenderFor(RenderManager renderManager)
+    {
         return new RenderBlorp<>(renderManager);
     }
 }

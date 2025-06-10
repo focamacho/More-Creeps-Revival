@@ -44,14 +44,8 @@ item.morecreeps.zebra_hide.name=Zebra Hide
 item.morecreeps.caveman_club.name=Caveman Club
 item.morecreeps.battery.name=Battery
 item.morecreeps.ram16k.name=16K RAM
-item.morecreeps.mobile_phone.name=Mobile Phone
-item.morecreeps.lucky_dress.name=Lucky Dress
-item.morecreeps.medicine.name=Medicine
-item.morecreeps.pee_bucket.name=Pee Bucket
-item.morecreeps.vhstape.name=VHS Tape
-item.morecreeps.vhstape2.name=VHS Tape 2
-item.morecreeps.vhammer.name=VHS Hammer
 item.morecreeps.growbot_growray.name=Grow Ray
+item.morecreeps.pet_radio_5000.name=Pet Radio 5000
 
 # Entities
 entity.morecreeps.guineapig.name=Guinea Pig
@@ -106,14 +100,12 @@ entity.morecreeps.growbot_gregg.name=Growbot Gregg
 entity.morecreeps.ponygirl.name=Pony Girl
 entity.morecreeps.invisible_man.name=Invisible Man
 entity.morecreeps.rock_monster.name=Rock Monster
-entity.morecreeps.vhs.name=Walking VHS
-entity.morecreeps.s.name=S
 entity.morecreeps.desert_lizard.name=Desert Lizard
 entity.morecreeps.hunchbackskeleton.name=Hunchback Skeleton
 entity.morecreeps.hippo.name=Hippo
 
 # Creative Tabs
-itemGroup.creepsTab=More Creeps
+itemGroup.creepsTab=More Creeps and Weirdos
 
 # Advancements
 advancements.morecreeps.title=More Creeps and Weirdos
@@ -134,40 +126,3 @@ advancements.morecreeps.falseidol.title=False Idol
 advancements.morecreeps.falseidol.desc=Kill a Preacher with Money.
 advancements.morecreeps.thezipper.title=The Zipper
 advancements.morecreeps.thezipper.desc=Tame a Zebra.
-
-# Welcome Messages
-other.morecreeps.welcome.0=Now, go out there and have some fun!
-other.morecreeps.welcome.1=Don't let those stinky Floobs push you around!
-other.morecreeps.welcome.2=Give a diamond to a level 25 HotDog for a special reward!
-other.morecreeps.welcome.3=Urinating Bums can help with landscaping. Try one today!
-other.morecreeps.welcome.4=You're doing something right!
-other.morecreeps.welcome.5=Watch out for grumpy G's!
-other.morecreeps.welcome.6=Guinea Pigs make nice pets.
-other.morecreeps.welcome.7=Bring a lost Kid back to a Lolliman for a nice reward.
-other.morecreeps.welcome.8=Robot Ted thinks Robot Todd is a dirty chicken wing.
-other.morecreeps.welcome.9=Sneaky Sal changes his prices. Check back for bargains.
-other.morecreeps.welcome.10=Power your HotDog with redstone for a fire attack!
-other.morecreeps.welcome.11=You want money? Punch a Lawyer From Hell!
-other.morecreeps.welcome.12=Equip your HotDogs with Redstone for fire attacks!
-other.morecreeps.welcome.13=Guinea Pigs eat Wheat and Apples.
-other.morecreeps.welcome.14=A Floob Ship will spit out Floobs until it is destroyed.
-other.morecreeps.welcome.15=Drop a BubbleScum 100 blocks for the MERCILESS achievement!
-other.morecreeps.welcome.16=Throw a BubbleScum down a DigBug hole for a cookie fountain!
-other.morecreeps.welcome.17=Feed lots of cake to a Hunchback and he will stay loyal.
-other.morecreeps.welcome.18=The longer you ride a RocketPony, the more tame it will be.
-other.morecreeps.welcome.19=Visit Sneaky Sal for those hard to find items.
-other.morecreeps.welcome.20=Hitting a Caveman will turn him/her evil!
-other.morecreeps.welcome.21=SNEAK KEY + RIGHT CLICK on creeps for info or to name them.
-other.morecreeps.welcome.22=Give a level 20 Guinea Pig a diamond to build a Hotel!
-other.morecreeps.welcome.23=If you hear disco music - RUN!
-other.morecreeps.welcome.24=Raising your pets ATTACK skill will help them level faster.
-other.morecreeps.welcome.25=Robot Ted and Todd will sometimes drop dirty chicken wings.
-other.morecreeps.welcome.26=Killing a Lawyer may result in a Bum or Undead Lawyers.
-other.morecreeps.welcome.27=Shrink a BigBaby down and put him in a jar to create a Schlump.
-other.morecreeps.welcome.28=The older your Schlump gets, the more valuable gifts he gives!
-other.morecreeps.welcome.29=Do not throw eggs at Ponies! You have been warned!
-other.morecreeps.welcome.30=Some Prisoners are friendly and will reward you upon release!
-other.morecreeps.welcome.31=Some Prisoners are just evil and will attack you on sight!
-other.morecreeps.welcome.32=Evil Scientists will conduct experiments that sometimes backfire.
-other.morecreeps.welcome.33=Your pet loses a level if resurrected with a LifeGem.
-other.morecreeps.welcome.34=Sneaky Sal will sometimes sell goods at a discount.

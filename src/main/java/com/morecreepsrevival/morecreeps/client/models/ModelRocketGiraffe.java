@@ -5,7 +5,8 @@ import net.minecraft.client.model.ModelRenderer;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.math.MathHelper;
 
-public class ModelRocketGiraffe extends ModelBase {
+public class ModelRocketGiraffe extends ModelBase
+{
     public ModelRenderer body;
     public ModelRenderer tail;
     public ModelRenderer leg1;
@@ -23,7 +24,8 @@ public class ModelRocketGiraffe extends ModelBase {
     public ModelRenderer earR;
     public ModelRenderer tail2;
 
-    public ModelRocketGiraffe() {
+    public ModelRocketGiraffe()
+    {
         body = new ModelRenderer(this, 0, 0);
         body.addBox(-2.5F, 0.0F, -7F, 5, 5, 14, 3.5F);
         body.setRotationPoint(0.0F, -10F, 0.0F);
@@ -92,7 +94,8 @@ public class ModelRocketGiraffe extends ModelBase {
     }
 
     @Override
-    public void render(Entity entity, float f, float f1, float f2, float f3, float f4, float f5) {
+    public void render(Entity entity, float f, float f1, float f2, float f3, float f4, float f5)
+    {
         setRotationAngles(f, f1, f2, f3, f4, f5, entity);
         body.render(f5);
         tail.render(f5);
@@ -113,10 +116,11 @@ public class ModelRocketGiraffe extends ModelBase {
     }
 
     @Override
-    public void setRotationAngles(float f, float f1, float f2, float f3, float f4, float f5, Entity entity) {
+    public void setRotationAngles(float f, float f1, float f2, float f3, float f4, float f5, Entity entity)
+    {
         leg1.rotateAngleX = MathHelper.cos(f * 0.6662F) * 1.4F * f1;
-        leg2.rotateAngleX = MathHelper.cos(f * 0.6662F + (float) Math.PI) * 1.4F * f1;
-        leg3.rotateAngleX = MathHelper.cos(f * 0.6662F + (float) Math.PI) * 1.4F * f1;
+        leg2.rotateAngleX = MathHelper.cos(f * 0.6662F + (float)Math.PI) * 1.4F * f1;
+        leg3.rotateAngleX = MathHelper.cos(f * 0.6662F + (float)Math.PI) * 1.4F * f1;
         leg4.rotateAngleX = MathHelper.cos(f * 0.6662F) * 1.4F * f1;
     }
 }

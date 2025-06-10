@@ -6,7 +6,8 @@ import net.minecraft.client.model.ModelRenderer;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.math.MathHelper;
 
-public class ModelBigBaby extends ModelBase {
+public class ModelBigBaby extends ModelBase
+{
     public ModelRenderer babyHead;
     public ModelRenderer babyBody;
     public ModelRenderer armL;
@@ -18,15 +19,18 @@ public class ModelBigBaby extends ModelBase {
     public ModelRenderer earL;
     public ModelRenderer earR;
 
-    public ModelBigBaby() {
+    public ModelBigBaby()
+    {
         this(0.0f);
     }
 
-    public ModelBigBaby(float f) {
+    public ModelBigBaby(float f)
+    {
         this(f, 0.0f);
     }
 
-    public ModelBigBaby(float f, float f1) {
+    public ModelBigBaby(float f, float f1)
+    {
         babyHead = new ModelRenderer(this, 0, 0);
         babyHead.addBox(-3F, -6F, -6F, 6, 6, 6, 0.0F);
         babyHead.setRotationPoint(0.0F, 18F, -1.5F);
@@ -100,7 +104,8 @@ public class ModelBigBaby extends ModelBase {
     }
 
     @Override
-    public void render(Entity entity, float f, float f1, float f2, float f3, float f4, float f5) {
+    public void render(Entity entity, float f, float f1, float f2, float f3, float f4, float f5)
+    {
         setRotationAngles(f, f1, f2, f3, f4, f5, entity);
         babyHead.render(f5);
         babyBody.render(f5);
@@ -115,23 +120,28 @@ public class ModelBigBaby extends ModelBase {
     }
 
     @Override
-    public void setRotationAngles(float f, float f1, float f2, float f3, float f4, float f5, Entity entity) {
-        earL.rotateAngleY = earR.rotateAngleY = babyHead.rotateAngleY = f3 / (180F / (float) Math.PI);
-        earL.rotateAngleX = earR.rotateAngleX = babyHead.rotateAngleX = f4 / (180F / (float) Math.PI) + 0.25F;
+    public void setRotationAngles(float f, float f1, float f2, float f3, float f4, float f5, Entity entity)
+    {
+        earL.rotateAngleY = earR.rotateAngleY = babyHead.rotateAngleY = f3 / (180F / (float)Math.PI);
+        earL.rotateAngleX = earR.rotateAngleX = babyHead.rotateAngleX = f4 / (180F / (float)Math.PI) + 0.25F;
         armL.rotateAngleX = MathHelper.cos(f * 0.6662F) * 1.4F * f1;
-        legL1.rotateAngleX = MathHelper.cos(f * 0.6662F + (float) Math.PI) * 1.4F * f1 - 0.5576792F;
-        legL2.rotateAngleX = MathHelper.cos(f * 0.6662F + (float) Math.PI) * 1.4F * f1;
+        legL1.rotateAngleX = MathHelper.cos(f * 0.6662F + (float)Math.PI) * 1.4F * f1 - 0.5576792F;
+        legL2.rotateAngleX = MathHelper.cos(f * 0.6662F + (float)Math.PI) * 1.4F * f1;
 
         float hammerSwing = 0.0f;
 
-        if (entity instanceof EntityBigBaby) {
-            hammerSwing = ((EntityBigBaby) entity).getHammerSwing();
+        if (entity instanceof EntityBigBaby)
+        {
+            hammerSwing = ((EntityBigBaby)entity).getHammerSwing();
         }
 
-        if (hammerSwing != 0.0F) {
+        if (hammerSwing != 0.0F)
+        {
             armR.rotateAngleX = hammerSwing;
-        } else {
-            armR.rotateAngleX = MathHelper.cos(f * 0.6662F + (float) Math.PI) * 1.4F * f1;
+        }
+        else
+        {
+            armR.rotateAngleX = MathHelper.cos(f * 0.6662F + (float)Math.PI) * 1.4F * f1;
         }
 
         legR1.rotateAngleX = MathHelper.cos(f * 0.6662F) * 1.4F * f1 - 0.5576792F;

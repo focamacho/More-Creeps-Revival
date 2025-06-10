@@ -12,37 +12,44 @@ import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 
-public class MessageLevelUpHotdogSkill implements IMessage {
+public class MessageLevelUpHotdogSkill implements IMessage
+{
     private int entityId;
 
     private String skill;
 
-    public MessageLevelUpHotdogSkill() {
+    public MessageLevelUpHotdogSkill()
+    {
     }
 
-    public MessageLevelUpHotdogSkill(int entityIdIn, String skillIn) {
+    public MessageLevelUpHotdogSkill(int entityIdIn, String skillIn)
+    {
         entityId = entityIdIn;
 
         skill = skillIn;
     }
 
     @Override
-    public void toBytes(ByteBuf buf) {
+    public void toBytes(ByteBuf buf)
+    {
         buf.writeInt(entityId);
 
         ByteBufUtils.writeUTF8String(buf, skill);
     }
 
     @Override
-    public void fromBytes(ByteBuf buf) {
+    public void fromBytes(ByteBuf buf)
+    {
         entityId = buf.readInt();
 
         skill = ByteBufUtils.readUTF8String(buf);
     }
 
-    public static class MessageHandler implements IMessageHandler<MessageLevelUpHotdogSkill, IMessage> {
+    public static class MessageHandler implements IMessageHandler<MessageLevelUpHotdogSkill, IMessage>
+    {
         @Override
-        public IMessage onMessage(MessageLevelUpHotdogSkill message, MessageContext context) {
+        public IMessage onMessage(MessageLevelUpHotdogSkill message, MessageContext context)
+        {
             EntityPlayerMP player = context.getServerHandler().player;
 
             WorldServer world = player.getServerWorld();
@@ -50,10 +57,12 @@ public class MessageLevelUpHotdogSkill implements IMessage {
             world.addScheduledTask(() -> {
                 Entity entity = world.getEntityByID(message.entityId);
 
-                if (entity instanceof EntityHotdog) {
-                    EntityHotdog hotdog = (EntityHotdog) entity;
+                if (entity instanceof EntityHotdog)
+                {
+                    EntityHotdog hotdog = (EntityHotdog)entity;
 
-                    if (hotdog.isPlayerOwner(player) && hotdog.canLevelSkill(message.skill) && InventoryHelper.takeItem(player.inventory, Items.BONE, 5)) {
+                    if (hotdog.isPlayerOwner(player) && hotdog.canLevelSkill(message.skill) && InventoryHelper.takeItem(player.inventory, Items.BONE, 5))
+                    {
                         hotdog.levelUpSkill(message.skill);
                     }
                 }

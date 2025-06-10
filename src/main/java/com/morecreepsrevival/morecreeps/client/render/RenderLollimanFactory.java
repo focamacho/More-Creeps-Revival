@@ -5,9 +5,11 @@ import net.minecraft.client.renderer.entity.Render;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraftforge.fml.client.registry.IRenderFactory;
 
-public class RenderLollimanFactory implements IRenderFactory<EntityLolliman> {
+public class RenderLollimanFactory implements IRenderFactory<EntityLolliman>
+{
     @Override
-    public Render<? super EntityLolliman> createRenderFor(RenderManager renderManager) {
+    public Render<? super EntityLolliman> createRenderFor(RenderManager renderManager)
+    {
         return new RenderLolliman<>(renderManager);
     }
 }

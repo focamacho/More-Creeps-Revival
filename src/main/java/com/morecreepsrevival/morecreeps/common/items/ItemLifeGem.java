@@ -8,16 +8,18 @@ import net.minecraft.world.World;
 
 import javax.annotation.Nonnull;
 
-public class ItemLifeGem extends CreepsItem {
-    public ItemLifeGem() {
+public class ItemLifeGem extends CreepsItem
+{
+    public ItemLifeGem()
+    {
         super("life_gem");
 
         setMaxStackSize(16);
     }
 
-    @Override
-    @Nonnull
-    public ActionResult<ItemStack> onItemRightClick(World world, EntityPlayer player, @Nonnull EnumHand hand) {
+    @Override @Nonnull
+    public ActionResult<ItemStack> onItemRightClick(World world, EntityPlayer player, @Nonnull EnumHand hand)
+    {
         player.swingArm(hand);
 
         return super.onItemRightClick(world, player, hand);

@@ -1,31 +1,36 @@
 package com.morecreepsrevival.morecreeps.client.render;
 
 import com.morecreepsrevival.morecreeps.client.models.ModelTombstone;
-import com.morecreepsrevival.morecreeps.common.entity.EntityTombstone;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.entity.RenderManager;
+import com.morecreepsrevival.morecreeps.common.entity.EntityTombstone;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import org.lwjgl.opengl.GL11;
 
 import javax.annotation.Nullable;
 
-public class RenderTombstone<T extends EntityTombstone> extends RenderCreep<T> {
-    public RenderTombstone(RenderManager renderManager) {
+public class RenderTombstone<T extends EntityTombstone> extends RenderCreep<T>
+{
+    public RenderTombstone(RenderManager renderManager)
+    {
         super(renderManager, new ModelTombstone(), 0.5f);
     }
 
     @Override
-    protected boolean shouldDrawTamedStatus(T entity) {
+    protected boolean shouldDrawTamedStatus(T entity)
+    {
         return false;
     }
 
-    public void doRender(@Nullable T entity, double x, double y, double z, float entityYaw, float partialTicks) {
+    public void doRender(@Nullable T entity, double x, double y, double z, float entityYaw, float partialTicks)
+    {
         super.doRender(entity, x, y, z, entityYaw, partialTicks);
 
-        if (entity == null || entity.getDistanceSq(renderManager.renderViewEntity) > 16) {
+        if (entity == null || entity.getDistanceSq(renderManager.renderViewEntity) > 16)
+        {
             return;
         }
 
@@ -41,7 +46,7 @@ public class RenderTombstone<T extends EntityTombstone> extends RenderCreep<T> {
 
         GlStateManager.pushMatrix();
 
-        GlStateManager.translate((float) x, (float) y + 1.1f, (float) z);
+        GlStateManager.translate((float)x, (float)y + 1.1f, (float)z);
 
         GlStateManager.glNormal3f(0.0f, 1.0f, 0.0f);
 
@@ -71,7 +76,8 @@ public class RenderTombstone<T extends EntityTombstone> extends RenderCreep<T> {
 
         int i = fontRenderer.getStringWidth(s);
 
-        if (fontRenderer.getStringWidth(s1) > i) {
+        if (fontRenderer.getStringWidth(s1) > i)
+        {
             i = fontRenderer.getStringWidth(s1);
         }
 
@@ -79,7 +85,7 @@ public class RenderTombstone<T extends EntityTombstone> extends RenderCreep<T> {
 
         byte byte0 = -25;
 
-        bufferBuilder.pos(-j - 1, -1 + i, 0.0d).color(0.0f, 0.0f, 0.0f, 0.25f).endVertex();
+        bufferBuilder.pos(-j -1, -1 + i, 0.0d).color(0.0f, 0.0f, 0.0f, 0.25f).endVertex();
 
         bufferBuilder.pos(-j - 1, 8 + i, 0.0d).color(0.0f, 0.0f, 0.0f, 0.25f).endVertex();
 

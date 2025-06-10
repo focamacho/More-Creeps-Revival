@@ -10,12 +10,15 @@ import net.minecraft.world.World;
 
 import javax.annotation.Nonnull;
 
-public class ItemGrowRay extends CreepsItem {
-    public ItemGrowRay() {
+public class ItemGrowRay extends CreepsItem
+{
+    public ItemGrowRay()
+    {
         this("grow_ray", false);
     }
 
-    public ItemGrowRay(String itemName, boolean noCreativeTab) {
+    public ItemGrowRay(String itemName, boolean noCreativeTab)
+    {
         super(itemName, noCreativeTab);
 
         setMaxStackSize(1);
@@ -23,16 +26,17 @@ public class ItemGrowRay extends CreepsItem {
         setMaxDamage(64);
     }
 
-    @Override
-    @Nonnull
-    public ActionResult<ItemStack> onItemRightClick(World world, EntityPlayer player, @Nonnull EnumHand hand) {
+    @Override @Nonnull
+    public ActionResult<ItemStack> onItemRightClick(World world, EntityPlayer player, @Nonnull EnumHand hand)
+    {
         player.playSound(CreepsSoundHandler.growRaySound, getSoundVolume(), getSoundPitch());
 
         player.getHeldItem(hand).damageItem(1, player);
 
         EntityGrow grow = new EntityGrow(world, player);
 
-        if (!world.isRemote) {
+        if (!world.isRemote)
+        {
             world.spawnEntity(grow);
         }
 
@@ -40,12 +44,14 @@ public class ItemGrowRay extends CreepsItem {
     }
 
     @Override
-    public float getSoundVolume() {
+    public float getSoundVolume()
+    {
         return 0.5f;
     }
 
     @Override
-    public float getSoundPitch() {
+    public float getSoundPitch()
+    {
         return (0.4f / ((itemRand.nextFloat() * 0.4f) + 0.8f));
     }
 }

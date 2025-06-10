@@ -7,57 +7,52 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
 
-public class ItemGemSword extends CreepsItemSword {
-    public ItemGemSword() {
+public class ItemGemSword extends CreepsItemSword
+{
+    public ItemGemSword()
+    {
         super("gem_sword", ToolMaterial.DIAMOND);
 
         setMaxDamage(256);
     }
 
     @Override
-    public float getAttackDamage() {
+    public float getAttackDamage()
+    {
         return 25.0f;
     }
 
     @Override
-    public float getDestroySpeed(ItemStack itemStack, IBlockState blockState) {
+    public float getDestroySpeed(ItemStack itemStack, IBlockState blockState)
+    {
         return 55.0f;
     }
 
     @Override
-    public boolean canHarvestBlock(IBlockState blockState) {
+    public boolean canHarvestBlock(IBlockState blockState)
+    {
         return true;
     }
 
-
     @Override
-    public void onUpdate(ItemStack itemStack, World world, Entity entity, int itemSlot, boolean isSelected) {
+    public void onUpdate(ItemStack itemStack, World world, Entity entity, int itemSlot, boolean isSelected)
+    {
         super.onUpdate(itemStack, world, entity, itemSlot, isSelected);
 
-        if (isSelected && entity instanceof EntityPlayer) {
-            EntityPlayer player = (EntityPlayer) entity;
+        if (isSelected && entity instanceof EntityPlayer)
+        {
+            EntityPlayer player = (EntityPlayer)entity;
 
-            if (player.isSwingInProgress) {
+            if (player.isSwingInProgress)
+            {
                 player.playSound(CreepsSoundHandler.gemSwordSound, getSoundVolume(), getSoundPitch());
             }
         }
     }
 
-
-    /*
     @Override
-    public ActionResult<ItemStack> onItemRightClick(World worldIn, EntityPlayer playerIn, EnumHand handIn)
+    public float getSoundVolume()
     {
-        BlockPos bpos = new BlockPos(playerIn.posX, playerIn.posY, playerIn.posZ);
-
-        //if(!worldIn.isRemote) new WorldGenCastle().generate(worldIn, itemRand, bpos);
-        if(!worldIn.isRemote) JailManager.buildJail(playerIn, worldIn, itemRand);
-
-        return new ActionResult<ItemStack>(EnumActionResult.SUCCESS, playerIn.getHeldItem(handIn));
-    }*/
-
-    @Override
-    public float getSoundVolume() {
         return 0.3f;
     }
 }

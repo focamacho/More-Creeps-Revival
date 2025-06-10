@@ -2,12 +2,12 @@ package com.morecreepsrevival.morecreeps.client.models;
 
 import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.model.ModelRenderer;
-import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.entity.Entity;
 
 import javax.annotation.Nonnull;
 
-public class ModelPonyCloud extends ModelBase {
+public class ModelPonyCloud extends ModelBase
+{
     public ModelRenderer headCloud;
     public ModelRenderer puff1;
     public ModelRenderer puff2;
@@ -16,7 +16,8 @@ public class ModelPonyCloud extends ModelBase {
     public ModelRenderer puff5;
     public ModelRenderer puff6;
 
-    public ModelPonyCloud() {
+    public ModelPonyCloud()
+    {
         headCloud = new ModelRenderer(this, 0, 0);
         headCloud.addBox(-5.0f, -2.0f, -4.0f, 10, 4, 4);
         headCloud.setRotationPoint(0.0f, 5.0f, 0.0f);
@@ -47,9 +48,9 @@ public class ModelPonyCloud extends ModelBase {
     }
 
     @Override
-    public void render(@Nonnull Entity entity, float f, float f1, float f2, float f3, float f4, float f5) {
+    public void render(@Nonnull Entity entity, float f, float f1, float f2, float f3, float f4, float f5)
+    {
         super.render(entity, f, f1, f2, f3, f4, f5);
-        GlStateManager.translate(0.0F, 0.001F, 0.0F);
         setRotationAngles(f, f1, f2, f3, f4, f, entity);
         headCloud.render(f5);
         puff1.render(f5);
@@ -61,7 +62,8 @@ public class ModelPonyCloud extends ModelBase {
     }
 
     @Override
-    public void setRotationAngles(float f, float f1, float f2, float f3, float f4, float f5, @Nonnull Entity entity) {
+    public void setRotationAngles(float f, float f1, float f2, float f3, float f4, float f5, @Nonnull Entity entity)
+    {
         super.setRotationAngles(f, f1, f2, f3, f4, f5, entity);
     }
 }

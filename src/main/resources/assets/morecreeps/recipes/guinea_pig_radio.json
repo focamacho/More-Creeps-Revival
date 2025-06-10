@@ -1,9 +1,9 @@
 {
   "type": "minecraft:crafting_shaped",
   "pattern": [
-    "xxx",
-    "xax",
-    "xxx"
+    "xfx",
+    "sas",
+    "xfx"
   ],
   "key": {
     "x": {
@@ -11,6 +11,12 @@
     },
     "a": {
       "item": "minecraft:iron_ingot"
+    },
+    "s": {
+      "item": "morecreeps:ram16k"
+    },
+    "f": {
+      "item": "morecreeps:battery"
     }
   },
   "result": {

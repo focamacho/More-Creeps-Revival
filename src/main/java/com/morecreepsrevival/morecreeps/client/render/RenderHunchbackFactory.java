@@ -5,9 +5,11 @@ import net.minecraft.client.renderer.entity.Render;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraftforge.fml.client.registry.IRenderFactory;
 
-public class RenderHunchbackFactory implements IRenderFactory<EntityHunchback> {
+public class RenderHunchbackFactory implements IRenderFactory<EntityHunchback>
+{
     @Override
-    public Render<? super EntityHunchback> createRenderFor(RenderManager renderManager) {
+    public Render<? super EntityHunchback> createRenderFor(RenderManager renderManager)
+    {
         return new RenderHunchback<>(renderManager);
     }
 }

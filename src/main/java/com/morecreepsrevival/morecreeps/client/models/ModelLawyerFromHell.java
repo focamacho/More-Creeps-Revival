@@ -7,7 +7,8 @@ import net.minecraft.util.math.MathHelper;
 
 import javax.annotation.Nonnull;
 
-public class ModelLawyerFromHell extends ModelBiped {
+public class ModelLawyerFromHell extends ModelBiped
+{
     public ModelRenderer headLawyer;
     public ModelRenderer body;
     public ModelRenderer rightarm;
@@ -22,15 +23,18 @@ public class ModelLawyerFromHell extends ModelBiped {
     public ModelRenderer shoeL;
     public ModelRenderer shoeR;
 
-    public ModelLawyerFromHell() {
+    public ModelLawyerFromHell()
+    {
         this(0.0f);
     }
 
-    public ModelLawyerFromHell(float f) {
+    public ModelLawyerFromHell(float f)
+    {
         this(f, 0.0f);
     }
 
-    public ModelLawyerFromHell(float f, float f1) {
+    public ModelLawyerFromHell(float f, float f1)
+    {
         float f2 = 0.0F;
         headLawyer = new ModelRenderer(this, 0, 0);
         headLawyer.addBox(-4F, -10F, -4F, 8, 8, 8, f2);
@@ -74,7 +78,8 @@ public class ModelLawyerFromHell extends ModelBiped {
     }
 
     @Override
-    public void render(@Nonnull Entity entity, float f, float f1, float f2, float f3, float f4, float f5) {
+    public void render(@Nonnull Entity entity, float f, float f1, float f2, float f3, float f4, float f5)
+    {
         setRotationAngles(f, f1, f2, f3, f4, f5, entity);
         headLawyer.render(f5);
         body.render(f5);
@@ -92,15 +97,16 @@ public class ModelLawyerFromHell extends ModelBiped {
     }
 
     @Override
-    public void setRotationAngles(float f, float f1, float f2, float f3, float f4, float f5, @Nonnull Entity entity) {
-        glasses.rotateAngleY = headLawyer.rotateAngleY = f3 / (180F / (float) Math.PI);
-        glasses.rotateAngleX = headLawyer.rotateAngleX = f4 / (180F / (float) Math.PI);
-        watch1.rotateAngleX = watch2.rotateAngleX = rightarm.rotateAngleX = MathHelper.cos(f * 0.6662F + (float) Math.PI) * 2.0F * f1 * 0.5F;
+    public void setRotationAngles(float f, float f1, float f2, float f3, float f4, float f5, @Nonnull Entity entity)
+    {
+        glasses.rotateAngleY = headLawyer.rotateAngleY = f3 / (180F / (float)Math.PI);
+        glasses.rotateAngleX = headLawyer.rotateAngleX = f4 / (180F / (float)Math.PI);
+        watch1.rotateAngleX = watch2.rotateAngleX = rightarm.rotateAngleX = MathHelper.cos(f * 0.6662F + (float)Math.PI) * 2.0F * f1 * 0.5F;
         case2.rotateAngleX = casehandle.rotateAngleX = leftarm.rotateAngleX = MathHelper.cos(f * 0.6662F) * 2.0F * f1 * 0.5F;
         watch1.rotateAngleZ = watch2.rotateAngleZ = rightarm.rotateAngleZ = 0.0F;
         case2.rotateAngleZ = casehandle.rotateAngleZ = leftarm.rotateAngleZ = 0.0F;
         shoeR.rotateAngleX = rightleg.rotateAngleX = MathHelper.cos(f * 0.6662F) * 1.4F * f1;
-        shoeL.rotateAngleX = leftleg.rotateAngleX = MathHelper.cos(f * 0.6662F + (float) Math.PI) * 1.4F * f1;
+        shoeL.rotateAngleX = leftleg.rotateAngleX = MathHelper.cos(f * 0.6662F + (float)Math.PI) * 1.4F * f1;
         rightleg.rotateAngleY = 0.0F;
         leftleg.rotateAngleY = 0.0F;
         rightarm.rotateAngleY = 0.0F;

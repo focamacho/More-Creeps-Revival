@@ -1,7 +1,7 @@
 package com.morecreepsrevival.morecreeps.common.entity;
 
-import com.morecreepsrevival.morecreeps.common.items.CreepsItemHandler;
 import com.morecreepsrevival.morecreeps.common.sounds.CreepsSoundHandler;
+import com.morecreepsrevival.morecreeps.common.items.CreepsItemHandler;
 import net.minecraft.entity.EnumCreatureType;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -14,16 +14,19 @@ import net.minecraft.world.World;
 
 import javax.annotation.Nullable;
 
-public class EntityTombstone extends EntityCreepBase {
+public class EntityTombstone extends EntityCreepBase
+{
     private NBTTagCompound additionalProps;
 
-    public EntityTombstone(World worldIn) {
+    public EntityTombstone(World worldIn)
+    {
         super(worldIn);
 
         additionalProps = new NBTTagCompound();
     }
 
-    public EntityTombstone(World worldIn, EntityCreepBase deadEntity) {
+    public EntityTombstone(World worldIn, EntityCreepBase deadEntity)
+    {
         this(worldIn);
 
         creatureType = EnumCreatureType.AMBIENT;
@@ -70,13 +73,16 @@ public class EntityTombstone extends EntityCreepBase {
     }
 
     @Override
-    protected void initEntityAI() {
+    protected void initEntityAI()
+    {
         clearAITasks();
     }
 
     @Override
-    protected SoundEvent getAmbientSound() {
-        if (rand.nextInt(10) == 0) {
+    protected SoundEvent getAmbientSound()
+    {
+        if (rand.nextInt(10) == 0)
+        {
             return CreepsSoundHandler.tombstoneSound;
         }
 
@@ -84,42 +90,53 @@ public class EntityTombstone extends EntityCreepBase {
     }
 
     @Override
-    protected SoundEvent getHurtSound(DamageSource damageSource) {
+    protected SoundEvent getHurtSound(DamageSource damageSource)
+    {
         return null;
     }
 
     @Override
-    protected SoundEvent getDeathSound() {
+    protected SoundEvent getDeathSound()
+    {
         return null;
     }
 
     @Override
-    public boolean isEntityInsideOpaqueBlock() {
+    public boolean isEntityInsideOpaqueBlock()
+    {
         return false;
     }
 
     @Override
-    public int getMaxSpawnedInChunk() {
+    public int getMaxSpawnedInChunk()
+    {
         return 1;
     }
 
     @Override
-    public boolean canDespawn() {
+    public boolean canDespawn()
+    {
         return false;
     }
 
     @Override
-    public boolean processInteract(EntityPlayer player, EnumHand hand) {
+    public boolean processInteract(EntityPlayer player, EnumHand hand)
+    {
         ItemStack itemStack = player.getHeldItem(hand);
 
-        if (itemStack.isEmpty() || itemStack.getItem() != CreepsItemHandler.lifeGem) {
-            if (!world.isRemote) {
+        if (itemStack.isEmpty() || itemStack.getItem() != CreepsItemHandler.lifeGem)
+        {
+            if (!world.isRemote)
+            {
                 player.sendMessage(new TextComponentString("Use a \2474LifeGem\247f on this tombstone to bring your pet back to life!"));
             }
 
             return true;
-        } else if (!isPlayerOwner(player)) {
-            if (!world.isRemote) {
+        }
+        else if (!isPlayerOwner(player))
+        {
+            if (!world.isRemote)
+            {
                 player.sendMessage(new TextComponentString("This is not your tamed pet!"));
             }
 
@@ -132,10 +149,12 @@ public class EntityTombstone extends EntityCreepBase {
 
         smoke();
 
-        if (!world.isRemote) {
+        if (!world.isRemote)
+        {
             EntityCreepBase entity = null;
 
-            switch (getCreepTypeName()) {
+            switch (getCreepTypeName())
+            {
                 case "Guinea Pig":
                     entity = new EntityGuineaPig(world);
 
@@ -148,7 +167,8 @@ public class EntityTombstone extends EntityCreepBase {
                     break;
             }
 
-            if (entity != null) {
+            if (entity != null)
+            {
                 entity.setPositionAndRotation(player.posX, player.posY, player.posZ, player.rotationYaw, player.rotationPitch);
 
                 entity.setBaseTexture(getBaseTexture());
@@ -193,12 +213,14 @@ public class EntityTombstone extends EntityCreepBase {
     }
 
     @Override
-    protected void updateTexture() {
+    protected void updateTexture()
+    {
         setTexture("textures/entity/tombstone.png");
     }
 
     @Override
-    public void onLivingUpdate() {
+    public void onLivingUpdate()
+    {
         motionX = 0.0d;
 
         motionY = 0.0d;
@@ -209,21 +231,24 @@ public class EntityTombstone extends EntityCreepBase {
     }
 
     @Override
-    public void writeEntityToNBT(NBTTagCompound compound) {
+    public void writeEntityToNBT(NBTTagCompound compound)
+    {
         super.writeEntityToNBT(compound);
 
         compound.setTag("MoreCreepsTombstone", additionalProps);
     }
 
     @Override
-    public void readEntityFromNBT(NBTTagCompound compound) {
+    public void readEntityFromNBT(NBTTagCompound compound)
+    {
         super.readEntityFromNBT(compound);
 
         additionalProps = compound.getCompoundTag("MoreCreepsTombstone");
     }
 
     @Override
-    public boolean attackEntityFrom(@Nullable DamageSource damageSource, float amt) {
+    public boolean attackEntityFrom(@Nullable DamageSource damageSource, float amt)
+    {
         return false;
     }
 }

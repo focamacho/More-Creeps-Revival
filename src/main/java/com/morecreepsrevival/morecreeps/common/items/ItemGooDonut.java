@@ -10,16 +10,18 @@ import net.minecraft.world.World;
 
 import javax.annotation.Nonnull;
 
-public class ItemGooDonut extends CreepsItem {
-    public ItemGooDonut() {
+public class ItemGooDonut extends CreepsItem
+{
+    public ItemGooDonut()
+    {
         super("goo_donut");
 
         setMaxStackSize(16);
     }
 
-    @Override
-    @Nonnull
-    public ActionResult<ItemStack> onItemRightClick(World world, EntityPlayer player, @Nonnull EnumHand hand) {
+    @Override @Nonnull
+    public ActionResult<ItemStack> onItemRightClick(World world, EntityPlayer player, @Nonnull EnumHand hand)
+    {
         player.getHeldItem(hand).shrink(1);
 
         player.swingArm(hand);
@@ -28,7 +30,8 @@ public class ItemGooDonut extends CreepsItem {
 
         EntityGooDonut gooDonut = new EntityGooDonut(world, player);
 
-        if (!world.isRemote) {
+        if (!world.isRemote)
+        {
             world.spawnEntity(gooDonut);
         }
 

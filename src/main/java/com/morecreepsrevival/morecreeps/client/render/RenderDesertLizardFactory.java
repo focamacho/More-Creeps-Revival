@@ -6,7 +6,10 @@ import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraftforge.fml.client.registry.IRenderFactory;
 
 public class RenderDesertLizardFactory implements IRenderFactory<EntityDesertLizard> {
+    public RenderDesertLizardFactory() {
+    }
+
     public Render<? super EntityDesertLizard> createRenderFor(RenderManager renderManager) {
-        return new RenderDesertLizard<>(renderManager);
+        return new RenderDesertLizard(renderManager);
     }
 }

@@ -4,6 +4,7 @@ import com.morecreepsrevival.morecreeps.common.entity.ai.EntityCreepAIFollowOwne
 import com.morecreepsrevival.morecreeps.common.entity.ai.EntityCreepAIFollowOwnerTarget;
 import com.morecreepsrevival.morecreeps.common.entity.ai.EntityCreepAIOwnerHurtByTarget;
 import com.morecreepsrevival.morecreeps.common.entity.ai.EntityCreepAIOwnerHurtTarget;
+import com.morecreepsrevival.morecreeps.common.helpers.CreepsUtil;
 import com.morecreepsrevival.morecreeps.common.helpers.EffectHelper;
 import com.morecreepsrevival.morecreeps.common.networking.CreepsPacketHandler;
 import com.morecreepsrevival.morecreeps.common.networking.message.MessageDismountEntity;
@@ -33,85 +34,432 @@ import net.minecraft.world.EnumSkyBlock;
 import net.minecraft.world.World;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.lang.reflect.Constructor;
 import java.util.UUID;
 
-public class EntityCreepBase extends EntityCreature implements IEntityOwnable {
+public class EntityCreepBase extends EntityCreature implements IEntityOwnable
+{
     private static final DataParameter<String> name = EntityDataManager.createKey(EntityCreepBase.class, DataSerializers.STRING);
-
     private static final DataParameter<Integer> level = EntityDataManager.createKey(EntityCreepBase.class, DataSerializers.VARINT);
-
     private static final DataParameter<String> texture = EntityDataManager.createKey(EntityCreepBase.class, DataSerializers.STRING);
-
     private static final DataParameter<Integer> speedBoost = EntityDataManager.createKey(EntityCreepBase.class, DataSerializers.VARINT);
-
     private static final DataParameter<String> owner = EntityDataManager.createKey(EntityCreepBase.class, DataSerializers.STRING);
-
     private static final DataParameter<Integer> wanderState = EntityDataManager.createKey(EntityCreepBase.class, DataSerializers.VARINT);
-
     private static final DataParameter<Integer> experience = EntityDataManager.createKey(EntityCreepBase.class, DataSerializers.VARINT);
-
     private static final DataParameter<Integer> totalDamage = EntityDataManager.createKey(EntityCreepBase.class, DataSerializers.VARINT);
-
     private static final DataParameter<String> creepTypeName = EntityDataManager.createKey(EntityCreepBase.class, DataSerializers.STRING);
-
     private static final DataParameter<Float> modelSize = EntityDataManager.createKey(EntityCreepBase.class, DataSerializers.FLOAT);
-
     private static final DataParameter<Integer> skillHealing = EntityDataManager.createKey(EntityCreepBase.class, DataSerializers.VARINT);
-
     private static final DataParameter<Integer> skillAttack = EntityDataManager.createKey(EntityCreepBase.class, DataSerializers.VARINT);
-
     private static final DataParameter<Integer> skillDefend = EntityDataManager.createKey(EntityCreepBase.class, DataSerializers.VARINT);
-
     private static final DataParameter<Integer> skillSpeed = EntityDataManager.createKey(EntityCreepBase.class, DataSerializers.VARINT);
-
     private static final DataParameter<Integer> interest = EntityDataManager.createKey(EntityCreepBase.class, DataSerializers.VARINT);
-
     private static final DataParameter<Integer> healTimer = EntityDataManager.createKey(EntityCreepBase.class, DataSerializers.VARINT);
-
     private static final DataParameter<Integer> healthBoost = EntityDataManager.createKey(EntityCreepBase.class, DataSerializers.VARINT);
-
     private static final DataParameter<Integer> criticalHitCooldown = EntityDataManager.createKey(EntityCreepBase.class, DataSerializers.VARINT);
-
     private static final DataParameter<Integer> armor = EntityDataManager.createKey(EntityCreepBase.class, DataSerializers.VARINT);
-
     private static final DataParameter<Integer> unmountTimer = EntityDataManager.createKey(EntityCreepBase.class, DataSerializers.VARINT);
-
     private static final DataParameter<Boolean> noDespawn = EntityDataManager.<Boolean>createKey(EntityCreepBase.class, DataSerializers.BOOLEAN);
-
     private static final DataParameter<Float> hammerSwing = EntityDataManager.createKey(EntityCreepBase.class, DataSerializers.FLOAT);
 
-    private static final DataParameter<Float> size = EntityDataManager.createKey(EntityCreepBase.class, DataSerializers.FLOAT);
-
     protected String baseTexture = "";
-
     protected float baseHealth = 100.0f;
-
     protected double baseSpeed = 1.0d;
-
     protected double baseAttackDamage = 1.0d;
-    protected float currentSize = 1f;
-    protected float widthActual, heightActual;
-
     protected EnumCreatureType creatureType = EnumCreatureType.CREATURE;
-
     protected boolean spawnOnlyAtNight = false;
-
     private int internalWanderState = 0;
-
-    public EntityCreepBase(World worldIn) {
+    public EntityCreepBase(World worldIn)
+    {
         super(worldIn);
-
         fallDistance = -25.0f;
-
         experienceValue = 5;
-
         updateAttributes();
     }
 
-    protected static float getArmorHealthBonus(int armorLevel) {
-        switch (armorLevel) {
+    @Override @Nonnull
+    public SoundCategory getSoundCategory()
+    {
+        if (getCreatureType() == EnumCreatureType.MONSTER)
+        {
+            return SoundCategory.HOSTILE;
+        }
+
+        return SoundCategory.NEUTRAL;
+    }
+
+    protected void onDismount(Entity entity)
+    {
+    }
+
+    @Override
+    public void dismountRidingEntity()
+    {
+        if (!world.isRemote)
+        {
+            CreepsPacketHandler.INSTANCE.sendToAll(new MessageDismountEntity(getEntityId()));
+        }
+        fallDistance = -25.0f;
+        dataManager.set(unmountTimer, 20);
+        SoundEvent unmountSound = getUnmountSound();
+        if (unmountSound != null)
+        {
+            playSound(unmountSound, getSoundVolume(), getSoundPitch());
+        }
+        Entity entity = getRidingEntity();
+        super.dismountRidingEntity();
+        onDismount(entity);
+    }
+
+    @Override
+    public boolean isEntityInvulnerable(DamageSource damageSource)
+    {
+        if (isRiding())
+        {
+            return true;
+        }
+        return super.isEntityInvulnerable(damageSource);
+    }
+
+    //public int getMaxSpawnedInChunk() {
+        //return 1;
+    //}
+
+    //@Override
+    //public boolean getCanSpawnHere()
+    //{
+    //    switch (getCreatureType())
+    //    {
+    //        case MONSTER:
+    //            if (world.getDifficulty() == EnumDifficulty.PEACEFUL || !IsValidLightLevel())
+    //            {
+    //               return false;
+    //            }
+    //            break;
+    //        default:
+    //            break;
+    //    }
+    //
+    //    return super.getCanSpawnHere();
+    //}
+
+    protected boolean isOverworldMob() {
+        return false;
+    }
+
+    protected boolean isDaylightMob() {
+        return false;
+    }
+
+    protected boolean IsValidLightLevel() {
+        if (!this.isDaylightMob() && this.isOverworldMob()) {
+            BlockPos blockPos = new BlockPos(this.posX, this.posY, this.posZ);
+            if (this.world.getLightFor(EnumSkyBlock.SKY, blockPos) > this.rand.nextInt(32)) {
+                return false;
+            } else {
+                if (this.world.isThundering()) {
+                    int skylightSubtracted = this.world.getSkylightSubtracted();
+                    this.world.setSkylightSubtracted(10);
+                    this.world.setSkylightSubtracted(skylightSubtracted);
+                } else {
+                }
+                return false;
+            }
+        } else if (!this.world.isDaytime() && this.isDaylightMob()) {
+            return false;
+        } else {
+            return CreepsUtil.getLightLevel(this.world, this.getPosition(), false, true) <= this.rand.nextInt(14);
+        }
+    }
+
+    @Override
+    protected void entityInit()
+    {
+        super.entityInit();
+        dataManager.register(name, "");
+        dataManager.register(level, 1);
+        dataManager.register(texture, "");
+        dataManager.register(speedBoost, 0);
+        dataManager.register(owner, "");
+        dataManager.register(wanderState, 0);
+        dataManager.register(experience, 0);
+        dataManager.register(totalDamage, 0);
+        dataManager.register(creepTypeName, "creep");
+        dataManager.register(modelSize, 1.0f);
+        dataManager.register(skillHealing, 0);
+        dataManager.register(skillAttack, 0);
+        dataManager.register(skillDefend, 0);
+        dataManager.register(skillSpeed, 0);
+        dataManager.register(interest, 0);
+        dataManager.register(healTimer, 0);
+        dataManager.register(healthBoost, 0);
+        dataManager.register(criticalHitCooldown, 5);
+        dataManager.register(armor, 0);
+        dataManager.register(unmountTimer, 0);
+        dataManager.register(noDespawn, Boolean.valueOf(false));
+        dataManager.register(hammerSwing, 0.0f);
+    }
+
+    protected void updateAttributes()
+    {
+        updateHealth();
+        updateMoveSpeed();
+        updateTexture();
+        updateAttackStrength();
+        updateModelSize();
+    }
+
+    protected void updateModelSize()
+    {
+    }
+
+    @Override
+    protected void initEntityAI()
+    {
+        clearAITasks();
+        NodeProcessor nodeProcessor = getNavigator().getNodeProcessor();
+        nodeProcessor.setCanSwim(true);
+        nodeProcessor.setCanEnterDoors(true);
+        switch (getWanderState())
+        {
+            case 0:
+                tasks.addTask(1, new EntityAISwimming(this));
+                tasks.addTask(2, new EntityAIAttackMelee(this, 1.0d, true));
+                tasks.addTask(3, new EntityAIWatchClosest(this, EntityPlayer.class, 8.0f));
+                tasks.addTask(3, new EntityAILookIdle(this));
+                if (isTamed())
+                {
+                    targetTasks.addTask(1, new EntityAIHurtByTarget(this, false));
+                }
+                break;
+            case 1:
+                tasks.addTask(1, new EntityAISwimming(this));
+                tasks.addTask(2, new EntityAIAttackMelee(this, 1.0d, true));
+                tasks.addTask(3, new EntityAIWanderAvoidWater(this, 1.0d));
+                tasks.addTask(4, new EntityAIWatchClosest(this, EntityPlayer.class, 8.0f));
+                tasks.addTask(4, new EntityAILookIdle(this));
+
+                if (isTamed())
+                {
+                    targetTasks.addTask(1, new EntityAIHurtByTarget(this, false));
+                }
+
+                break;
+            case 2:
+                tasks.addTask(1, new EntityAISwimming(this));
+                tasks.addTask(2, new EntityAIAttackMelee(this, 1.0d, true));
+                tasks.addTask(3, new EntityCreepAIFollowOwner(this, 1.0d, 6.0f, 2.0f));
+                tasks.addTask(4, new EntityAIWanderAvoidWater(this, 1.0d));
+                tasks.addTask(5, new EntityAIWatchClosest(this, EntityPlayer.class, 8.0f));
+                tasks.addTask(5, new EntityAILookIdle(this));
+
+                if (isTamed())
+                {
+                    targetTasks.addTask(1, new EntityAIHurtByTarget(this, false));
+                    targetTasks.addTask(2, new EntityCreepAIOwnerHurtByTarget(this));
+                    targetTasks.addTask(3, new EntityCreepAIOwnerHurtTarget(this));
+                    targetTasks.addTask(4, new EntityCreepAIFollowOwnerTarget(this));
+                }
+                break;
+            default:
+                break;
+        }
+    }
+
+    protected void clearAITasks()
+    {
+        tasks.taskEntries.clear();
+        targetTasks.taskEntries.clear();
+    }
+
+    @Override
+    protected void applyEntityAttributes()
+    {
+        super.applyEntityAttributes();
+        getAttributeMap().registerAttribute(SharedMonsterAttributes.ATTACK_DAMAGE);
+        updateAttributes();
+    }
+
+    @Override
+    public void writeEntityToNBT(NBTTagCompound compound)
+    {
+        super.writeEntityToNBT(compound);
+        NBTTagCompound props = compound.getCompoundTag("MoreCreepsEntity");
+        props.setFloat("ModelSize", getModelSize());
+        props.setString("Name", getCreepName());
+        props.setString("BaseTexture", baseTexture);
+        props.setInteger("HealthBoost", dataManager.get(healthBoost));
+        props.setInteger("Level", getLevel());
+        props.setInteger("SpeedBoost", getSpeedBoost());
+        props.setInteger("Interest", dataManager.get(interest));
+        props.setInteger("TotalDamage", getTotalDamage());
+        props.setInteger("Experience", getExperience());
+        props.setInteger("WanderState", getWanderState());
+        props.setInteger("Armor", dataManager.get(armor));
+        props.setInteger("SkillHealing", getSkillHealing());
+        props.setInteger("SkillAttack", getSkillAttack());
+        props.setInteger("SkillDefend", getSkillDefend());
+        props.setInteger("SkillSpeed", getSkillSpeed());
+        UUID owner = getOwnerId();
+        if (owner != null)
+        {
+            props.setString("Owner", owner.toString());
+        }
+        props.setString("CreepTypeName", getCreepTypeName());
+        compound.setTag("MoreCreepsEntity", props);
+    }
+
+    @Override
+    public void readEntityFromNBT(NBTTagCompound compound)
+    {
+        NBTTagCompound props = compound.getCompoundTag("MoreCreepsEntity");
+        if (props.hasKey("ModelSize"))
+        {
+            setModelSize(props.getFloat("ModelSize"));
+        }
+        if (props.hasKey("Name"))
+        {
+            setCreepName(props.getString("Name"));
+        }
+        if (props.hasKey("HealthBoost"))
+        {
+            setHealthBoost(props.getInteger("HealthBoost"));
+        }
+        if (props.hasKey("BaseTexture"))
+        {
+            baseTexture = props.getString("BaseTexture");
+        }
+        else
+        {
+            String[] availableTextures = getAvailableTextures();
+            if (availableTextures.length > 0)
+            {
+                baseTexture = availableTextures[rand.nextInt(availableTextures.length)];
+            }
+        }
+
+        if (props.hasKey("Level"))
+        {
+            setLevel(props.getInteger("Level"));
+        }
+        if (props.hasKey("SpeedBoost"))
+        {
+            setSpeedBoost(props.getInteger("SpeedBoost"));
+        }
+        if (props.hasKey("Interest"))
+        {
+            setInterest(props.getInteger("Interest"));
+        }
+        if (props.hasKey("TotalDamage"))
+        {
+            setTotalDamage(props.getInteger("TotalDamage"));
+        }
+        if (props.hasKey("Experience"))
+        {
+            setExperience(props.getInteger("Experience"));
+        }
+        if (props.hasKey("WanderState"))
+        {
+            setWanderState(props.getInteger("WanderState"));
+        }
+        if (props.hasKey("Armor"))
+        {
+            setArmor(props.getInteger("Armor"));
+        }
+        if (props.hasKey("SkillHealing"))
+        {
+            setSkillHealing(props.getInteger("SkillHealing"));
+        }
+        if (props.hasKey("SkillAttack"))
+        {
+            setSkillAttack(props.getInteger("SkillAttack"));
+        }
+        if (props.hasKey("SkillDefend"))
+        {
+            setSkillDefend(props.getInteger("SkillDefend"));
+        }
+        if (props.hasKey("SkillSpeed"))
+        {
+            setSkillSpeed(props.getInteger("SkillSpeed"));
+        }
+        if (props.hasKey("Owner"))
+        {
+            setOwner(UUID.fromString(props.getString("Owner")));
+        }
+        if (props.hasKey("CreepTypeName"))
+        {
+            setCreepTypeName(props.getString("CreepTypeName"));
+        }
+        updateAttributes();
+
+        super.readEntityFromNBT(compound);
+    }
+
+    public void determineBaseTexture()
+    {
+        if (!baseTexture.isEmpty())
+        {
+            return;
+        }
+        String[] availableTextures = getAvailableTextures();
+        if (availableTextures.length > 0)
+        {
+            baseTexture = availableTextures[rand.nextInt(availableTextures.length)];
+        }
+        updateTexture();
+    }
+
+    public void setInitialHealth()
+    {
+        setHealth(getMaxHealth());
+    }
+
+    @Override
+    public IEntityLivingData onInitialSpawn(DifficultyInstance difficulty, IEntityLivingData livingData)
+    {
+        super.onInitialSpawn(difficulty, livingData);
+        determineBaseTexture();
+        setInitialHealth();
+        return livingData;
+    }
+
+    protected double getMoveSpeed()
+    {
+        return baseSpeed;
+    }
+    protected double getAttackDamage()
+    {
+        return baseAttackDamage;
+    }
+    protected void updateMoveSpeed()
+    {
+        double speed = getMoveSpeed() + (getLevelSpeedMultiplier() * (getLevel() - 1));
+        if (getSpeedBoost() > 0)
+        {
+            speed += 0.75d;
+        }
+        getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(speed);
+    }
+
+    @Override
+    public boolean isCreatureType(EnumCreatureType type, boolean forSpawnCount)
+    {
+        if (forSpawnCount && isNoDespawnRequired())
+        {
+            return false;
+        }
+        return (getCreatureType() == type);
+    }
+
+    public EnumCreatureType getCreatureType()
+    {
+        return creatureType;
+    }
+
+    protected static float getArmorHealthBonus(int armorLevel)
+    {
+        switch (armorLevel)
+        {
             case 1:
                 return 5.0f;
             case 2:
@@ -123,680 +471,276 @@ public class EntityCreepBase extends EntityCreature implements IEntityOwnable {
             default:
                 break;
         }
-
         return 0.0f;
     }
 
-    @Override
-    protected void setSize(float width, float height) {
-        super.setSize(width * currentSize, height * currentSize);
-    }
-
-    @Override
-    @Nonnull
-    public SoundCategory getSoundCategory() {
-        if (getCreatureType() == EnumCreatureType.MONSTER) {
-            return SoundCategory.HOSTILE;
-        }
-
-        return SoundCategory.NEUTRAL;
-    }
-
-    protected void onDismount(Entity entity) {
-    }
-
-    @Override
-    public void dismountRidingEntity() {
-        if (!world.isRemote) {
-            CreepsPacketHandler.INSTANCE.sendToAll(new MessageDismountEntity(getEntityId()));
-        }
-
-        fallDistance = -25.0f;
-
-        dataManager.set(unmountTimer, 20);
-
-        SoundEvent unmountSound = getUnmountSound();
-
-        if (unmountSound != null) {
-            playSound(unmountSound, getSoundVolume(), getSoundPitch());
-        }
-
-        Entity entity = getRidingEntity();
-
-        super.dismountRidingEntity();
-
-        onDismount(entity);
-    }
-
-    @Override
-    public boolean isEntityInvulnerable(@Nonnull DamageSource damageSource) {
-        if (isRiding()) {
-            return true;
-        }
-
-        return super.isEntityInvulnerable(damageSource);
-    }
-
-    @Override
-    protected void entityInit() {
-        super.entityInit();
-
-        dataManager.register(name, "");
-
-        dataManager.register(level, 1);
-
-        dataManager.register(texture, "");
-
-        dataManager.register(size, 1f);
-
-        dataManager.register(speedBoost, 0);
-
-        dataManager.register(owner, "");
-
-        dataManager.register(wanderState, 0);
-
-        dataManager.register(experience, 0);
-
-        dataManager.register(totalDamage, 0);
-
-        dataManager.register(creepTypeName, "creep");
-
-        dataManager.register(modelSize, 1.0f);
-
-        dataManager.register(skillHealing, 0);
-
-        dataManager.register(skillAttack, 0);
-
-        dataManager.register(skillDefend, 0);
-
-        dataManager.register(skillSpeed, 0);
-
-        dataManager.register(interest, 0);
-
-        dataManager.register(healTimer, 0);
-
-        dataManager.register(healthBoost, 0);
-
-        dataManager.register(criticalHitCooldown, 5);
-
-        dataManager.register(armor, 0);
-
-        dataManager.register(unmountTimer, 0);
-
-        dataManager.register(noDespawn, Boolean.valueOf(false));
-
-        dataManager.register(hammerSwing, 0.0f);
-    }
-
-    protected void updateAttributes() {
-        updateHealth();
-
-        updateMoveSpeed();
-
-        updateTexture();
-
-        updateAttackStrength();
-
-        updateModelSize();
-    }
-
-    protected void updateModelSize() {
-        widthActual = width;
-        heightActual = height;
-    }
-
-    @Override
-    protected void initEntityAI() {
-        clearAITasks();
-
-        NodeProcessor nodeProcessor = getNavigator().getNodeProcessor();
-
-        nodeProcessor.setCanSwim(true);
-
-        nodeProcessor.setCanEnterDoors(true);
-
-        switch (getWanderState()) {
-            case 0:
-                tasks.addTask(1, new EntityAISwimming(this));
-
-                tasks.addTask(2, new EntityAIAttackMelee(this, 1.0d, true));
-
-                tasks.addTask(3, new EntityAIWatchClosest(this, EntityPlayer.class, 8.0f));
-
-                tasks.addTask(3, new EntityAILookIdle(this));
-
-                if (isTamed()) {
-                    targetTasks.addTask(1, new EntityAIHurtByTarget(this, false));
-                }
-
-                break;
-            case 1:
-                tasks.addTask(1, new EntityAISwimming(this));
-
-                tasks.addTask(2, new EntityAIAttackMelee(this, 1.0d, true));
-
-                tasks.addTask(3, new EntityAIWanderAvoidWater(this, 1.0d));
-
-                tasks.addTask(4, new EntityAIWatchClosest(this, EntityPlayer.class, 8.0f));
-
-                tasks.addTask(4, new EntityAILookIdle(this));
-
-                if (isTamed()) {
-                    targetTasks.addTask(1, new EntityAIHurtByTarget(this, false));
-                }
-
-                break;
-            case 2:
-                tasks.addTask(1, new EntityAISwimming(this));
-
-                tasks.addTask(2, new EntityAIAttackMelee(this, 1.0d, true));
-
-                tasks.addTask(3, new EntityCreepAIFollowOwner(this, 1.0d, 6.0f, 2.0f));
-
-                tasks.addTask(4, new EntityAIWanderAvoidWater(this, 1.0d));
-
-                tasks.addTask(5, new EntityAIWatchClosest(this, EntityPlayer.class, 8.0f));
-
-                tasks.addTask(5, new EntityAILookIdle(this));
-
-                if (isTamed()) {
-                    targetTasks.addTask(1, new EntityAIHurtByTarget(this, false));
-
-                    targetTasks.addTask(2, new EntityCreepAIOwnerHurtByTarget(this));
-
-                    targetTasks.addTask(3, new EntityCreepAIOwnerHurtTarget(this));
-
-                    targetTasks.addTask(4, new EntityCreepAIFollowOwnerTarget(this));
-                }
-
-                break;
-            default:
-                break;
-        }
-    }
-
-    protected void clearAITasks() {
-        tasks.taskEntries.clear();
-
-        targetTasks.taskEntries.clear();
-    }
-
-    @Override
-    protected void applyEntityAttributes() {
-        super.applyEntityAttributes();
-
-        getAttributeMap().registerAttribute(SharedMonsterAttributes.ATTACK_DAMAGE);
-
-        updateAttributes();
-    }
-
-    @Override
-    public void writeEntityToNBT(NBTTagCompound compound) {
-        super.writeEntityToNBT(compound);
-
-        NBTTagCompound props = compound.getCompoundTag("MoreCreepsEntity");
-
-        props.setFloat("ModelSize", getModelSize());
-
-        props.setString("Name", getCreepName());
-
-        props.setString("BaseTexture", baseTexture);
-
-        props.setFloat("SizeCreep", dataManager.get(size));
-
-        props.setInteger("HealthBoost", dataManager.get(healthBoost));
-
-        props.setInteger("Level", getLevel());
-
-        props.setInteger("SpeedBoost", getSpeedBoost());
-
-        props.setInteger("Interest", dataManager.get(interest));
-
-        props.setInteger("TotalDamage", getTotalDamage());
-
-        props.setInteger("Experience", getExperience());
-
-        props.setInteger("WanderState", getWanderState());
-
-        props.setInteger("Armor", dataManager.get(armor));
-
-        props.setInteger("SkillHealing", getSkillHealing());
-
-        props.setInteger("SkillAttack", getSkillAttack());
-
-        props.setInteger("SkillDefend", getSkillDefend());
-
-        props.setInteger("SkillSpeed", getSkillSpeed());
-
-        UUID owner = getOwnerId();
-
-        if (owner != null) {
-            props.setString("Owner", owner.toString());
-        }
-
-        props.setString("CreepTypeName", getCreepTypeName());
-
-        compound.setTag("MoreCreepsEntity", props);
-    }
-
-    @Override
-    public void readEntityFromNBT(NBTTagCompound compound) {
-        NBTTagCompound props = compound.getCompoundTag("MoreCreepsEntity");
-
-        if (props.hasKey("ModelSize")) {
-            setModelSize(props.getFloat("ModelSize"));
-        }
-
-        if (props.hasKey("Name")) {
-            setCreepName(props.getString("Name"));
-        }
-
-        if (props.hasKey("HealthBoost")) {
-            setHealthBoost(props.getInteger("HealthBoost"));
-        }
-
-        if (props.hasKey("BaseTexture")) {
-            baseTexture = props.getString("BaseTexture");
-        } else {
-            String[] availableTextures = getAvailableTextures();
-
-            if (availableTextures.length > 0) {
-                baseTexture = availableTextures[rand.nextInt(availableTextures.length)];
-            }
-        }
-
-        if (props.hasKey("SizeCreep")) {
-            putSizeNBT(props.getFloat("SizeCreep"));
-        }
-
-        if (props.hasKey("Level")) {
-            setLevel(props.getInteger("Level"));
-        }
-
-        if (props.hasKey("SpeedBoost")) {
-            setSpeedBoost(props.getInteger("SpeedBoost"));
-        }
-
-        if (props.hasKey("Interest")) {
-            setInterest(props.getInteger("Interest"));
-        }
-
-        if (props.hasKey("TotalDamage")) {
-            setTotalDamage(props.getInteger("TotalDamage"));
-        }
-
-        if (props.hasKey("Experience")) {
-            setExperience(props.getInteger("Experience"));
-        }
-
-        if (props.hasKey("WanderState")) {
-            setWanderState(props.getInteger("WanderState"));
-        }
-
-        if (props.hasKey("Armor")) {
-            setArmor(props.getInteger("Armor"));
-        }
-
-        if (props.hasKey("SkillHealing")) {
-            setSkillHealing(props.getInteger("SkillHealing"));
-        }
-
-        if (props.hasKey("SkillAttack")) {
-            setSkillAttack(props.getInteger("SkillAttack"));
-        }
-
-        if (props.hasKey("SkillDefend")) {
-            setSkillDefend(props.getInteger("SkillDefend"));
-        }
-
-        if (props.hasKey("SkillSpeed")) {
-            setSkillSpeed(props.getInteger("SkillSpeed"));
-        }
-
-        if (props.hasKey("Owner")) {
-            setOwner(UUID.fromString(props.getString("Owner")));
-        }
-
-        if (props.hasKey("CreepTypeName")) {
-            setCreepTypeName(props.getString("CreepTypeName"));
-        }
-
-        updateAttributes();
-
-        super.readEntityFromNBT(compound);
-    }
-
-    public void determineBaseTexture() {
-        if (!baseTexture.isEmpty()) {
-            return;
-        }
-
-        String[] availableTextures = getAvailableTextures();
-
-        if (availableTextures.length > 0) {
-            baseTexture = availableTextures[rand.nextInt(availableTextures.length)];
-        }
-
-        updateTexture();
-    }
-
-    public void setInitialHealth() {
-        setHealth(getMaxHealth());
-    }
-
-    @Override
-    public IEntityLivingData onInitialSpawn(DifficultyInstance difficulty, @Nullable IEntityLivingData livingData) {
-        super.onInitialSpawn(difficulty, livingData);
-
-        determineBaseTexture();
-
-        setInitialHealth();
-
-        return livingData;
-    }
-
-    protected double getMoveSpeed() {
-        return baseSpeed;
-    }
-
-    protected double getAttackDamage() {
-        return baseAttackDamage;
-    }
-
-    protected void updateMoveSpeed() {
-        double speed = getMoveSpeed() + (getLevelSpeedMultiplier() * (getLevel() - 1));
-
-        if (getSpeedBoost() > 0) {
-            speed += 0.75d;
-        }
-
-        getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(speed);
-    }
-
-    @Override
-    public boolean isCreatureType(@Nullable EnumCreatureType type, boolean forSpawnCount) {
-        if (forSpawnCount && isNoDespawnRequired()) {
-            return false;
-        }
-
-        return (getCreatureType() == type);
-    }
-
-    public EnumCreatureType getCreatureType() {
-        return creatureType;
-    }
-
-    protected float getBaseHealth() {
+    protected float getBaseHealth()
+    {
         return baseHealth;
     }
 
-    protected void updateHealth() {
+    protected void updateHealth()
+    {
         getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(getBaseHealth() + (getLevelHealthMultiplier() * (getLevel() - 1)) + getHealthBoost() + getArmorHealthBonus(getArmor()));
     }
 
-    protected void updateAttackStrength() {
+    protected void updateAttackStrength()
+    {
         double attackDamage = getAttackDamage() + (getLevelDamageMultiplier() * (getLevel() - 1));
-
-        switch (getArmor()) {
+        switch (getArmor())
+        {
             case 1:
                 attackDamage++;
-
                 break;
             case 2:
                 attackDamage += 3;
-
                 break;
             case 3:
                 attackDamage += 2;
-
                 break;
             case 4:
                 attackDamage += 6;
-
                 break;
             default:
                 break;
         }
-
         getEntityAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).setBaseValue(attackDamage);
     }
 
-    public void addHealth(float amt) {
+    public void addHealth(float amt)
+    {
         setHealth(Math.max(0, Math.min(getMaxHealth(), getHealth() + amt)));
     }
 
-    public int getInterest() {
-        return dataManager.get(interest);
-    }
-
-    protected void setInterest(int i) {
+    protected void setInterest(int i)
+    {
         dataManager.set(interest, Math.max(0, Math.min(100, i)));
     }
 
-    protected void addInterest(int i, EntityPlayer player) {
-        if (!isTamable() || isTamed()) {
+    public int getInterest()
+    {
+        return dataManager.get(interest);
+    }
+
+    protected void addInterest(int i, EntityPlayer player)
+    {
+        if (!isTamable() || isTamed())
+        {
             return;
         }
 
         setInterest(getInterest() + i);
-
-        if (getInterest() >= 100) {
+        if (getInterest() >= 100)
+        {
             tame(player);
         }
     }
 
-    public void feed(EntityPlayer player, float healthToAdd, int interestToAdd) {
+    public void feed(EntityPlayer player, float healthToAdd, int interestToAdd)
+    {
         addHealth(healthToAdd);
-
         addInterest(interestToAdd, player);
-
         SoundEvent fullSound = getFullSound();
-
         SoundEvent eatSound;
-
-        if (getHealth() >= getMaxHealth() && fullSound != null) {
+        if (getHealth() >= getMaxHealth() && fullSound != null)
+        {
             eatSound = fullSound;
-        } else {
+        }
+        else
+        {
             eatSound = getEatSound();
         }
 
-        if (eatSound != null) {
+        if (eatSound != null)
+        {
             playSound(eatSound, getSoundVolume(), getSoundPitch());
         }
     }
 
-    protected void updateTexture() {
-        if (baseTexture == null || baseTexture.length() < 1) {
+    protected void updateTexture()
+    {
+        if (baseTexture == null || baseTexture.length() < 1)
+        {
             return;
         }
-
         StringBuilder builder = (new StringBuilder()).append(baseTexture);
-
-        switch (getArmor()) {
+        switch (getArmor())
+        {
             case 1:
                 builder.append("l");
-
                 break;
             case 2:
                 builder.append("g");
-
                 break;
             case 3:
                 builder.append("i");
-
                 break;
             case 4:
                 builder.append("d");
-
                 break;
             default:
                 break;
         }
-
         builder.append(".png");
-
         setTexture(builder.toString());
     }
 
-    public int getWanderState() {
-        return dataManager.get(wanderState);
-    }
-
-    public void setWanderState(int i) {
+    public void setWanderState(int i)
+    {
         dataManager.set(wanderState, i);
     }
 
-    public int getArmor() {
-        return dataManager.get(armor);
+    public int getWanderState()
+    {
+        return dataManager.get(wanderState);
     }
 
-    protected void setArmor(int i) {
+    protected void setArmor(int i)
+    {
         dataManager.set(armor, i);
-
         updateHealth();
-
         updateAttackStrength();
-
         updateTexture();
     }
 
-    protected double getRidingYOffset() {
+    public int getArmor()
+    {
+        return dataManager.get(armor);
+    }
+
+    protected double getRidingYOffset()
+    {
         return 0.5;
     }
 
     @Override
-    public double getYOffset() {
+    public double getYOffset()
+    {
         Entity entity = getRidingEntity();
-
-        if (entity != null) {
+        if (entity != null)
+        {
             return (getRidingYOffset() * (entity.getPassengers().indexOf(this) + 1));
         }
-
         return 0.0d;
     }
 
-    protected boolean shouldJumpWhileAttacking(Entity entity) {
+    protected boolean shouldJumpWhileAttacking(Entity entity)
+    {
         return false;
     }
 
-    protected void doAttackJump(Entity entity) {
-        rotationYaw = ((float) Math.toDegrees(Math.atan2(entity.posZ - posZ, entity.posX - posX))) - 90.0f;
-
+    protected void doAttackJump(Entity entity)
+    {
+        rotationYaw = ((float)Math.toDegrees(Math.atan2(entity.posZ - posZ, entity.posX - posX))) - 90.0f;
         double d0 = entity.posX - posX;
-
         double d1 = entity.posZ - posZ;
-
         double f = MathHelper.sqrt(d0 * d0 + d1 * d1);
-
         motionX = (d0 / f) * 0.5d * 0.800000011920929d + motionX * 0.20000000298023224d;
-
         motionZ = (d1 / f) * 0.5d * 0.800000011920929d + motionZ * 0.20000000298023224d;
-
         motionY = 0.40000000596046448f;
-
         fallDistance = -25.0f;
     }
 
     @Override
-    public boolean attackEntityAsMob(@Nonnull Entity entity) {
-        if (onGround && shouldJumpWhileAttacking(entity)) {
+    public boolean attackEntityAsMob(Entity entity)
+    {
+        if (onGround && shouldJumpWhileAttacking(entity))
+        {
             doAttackJump(entity);
         }
 
-        if (rand.nextInt(5) == 0) {
+        if (rand.nextInt(5) == 0)
+        {
             SoundEvent angrySound = getAngrySound();
-
-            if (angrySound != null) {
+            if (angrySound != null)
+            {
                 playSound(angrySound, getSoundVolume(), getSoundPitch());
             }
         }
 
-        float f = (float) getEntityAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).getAttributeValue();
-
+        float f = (float)getEntityAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).getAttributeValue();
         boolean flag = entity.attackEntityFrom(DamageSource.causeMobDamage(this), f);
 
-        if (flag) {
+        if (flag)
+        {
             int j = EnchantmentHelper.getFireAspectModifier(this);
-
-            if (j > 0) {
+            if (j > 0)
+            {
                 entity.setFire(j * 4);
             }
 
-            if (entity instanceof EntityPlayer) {
-                EntityPlayer player = (EntityPlayer) entity;
-
+            if (entity instanceof EntityPlayer)
+            {
+                EntityPlayer player = (EntityPlayer)entity;
                 ItemStack itemStack = getHeldItemMainhand();
-
                 ItemStack itemStack2 = (player.isHandActive() ? player.getActiveItemStack() : ItemStack.EMPTY);
-
-                if (!itemStack.isEmpty() && !itemStack2.isEmpty() && itemStack.getItem().canDisableShield(itemStack, itemStack2, player, this) && itemStack2.getItem().isShield(itemStack2, player)) {
-                    float f1 = 0.25f + (float) EnchantmentHelper.getEfficiencyModifier(this) * 0.05f;
-
-                    if (rand.nextFloat() < f1) {
+                if (!itemStack.isEmpty() && !itemStack2.isEmpty() && itemStack.getItem().canDisableShield(itemStack, itemStack2, player, this) && itemStack2.getItem().isShield(itemStack2, player))
+                {
+                    float f1 = 0.25f + (float)EnchantmentHelper.getEfficiencyModifier(this) * 0.05f;
+                    if (rand.nextFloat() < f1)
+                    {
                         player.getCooldownTracker().setCooldown(itemStack2.getItem(), 100);
-
-                        world.setEntityState(player, (byte) 30);
+                        world.setEntityState(player, (byte)30);
                     }
                 }
             }
 
             applyEnchantments(this, entity);
-
-            if (isTamed() && canLevelUp()) {
+            if (isTamed() && canLevelUp())
+            {
                 int iSkillAttack = getSkillAttack();
-
-                addTotalDamage((int) (f * (1.85d + iSkillAttack)));
-
+                addTotalDamage((int)(f * (1.85d + iSkillAttack)));
                 double hitChance = 1.0d + (getLevel() * 5) + (iSkillAttack * 4);
-
-                if (hitChance < 5.0d) {
+                if (hitChance < 5.0d)
+                {
                     hitChance = 5.0d;
                 }
 
-                if ((double) rand.nextInt(100) > (100.0d - hitChance)) {
+                if ((double)rand.nextInt(100) > (100.0d - hitChance))
+                {
                     /*if (MoreCreepsConfig.blood && !world.isRemote)
                     {
                         CreepsPacketHandler.INSTANCE.sendToAllTracking(new MessageSendBloodEffect(entity.getEntityId()), entity);
                     }*/
 
                     float damageDealt = f * 0.75f;
-
-                    if (damageDealt < 1.0f) {
+                    if (damageDealt < 1.0f)
+                    {
                         damageDealt = 1.0f;
                     }
 
-                    if (dataManager.get(criticalHitCooldown) > 0) {
+                    if (dataManager.get(criticalHitCooldown) > 0)
+                    {
                         dataManager.set(criticalHitCooldown, dataManager.get(criticalHitCooldown) - 1);
                     }
 
-                    if (iSkillAttack > 1 && rand.nextInt(100) > (100 - (iSkillAttack * 2)) && dataManager.get(criticalHitCooldown) < 1) {
-                        float hp = ((EntityLivingBase) entity).getHealth();
-
-                        if (damageDealt < hp) {
+                    if (iSkillAttack > 1 && rand.nextInt(100) > (100 - (iSkillAttack * 2)) && dataManager.get(criticalHitCooldown) < 1)
+                    {
+                        float hp = ((EntityLivingBase)entity).getHealth();
+                        if (damageDealt < hp)
+                        {
                             damageDealt = hp;
                         }
 
                         dataManager.set(criticalHitCooldown, 50 - (iSkillAttack * 8));
-
                         SoundEvent criticalHitSound = getCriticalHitSound();
-
-                        if (criticalHitSound != null) {
+                        if (criticalHitSound != null)
+                        {
                             entity.playSound(criticalHitSound, 1.0f, 1.0f);
                         }
-
                         addTotalDamage(25);
                     }
 
-                    if ((((EntityLivingBase) entity).getHealth() - damageDealt) <= 0.0f) {
+                    if ((((EntityLivingBase)entity).getHealth() - damageDealt) <= 0.0f)
+                    {
                         SoundEvent killSound = getKillSound();
-
-                        if (killSound != null) {
+                        if (killSound != null)
+                        {
                             playSound(killSound, getSoundVolume(), getSoundPitch());
                         }
                     }
 
-                    addTotalDamage((int) (damageDealt * (1.85d + iSkillAttack)));
-
+                    addTotalDamage((int)(damageDealt * (1.85d + iSkillAttack)));
                     return entity.attackEntityFrom(DamageSource.causeThrownDamage(this, entity), damageDealt);
                 }
             }
@@ -806,35 +750,38 @@ public class EntityCreepBase extends EntityCreature implements IEntityOwnable {
     }
 
     @Override
-    public boolean attackEntityFrom(@Nonnull DamageSource source, float amount) {
-        if (isEntityInvulnerable(source)) {
+    public boolean attackEntityFrom(DamageSource source, float amount)
+    {
+        if (isEntityInvulnerable(source))
+        {
             return false;
         }
-
         return super.attackEntityFrom(source, amount);
     }
 
-    public boolean canMount(Entity entity) {
+    public boolean canMount(Entity entity)
+    {
         return true;
     }
 
     @Override
-    public boolean startRiding(@Nonnull Entity entity, boolean force) {
-        if (!force && !canMount(entity)) {
+    public boolean startRiding(Entity entity, boolean force)
+    {
+        if (!force && !canMount(entity))
+        {
             return false;
         }
 
         boolean flag = super.startRiding(entity, force);
 
-        if (flag) {
+        if (flag)
+        {
             rotationYaw = entity.rotationYaw;
-
             SoundEvent mountSound = getMountSound();
-
-            if (mountSound != null) {
+            if (mountSound != null)
+            {
                 playSound(mountSound, getSoundVolume(), getSoundPitch());
             }
-
             dataManager.set(unmountTimer, 20);
         }
 
@@ -842,44 +789,61 @@ public class EntityCreepBase extends EntityCreature implements IEntityOwnable {
     }
 
     @Override
-    public boolean processInteract(EntityPlayer player, EnumHand hand) {
-        if (hand == EnumHand.OFF_HAND) {
+    public boolean processInteract(EntityPlayer player, EnumHand hand)
+    {
+        if (hand == EnumHand.OFF_HAND)
+        {
             return super.processInteract(player, hand);
         }
-
         ItemStack itemStack = player.getHeldItem(hand);
 
-        if (isEntityAlive()) {
-            if (itemStack.isEmpty()) {
-                if (player.isSneaking() && isTamed() && isPlayerOwner(player) && canUseTamableMenu()) {
-                    if (!world.isRemote) {
-                        CreepsPacketHandler.INSTANCE.sendTo(new MessageOpenGuiTamableEntity(getEntityId()), (EntityPlayerMP) player);
+        if (isEntityAlive())
+        {
+            if (itemStack.isEmpty())
+            {
+                if (player.isSneaking() && isTamed() && isPlayerOwner(player) && canUseTamableMenu())
+                {
+                    if (!world.isRemote)
+                    {
+                        CreepsPacketHandler.INSTANCE.sendTo(new MessageOpenGuiTamableEntity(getEntityId()), (EntityPlayerMP)player);
                     }
 
                     return true;
-                } else if (canRidePlayer() && canRidePlayer(player)) {
-                    if (!player.equals(getRidingEntity())) {
-                        if (isStackable()) {
+                }
+                else if (canRidePlayer() && canRidePlayer(player))
+                {
+                    if (!player.equals(getRidingEntity()))
+                    {
+                        if (isStackable())
+                        {
                             copyLocationAndAnglesFrom(player);
 
                             startRiding(player, true);
-                        } else {
+                        }
+                        else
+                        {
                             startRiding(player);
                         }
-                    } else {
+                    }
+                    else
+                    {
                         dismountRidingEntity();
                     }
-
-                    return true;
-                } else if (isRideable() && canPlayerRide(player) && !player.equals(getFirstPassenger()) && player.startRiding(this)) {
                     return true;
                 }
-            } else {
+                else if (isRideable() && canPlayerRide(player) && !player.equals(getFirstPassenger()) && player.startRiding(this))
+                {
+                    return true;
+                }
+            }
+            else
+            {
                 Item item = itemStack.getItem();
-
-                if (isTamed() && isPlayerOwner(player) && canUseTamableMenu() && (item == Items.BOOK || item == Items.PAPER || shouldOpenTamableMenu(item))) {
-                    if (!world.isRemote) {
-                        CreepsPacketHandler.INSTANCE.sendTo(new MessageOpenGuiTamableEntity(getEntityId()), (EntityPlayerMP) player);
+                if (isTamed() && isPlayerOwner(player) && canUseTamableMenu() && (item == Items.BOOK || item == Items.PAPER || shouldOpenTamableMenu(item)))
+                {
+                    if (!world.isRemote)
+                    {
+                        CreepsPacketHandler.INSTANCE.sendTo(new MessageOpenGuiTamableEntity(getEntityId()), (EntityPlayerMP)player);
                     }
 
                     return true;
@@ -890,636 +854,681 @@ public class EntityCreepBase extends EntityCreature implements IEntityOwnable {
         return super.processInteract(player, hand);
     }
 
-    public void spawnTrophy(Entity entity) {
+    public void spawnTrophy(Entity entity)
+    {
         EffectHelper.spawnTrophy(world, entity);
     }
 
-    public void spawnTrophy() {
+    public void spawnTrophy()
+    {
         spawnTrophy(this);
     }
 
-    public void explode() {
+    public void explode()
+    {
         EffectHelper.explode(world, this);
     }
 
-    public void smoke(boolean plain) {
+    public void smoke(boolean plain)
+    {
         EffectHelper.smoke(world, this, rand, plain);
     }
 
-    public void smoke() {
+    public void smoke()
+    {
         smoke(false);
     }
 
-    public void smokePlain() {
+    public void smokePlain()
+    {
         smoke(true);
     }
 
-    public void smoke2() {
+    public void smoke2()
+    {
         EffectHelper.smoke2(world, this, rand);
     }
 
     @Override
-    public void onDeath(@Nonnull DamageSource cause) {
-        if (!dead && !world.isRemote) {
-            if (isTamed() && canBeRevived()) {
-                if (!(this instanceof EntityTombstone)) {
+    public void onDeath(DamageSource cause)
+    {
+        if (!dead && !world.isRemote)
+        {
+            if (isTamed() && canBeRevived())
+            {
+                if (!(this instanceof EntityTombstone))
+                {
                     EntityTombstone tombstone = new EntityTombstone(world, this);
-
                     tombstone.determineBaseTexture();
-
                     tombstone.setInitialHealth();
-
                     world.spawnEntity(tombstone);
                 }
-            } else {
+            }
+            else
+            {
                 dropItemsOnDeath();
             }
         }
-
         super.onDeath(cause);
     }
 
-    protected void dropItemsOnDeath() {
+    protected void dropItemsOnDeath()
+    {
     }
 
     @Override
-    public boolean isEntityInsideOpaqueBlock() {
-        if (isRiding() || dataManager.get(unmountTimer) > 0) {
+    public boolean isEntityInsideOpaqueBlock()
+    {
+        if (isRiding() || dataManager.get(unmountTimer) > 0)
+        {
             return false;
         }
-
         return super.isEntityInsideOpaqueBlock();
     }
 
     @Override
-    public boolean canBreatheUnderwater() {
-        if (isRiding() || dataManager.get(unmountTimer) > 0) {
+    public boolean canBreatheUnderwater()
+    {
+        if (isRiding() || dataManager.get(unmountTimer) > 0)
+        {
             return true;
         }
-
         return false;
     }
 
     @Override
-    public void notifyDataManagerChange(DataParameter<?> parameter) {
-        super.notifyDataManagerChange(parameter);
-
-        if(parameter.equals(size)) {
-            if (currentSize != dataManager.get(size)) {
-                currentSize = dataManager.get(size);
-                setSize(widthActual, heightActual);
-            }
-        }
-    }
-
-    @Override
-    public boolean canBeSteered() {
+    public boolean canBeSteered()
+    {
         return (isRideable() && getControllingPassenger() instanceof EntityLivingBase);
     }
 
     @Override
-    public void onLivingUpdate() {
+    public void onLivingUpdate()
+    {
         super.onLivingUpdate();
-
         updateArmSwingProgress();
-
         /*Entity ridingEntity = getRidingEntity();
-
         if (isInsideOfMaterial(Material.WATER) && ridingEntity != null && ridingEntity.isInsideOfMaterial(Material.WATER) && world.isRemote)
         {
             dismountRidingEntity();
-
             CreepsPacketHandler.INSTANCE.sendToServer(new MessageDismountEntity(getEntityId()));
         }*/
 
-        if (getBrightness() > 0.5f) {
+        if (getBrightness() > 0.5f)
+        {
             idleTime += 2;
         }
 
-        if (dataManager.get(unmountTimer) > 0) {
+        if (dataManager.get(unmountTimer) > 0)
+        {
             dataManager.set(unmountTimer, dataManager.get(unmountTimer) - 1);
         }
 
         int iSkillHealing = getSkillHealing();
-
-        if (dataManager.get(healTimer) > 0) {
+        if (dataManager.get(healTimer) > 0)
+        {
             dataManager.set(healTimer, dataManager.get(healTimer) - 1);
         }
 
-        if (iSkillHealing > 0 && dataManager.get(healTimer) < 1 && getHealth() < getMaxHealth()) {
+        if (iSkillHealing > 0 && dataManager.get(healTimer) < 1 && getHealth() < getMaxHealth())
+        {
             dataManager.set(healTimer, (6 - iSkillHealing) * 200);
-
             addHealth(iSkillHealing);
-
-            for (int i = 0; i < iSkillHealing; i++) {
-                world.spawnParticle(EnumParticleTypes.HEART, (posX + (double) (rand.nextFloat() * width * 2.0F)) - (double) width, posY + 0.5D + (double) (rand.nextFloat() * height), (posZ + (double) (rand.nextFloat() * width * 2.0F)) - (double) width, rand.nextGaussian() * 0.02d, rand.nextGaussian() * 0.02d, rand.nextGaussian() * 0.02d);
+            for (int i = 0; i < iSkillHealing; i++)
+            {
+                world.spawnParticle(EnumParticleTypes.HEART, (posX + (double)(rand.nextFloat() * width * 2.0F)) - (double)width, posY + 0.5D + (double)(rand.nextFloat() * height), (posZ + (double)(rand.nextFloat() * width * 2.0F)) - (double)width, rand.nextGaussian() * 0.02d, rand.nextGaussian() * 0.02d, rand.nextGaussian() * 0.02d);
             }
-
             updateEntityActionState();
         }
 
         int speedBoost = getSpeedBoost();
-
-        if (speedBoost > 0) {
+        if (speedBoost > 0)
+        {
             speedBoost--;
-
             setSpeedBoost(speedBoost);
-
-            if (speedBoost < 1) {
-                if (!world.isRemote) {
+            if (speedBoost < 1)
+            {
+                if (!world.isRemote)
+                {
                     EntityPlayer owner = getOwner();
-
-                    if (owner != null) {
+                    if (owner != null)
+                    {
                         owner.sendMessage(new TextComponentString("\247b" + getCreepName() + "\2476 has run out of speedboost."));
                     }
                 }
 
                 SoundEvent speedDownSound = getSpeedDownSound();
-
-                if (speedDownSound != null) {
+                if (speedDownSound != null)
+                {
                     playSound(speedDownSound, getSoundVolume(), getSoundPitch());
                 }
-
                 updateMoveSpeed();
             }
         }
 
-        if (shouldBurnInDay() && world.isDaytime() && !world.isRemote && !isChild()) {
+        if (shouldBurnInDay() && world.isDaytime() && !world.isRemote && !isChild())
+        {
             float f = getBrightness();
-
-            if (f > 0.5f && (rand.nextFloat() * 30) < ((f - 0.4f) * 2.0f) && world.canSeeSky(new BlockPos(posX, posY + (double) getEyeHeight(), posZ))) {
+            if (f > 0.5f && (rand.nextFloat() * 30) < ((f - 0.4f) * 2.0f) && world.canSeeSky(new BlockPos(posX, posY + (double)getEyeHeight(), posZ)))
+            {
                 setFire(getBurnInDayTime());
             }
         }
     }
 
-    protected int getBurnInDayTime() {
+    protected int getBurnInDayTime()
+    {
         return 20;
     }
 
-    protected boolean shouldBurnInDay() {
+    protected boolean shouldBurnInDay()
+    {
         return false;
     }
 
-    protected void giveSpeedBoost(int speedBoost) {
+    protected void giveSpeedBoost(int speedBoost)
+    {
         smokePlain();
-
         setSpeedBoost(Math.max(0, getSpeedBoost()) + speedBoost);
-
         updateMoveSpeed();
-
         SoundEvent speedUpSound = getSpeedUpSound();
 
-        if (speedUpSound != null) {
+        if (speedUpSound != null)
+        {
             playSound(speedUpSound, getSoundVolume(), getSoundPitch());
         }
-
         int speedBoostLeft = Math.max((getSpeedBoost() / 21) / 60, 0);
 
-        if (!world.isRemote) {
+        if (!world.isRemote)
+        {
             EntityPlayer owner = getOwner();
-
-            if (owner != null) {
+            if (owner != null)
+            {
                 owner.sendMessage(new TextComponentString("\2473" + getCreepName() + "\2476 has\247f " + speedBoostLeft + "\2476 minute" + ((speedBoostLeft > 1 ? "s" : "")) + " of speedboost left."));
             }
         }
     }
 
-    protected SoundEvent getMountSound() {
+    protected SoundEvent getMountSound()
+    {
         return null;
     }
 
-    protected SoundEvent getUnmountSound() {
+    protected SoundEvent getUnmountSound()
+    {
         return null;
     }
 
-    protected SoundEvent getEatSound() {
+    protected SoundEvent getEatSound()
+    {
         return null;
     }
 
-    protected SoundEvent getFullSound() {
+    protected SoundEvent getFullSound()
+    {
         return null;
     }
 
-    protected SoundEvent getSpeedUpSound() {
+    protected SoundEvent getSpeedUpSound()
+    {
         return null;
     }
 
-    protected SoundEvent getSpeedDownSound() {
+    protected SoundEvent getSpeedDownSound()
+    {
         return null;
     }
 
-    protected SoundEvent getLevelUpSound() {
+    protected SoundEvent getLevelUpSound()
+    {
         return null;
     }
 
-    protected SoundEvent getCriticalHitSound() {
+    protected SoundEvent getCriticalHitSound()
+    {
         return null;
     }
 
-    protected SoundEvent getAngrySound() {
+    protected SoundEvent getAngrySound()
+    {
         return null;
     }
 
-    protected String[] getTamedNames() {
+    protected String[] getTamedNames()
+    {
         return new String[0];
     }
 
-    protected String[] getAvailableTextures() {
+    protected String[] getAvailableTextures()
+    {
         return new String[0];
     }
 
     @Override
-    protected boolean canDespawn() {
-        if (getCreatureType() == EnumCreatureType.MONSTER && !getNoDespawn() && !isTamed()) {
+    protected boolean canDespawn()
+    {
+        if (getCreatureType() == EnumCreatureType.MONSTER && !getNoDespawn() && !isTamed())
+        {
             return true;
         }
-
         return false;
     }
 
     @Override
-    public int getTalkInterval() {
+    public int getTalkInterval()
+    {
         return 120;
     }
 
-    public void resetTarget() {
+    public void resetTarget()
+    {
         setAttackTarget(null);
-
         setRevengeTarget(null);
     }
 
-    public void resetModelSize() {
+    public void resetModelSize()
+    {
         setModelSize(1.0f);
     }
 
-    public float getModelSize() {
-        return dataManager.get(modelSize);
-    }
-
-    protected void setModelSize(float f) {
+    protected void setModelSize(float f)
+    {
         dataManager.set(modelSize, f);
     }
 
-    public void shrinkModelSize(float f) {
+    public float getModelSize()
+    {
+        return dataManager.get(modelSize);
+    }
+
+    public void shrinkModelSize(float f)
+    {
         setModelSize(Math.max(0.0f, getModelSize() - f));
     }
 
-    public void growModelSize(float f) {
+    public void growModelSize(float f)
+    {
         setModelSize(Math.max(0.0f, getModelSize() + f));
     }
 
-    public void growHitboxSize(float f) {
-        dataManager.set(size, dataManager.get(size) + f);
-    }
-
-    public void shrinkHitboxSize(float f) {
-        dataManager.set(size, dataManager.get(size) - f);
-    }
-
-    public void decreaseMoveSpeed(float f) {
+    public void decreaseMoveSpeed(float f)
+    {
         baseSpeed -= f;
-
         updateMoveSpeed();
     }
 
-    public void increaseMoveSpeed(float f) {
+    public void increaseMoveSpeed(float f)
+    {
         baseSpeed += f;
-
         updateMoveSpeed();
     }
 
-    public int getSpeedBoost() {
-        return dataManager.get(speedBoost);
-    }
-
-    protected void setSpeedBoost(int i) {
+    protected void setSpeedBoost(int i)
+    {
         dataManager.set(speedBoost, i);
     }
 
-    public String getTexture() {
-        return dataManager.get(texture);
+    public int getSpeedBoost()
+    {
+        return dataManager.get(speedBoost);
     }
 
-    protected void setTexture(String textureIn) {
+    protected void setTexture(String textureIn)
+    {
         dataManager.set(texture, textureIn);
     }
 
-    public String getCreepName() {
-        return dataManager.get(name);
+    public String getTexture()
+    {
+        return dataManager.get(texture);
     }
 
-    public void setCreepName(String s) {
+    public void setCreepName(String s)
+    {
         dataManager.set(name, s);
     }
 
-    protected void clearOwner() {
+    public String getCreepName()
+    {
+        return dataManager.get(name);
+    }
+
+    public void setOwner(UUID uuid)
+    {
+        dataManager.set(owner, uuid.toString());
+    }
+
+    public void setOwner(EntityPlayer player)
+    {
+        dataManager.set(owner, player.getUniqueID().toString());
+    }
+
+    protected void clearOwner()
+    {
         dataManager.set(owner, "");
     }
 
-    @Nullable
-    public UUID getOwnerId() {
+    public UUID getOwnerId()
+    {
         String uuid = dataManager.get(owner);
-
-        if (uuid.isEmpty()) {
+        if (uuid.isEmpty())
+        {
             return null;
         }
-
         return UUID.fromString(uuid);
     }
 
-    public boolean isPlayerOwner(EntityPlayer player) {
-        if (player == null || getOwnerId() == null) {
+    public boolean isPlayerOwner(EntityPlayer player)
+    {
+        if (player == null || getOwnerId() == null)
+        {
             return false;
         }
 
         return player.getUniqueID().equals(getOwnerId());
     }
 
-    @Nullable
-    public EntityPlayer getOwner() {
+    public EntityPlayer getOwner()
+    {
         UUID owner = getOwnerId();
-
-        if (owner != null) {
+        if (owner != null)
+        {
             return world.getPlayerEntityByUUID(owner);
         }
-
         return null;
     }
 
-    public void setOwner(UUID uuid) {
-        dataManager.set(owner, uuid.toString());
-    }
-
-    public void setOwner(EntityPlayer player) {
-        dataManager.set(owner, player.getUniqueID().toString());
-    }
-
-    protected void putSizeNBT(float f) {
-        dataManager.set(size, f);
-    }
-
-    public int getLevel() {
-        return dataManager.get(level);
-    }
-
-    protected void setLevel(int i) {
+    protected void setLevel(int i)
+    {
         dataManager.set(level, i);
     }
 
-    public void tame(EntityPlayer player) {
+    public int getLevel()
+    {
+        return dataManager.get(level);
+    }
+
+    public void tame(EntityPlayer player)
+    {
         setInterest(0);
-
         setOwner(player);
-
         //spawnTrophy(player);
-
         // TODO: only spawn trophy when the player gets an achievement
-
         boolean emptyName = true;
-
-        if (getCreepName().length() < 1 && !world.isRemote) {
+        if (getCreepName().length() < 1 && !world.isRemote)
+        {
             String[] names = getTamedNames();
 
-            if (names.length > 0) {
+            if (names.length > 0)
+            {
                 setCreepName(names[rand.nextInt(names.length)]);
 
                 emptyName = false;
-            } else {
+            }
+            else
+            {
                 setCreepName("");
             }
         }
 
         updateAttributes();
-
         setHealth(getMaxHealth());
-
         setWanderState(2);
-
         SoundEvent tamedSound = getTamedSound();
-
-        if (tamedSound != null) {
+        if (tamedSound != null)
+        {
             playSound(tamedSound, getSoundVolume(), getSoundPitch());
         }
 
-        if (!world.isRemote) {
-            if (emptyName) {
+        if (!world.isRemote)
+        {
+            if (emptyName)
+            {
                 player.sendMessage(new TextComponentString("You have successfully tamed: \2476" + getCreepTypeName()));
-            } else {
+            }
+            else
+            {
                 player.sendMessage(new TextComponentString("\2476" + getCreepName() + " \247fhas been tamed!"));
             }
         }
     }
 
-    public void untame() {
+    public void untame()
+    {
         clearOwner();
-
         setCreepName("");
-
         setInterest(0);
     }
 
-    public boolean isTamed() {
+    public boolean isTamed()
+    {
         return (getOwnerId() != null);
     }
 
-    public boolean isTamable() {
+    public boolean isTamable()
+    {
         return false;
     }
 
-    public boolean canRidePlayer() {
+    public boolean canRidePlayer()
+    {
         return false;
     }
 
-    public boolean canRidePlayer(EntityPlayer player) {
+    public boolean canRidePlayer(EntityPlayer player)
+    {
         return (!isTamable() || (isTamed() && isPlayerOwner(player)));
     }
 
-    public boolean isRideable() {
+    public boolean isRideable()
+    {
         return false;
     }
 
-    public boolean canPlayerRide(EntityPlayer player) {
+    public boolean canPlayerRide(EntityPlayer player)
+    {
         return (!isTamable() || (isTamed() && isPlayerOwner(player)));
     }
 
-    protected boolean shouldOpenTamableMenu(Item item) {
+    protected boolean shouldOpenTamableMenu(Item item)
+    {
         return false;
     }
 
-    protected boolean canUseTamableMenu() {
+    protected boolean canUseTamableMenu()
+    {
         return false;
     }
 
-    public String getLevelName() {
+    public String getLevelName()
+    {
         return "";
     }
 
-    public int getLevelDamage() {
+    public int getLevelDamage()
+    {
         return 0;
     }
 
-    public int getMaxLevel() {
+    public int getMaxLevel()
+    {
         return 1;
     }
 
-    protected void addExperience(int i) {
-        setExperience(getExperience() + i);
-    }
-
-    public int getExperience() {
-        return dataManager.get(experience);
-    }
-
-    protected void setExperience(int i) {
+    protected void setExperience(int i)
+    {
         dataManager.set(experience, i);
     }
 
-    public void addTotalDamage(int i) {
+    protected void addExperience(int i)
+    {
+        setExperience(getExperience() + i);
+    }
+
+    public int getExperience()
+    {
+        return dataManager.get(experience);
+    }
+
+    protected void setTotalDamage(int i)
+    {
+        dataManager.set(totalDamage, i);
+    }
+
+    public void addTotalDamage(int i)
+    {
         addExperience(i);
-
         i += getTotalDamage();
-
-        if (i >= getLevelDamage() && getLevel() < getMaxLevel()) {
+        if (i >= getLevelDamage() && getLevel() < getMaxLevel())
+        {
             int lvl = getLevel() + 1;
-
             setLevel(lvl);
-
             setTotalDamage(0);
-
             int healthBoostNew = rand.nextInt(4);
-
             setHealthBoost(healthBoostNew);
-
             updateAttributes();
-
             addHealth(healthBoostNew + getLevelHealthMultiplier());
 
-            if (!world.isRemote) {
+            if (!world.isRemote)
+            {
                 EntityPlayer player = getOwner();
-
-                if (player != null) {
+                if (player != null)
+                {
                     player.sendMessage(new TextComponentString("\247b" + getCreepName() + " \247fincreased to level \2476" + lvl + "!"));
                 }
             }
 
             SoundEvent levelUpSound = getLevelUpSound();
-
-            if (levelUpSound != null) {
+            if (levelUpSound != null)
+            {
                 playSound(levelUpSound, getSoundVolume(), getSoundPitch());
             }
-
             return;
         }
-
         setTotalDamage(i);
     }
 
-    public int getTotalDamage() {
+    public int getTotalDamage()
+    {
         return dataManager.get(totalDamage);
     }
 
-    protected void setTotalDamage(int i) {
-        dataManager.set(totalDamage, i);
-    }
-
     @Override
-    public boolean canRiderInteract() {
+    public boolean canRiderInteract()
+    {
         return true;
     }
 
-    protected float getLevelHealthMultiplier() {
+    protected float getLevelHealthMultiplier()
+    {
         return 1.0f;
     }
 
-    protected double getLevelDamageMultiplier() {
+    protected double getLevelDamageMultiplier()
+    {
         return 1.0d;
     }
 
-    protected double getLevelSpeedMultiplier() {
+    protected double getLevelSpeedMultiplier()
+    {
         return 0.0d;
     }
 
-    public boolean shouldAttackEntity(EntityLivingBase target) {
-        if (isTamed() && target instanceof EntityCreepBase && ((EntityCreepBase) target).isPlayerOwner(getOwner())) {
+    public boolean shouldAttackEntity(EntityLivingBase target)
+    {
+        if (isTamed() && target instanceof EntityCreepBase && ((EntityCreepBase)target).isPlayerOwner(getOwner()))
+        {
             return false;
         }
-
         return true;
     }
 
     @Override
-    public Team getTeam() {
-        if (isTamed()) {
+    public Team getTeam()
+    {
+        if (isTamed())
+        {
             EntityPlayer owner = getOwner();
-
-            if (owner != null) {
+            if (owner != null)
+            {
                 return owner.getTeam();
             }
         }
-
         return super.getTeam();
     }
 
     @Override
-    public boolean isOnSameTeam(Entity entity) {
-        if (isTamed()) {
+    public boolean isOnSameTeam(Entity entity)
+    {
+        if (isTamed())
+        {
             EntityPlayer owner = getOwner();
-
-            if (owner != null) {
-                if (owner.equals(entity)) {
+            if (owner != null)
+            {
+                if (owner.equals(entity))
+                {
                     return true;
                 }
-
                 return owner.isOnSameTeam(entity);
             }
         }
-
         return super.isOnSameTeam(entity);
     }
 
-    public int getHealthBoost() {
-        return dataManager.get(healthBoost);
-    }
-
-    protected void setHealthBoost(int healthBoostIn) {
+    protected void setHealthBoost(int healthBoostIn)
+    {
         dataManager.set(healthBoost, healthBoostIn);
     }
 
-    public int getSkillAttack() {
-        return dataManager.get(skillAttack);
+    public int getHealthBoost()
+    {
+        return dataManager.get(healthBoost);
     }
 
-    protected void setSkillAttack(int i) {
+    protected void setSkillAttack(int i)
+    {
         dataManager.set(skillAttack, i);
     }
 
-    public int getSkillHealing() {
-        return dataManager.get(skillHealing);
+    public int getSkillAttack()
+    {
+        return dataManager.get(skillAttack);
     }
 
-    protected void setSkillHealing(int i) {
+    protected void setSkillHealing(int i)
+    {
         dataManager.set(skillHealing, i);
     }
 
-    public int getSkillDefend() {
-        return dataManager.get(skillDefend);
+    public int getSkillHealing()
+    {
+        return dataManager.get(skillHealing);
     }
 
-    protected void setSkillDefend(int i) {
+    protected void setSkillDefend(int i)
+    {
         dataManager.set(skillDefend, i);
     }
 
-    public int getSkillSpeed() {
-        return dataManager.get(skillSpeed);
+    public int getSkillDefend()
+    {
+        return dataManager.get(skillDefend);
     }
 
-    protected void setSkillSpeed(int i) {
+    protected void setSkillSpeed(int i)
+    {
         dataManager.set(skillSpeed, i);
     }
 
-    public int getSkillLevel(String skill) {
-        switch (skill) {
+    public int getSkillSpeed()
+    {
+        return dataManager.get(skillSpeed);
+    }
+
+    public int getSkillLevel(String skill)
+    {
+        switch (skill)
+        {
             case "attack":
                 return getSkillAttack();
             case "defend":
@@ -1531,258 +1540,236 @@ public class EntityCreepBase extends EntityCreature implements IEntityOwnable {
             default:
                 break;
         }
-
         return 0;
     }
 
-    public int getRequiredLevelForSkill(String skill) {
+    public int getRequiredLevelForSkill(String skill)
+    {
         return getSkillLevel(skill) * 5;
     }
 
-    public boolean canLevelSkill(String skill) {
+    public boolean canLevelSkill(String skill)
+    {
         return (getSkillLevel(skill) < 5 && getLevel() >= getRequiredLevelForSkill(skill));
     }
 
-    public void levelUpSkill(String skill) {
-        if (getSkillLevel(skill) >= 5) {
+    public void levelUpSkill(String skill)
+    {
+        if (getSkillLevel(skill) >= 5)
+        {
             return;
         }
 
-        switch (skill) {
+        switch (skill)
+        {
             case "attack":
                 setSkillAttack(getSkillAttack() + 1);
-
                 updateAttackStrength();
-
                 break;
             case "defend":
                 setSkillDefend(getSkillDefend() + 1);
-
                 break;
             case "healing":
                 setSkillHealing(getSkillHealing() + 1);
-
                 break;
             case "speed":
                 setSkillSpeed(getSkillSpeed() + 1);
-
                 updateMoveSpeed();
-
                 break;
             default:
                 break;
         }
     }
 
-    public boolean isStackable() {
+    public boolean isStackable()
+    {
         return false;
     }
 
-    public String getCreepTypeName() {
-        return dataManager.get(creepTypeName);
-    }
-
-    protected void setCreepTypeName(String creepTypeNameIn) {
+    protected void setCreepTypeName(String creepTypeNameIn)
+    {
         dataManager.set(creepTypeName, creepTypeNameIn);
     }
 
-    public String getBaseTexture() {
-        return baseTexture;
+    public String getCreepTypeName()
+    {
+        return dataManager.get(creepTypeName);
     }
 
-    protected void setBaseTexture(String baseTextureIn) {
+    protected void setBaseTexture(String baseTextureIn)
+    {
         baseTexture = baseTextureIn;
     }
 
-    public boolean getNoDespawn() {
-        return ((Boolean) dataManager.get(noDespawn)).booleanValue();
+    public String getBaseTexture()
+    {
+        return baseTexture;
     }
 
-    public void setNoDespawn(boolean b) {
+    public void setNoDespawn(boolean b)
+    {
         dataManager.set(noDespawn, Boolean.valueOf(b));
     }
 
-    @Override
-    public boolean getCanSpawnHere() {
-        switch (getCreatureType()) {
-            case AMBIENT:
-                return true;
-            case MONSTER:
-                if (world.getDifficulty() == EnumDifficulty.PEACEFUL || !isValidLightLevel()) {
-                    return false;
-                }
-
-                break;
-            default:
-                break;
-        }
-
-        return super.getCanSpawnHere();
+    public boolean getNoDespawn()
+    {
+        return ((Boolean)dataManager.get(noDespawn)).booleanValue();
     }
 
     @Override
-    public void onUpdate() {
-        if (internalWanderState != getWanderState()) {
+    public void onUpdate()
+    {
+        if (internalWanderState != getWanderState())
+        {
             initEntityAI();
-
             internalWanderState = getWanderState();
         }
-
         EntityLivingBase target = getAttackTarget();
 
-        if (target != null && target.equals(getOwner())) {
+        if (target != null && target.equals(getOwner()))
+        {
             setAttackTarget(null);
         }
-
         super.onUpdate();
-
-        if (getHammerSwing() < 0.0f) {
+        if (getHammerSwing() < 0.0f)
+        {
             addHammerSwing(0.45f);
-        } else {
+        }
+        else
+        {
             setHammerSwing(0.0f);
         }
-
-        if (getCreatureType() == EnumCreatureType.MONSTER && !world.isRemote && world.getDifficulty() == EnumDifficulty.PEACEFUL) {
+        if (getCreatureType() == EnumCreatureType.MONSTER && !world.isRemote && world.getDifficulty() == EnumDifficulty.PEACEFUL)
+        {
             setDead();
         }
     }
 
     @Override
-    public float getBlockPathWeight(BlockPos blockPos) {
-        if (getCreatureType() == EnumCreatureType.MONSTER && spawnOnlyAtNight) {
+    public float getBlockPathWeight(BlockPos blockPos)
+    {
+        if (getCreatureType() == EnumCreatureType.MONSTER && spawnOnlyAtNight)
+        {
             return (0.5f - world.getLightBrightness(blockPos));
         }
-
         return (world.getLightBrightness(blockPos) - 0.5f);
     }
 
-    protected boolean isValidLightLevel() {
-        if (!spawnOnlyAtNight) {
-            return true;
-        }
-
-        BlockPos blockPos = new BlockPos(posX, getEntityBoundingBox().minY, posZ);
-
-        if (world.getLightFor(EnumSkyBlock.SKY, blockPos) > rand.nextInt(32)) {
-            return false;
-        }
-
-        int i = world.getLightFromNeighbors(blockPos);
-
-        if (world.isThundering()) {
-            int j = world.getSkylightSubtracted();
-
-            world.setSkylightSubtracted(10);
-
-            i = world.getLightFromNeighbors(blockPos);
-
-            world.setSkylightSubtracted(j);
-        }
-
-        return (i <= rand.nextInt(8));
-    }
-
     @Override
-    protected boolean canDropLoot() {
+    protected boolean canDropLoot()
+    {
         return true;
     }
 
-    public void onRevive(NBTTagCompound compound) {
+    public void onRevive(NBTTagCompound compound)
+    {
     }
 
-    public void onTombstoneCreate(NBTTagCompound compound) {
+    public void onTombstoneCreate(NBTTagCompound compound)
+    {
     }
 
-    public float getHammerSwing() {
-        return dataManager.get(hammerSwing);
-    }
-
-    public void setHammerSwing(float f) {
+    public void setHammerSwing(float f)
+    {
         dataManager.set(hammerSwing, f);
     }
 
-    public void addHammerSwing(float f) {
+    public float getHammerSwing()
+    {
+        return dataManager.get(hammerSwing);
+    }
+
+    public void addHammerSwing(float f)
+    {
         setHammerSwing(getHammerSwing() + f);
     }
 
-    public void takeHammerSwing(float f) {
+    public void takeHammerSwing(float f)
+    {
         setHammerSwing(getHammerSwing() - f);
     }
 
     @Override
-    public boolean isLeftHanded() {
+    public boolean isLeftHanded()
+    {
         return false;
     }
 
-    public boolean canBleed() {
+    public boolean canBleed()
+    {
         return true;
     }
-
-    protected Entity getFirstPassenger() {
-        for (Entity entity : getPassengers()) {
+    protected Entity getFirstPassenger()
+    {
+        for (Entity entity : getPassengers())
+        {
             return entity;
         }
-
         return null;
     }
 
-    protected SoundEvent getKillSound() {
+    protected SoundEvent getKillSound()
+    {
         return null;
     }
 
-    protected SoundEvent getMissSound() {
+    protected SoundEvent getMissSound()
+    {
         return null;
     }
 
-    protected SoundEvent getTamedSound() {
+    protected SoundEvent getTamedSound()
+    {
         return null;
     }
 
-    public int getUnmountTimer() {
+    public int getUnmountTimer()
+    {
         return dataManager.get(unmountTimer);
     }
 
-    public boolean canLevelUp() {
+    public boolean canLevelUp()
+    {
         return false;
     }
 
-    public boolean canBeRevived() {
+    public boolean canBeRevived()
+    {
         return false;
     }
 
-    public void cloneEntity() {
-        if (world.isRemote) {
+    public void cloneEntity()
+    {
+        if (world.isRemote)
+        {
             return;
         }
-
-        try {
+        try
+        {
             Constructor<? extends EntityCreepBase> constructor = getClass().getConstructor(World.class);
-
             EntityCreepBase newEntity = constructor.newInstance(world);
-
             newEntity.copyLocationAndAnglesFrom(this);
-
             NBTTagCompound compound = new NBTTagCompound();
-
             writeEntityToNBT(compound);
-
             newEntity.readEntityFromNBT(compound);
-
             newEntity.setHealth(getHealth());
-
             world.spawnEntity(newEntity);
-
             setDead();
-        } catch (Exception ignored) {
+        }
+        catch (Exception ignored)
+        {
         }
     }
 
     @Override
-    public boolean isInsideOfMaterial(@Nonnull Material material) {
-        if (material == Material.WATER && isRiding() && dataManager.get(unmountTimer) > 0) {
+    public boolean isInsideOfMaterial(Material material)
+    {
+        if (material == Material.WATER && isRiding() && dataManager.get(unmountTimer) > 0)
+        {
             return false;
         }
 
         return super.isInsideOfMaterial(material);
     }
+
 }

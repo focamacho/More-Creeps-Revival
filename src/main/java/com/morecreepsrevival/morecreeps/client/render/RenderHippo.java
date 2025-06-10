@@ -6,6 +6,6 @@ import net.minecraft.client.renderer.entity.RenderManager;
 
 public class RenderHippo<T extends EntityHippo> extends RenderCreep<T> {
     public RenderHippo(RenderManager renderManager) {
-        super(renderManager, new ModelHippo(), 0.5f);
+        super(renderManager, new ModelHippo(), 0.5F);
     }
 }

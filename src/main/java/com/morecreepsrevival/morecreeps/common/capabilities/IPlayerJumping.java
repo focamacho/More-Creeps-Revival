@@ -1,7 +1,8 @@
 package com.morecreepsrevival.morecreeps.common.capabilities;
 
-public interface IPlayerJumping {
-    boolean getJumping();
-
+public interface IPlayerJumping
+{
     void setJumping(boolean jumpingIn);
+
+    boolean getJumping();
 }

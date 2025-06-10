@@ -11,26 +11,29 @@ import net.minecraft.world.World;
 
 import javax.annotation.Nonnull;
 
-public class ItemHorseHeadGem extends CreepsItem {
-    public ItemHorseHeadGem() {
+public class ItemHorseHeadGem extends CreepsItem
+{
+    public ItemHorseHeadGem()
+    {
         super("horse_head_gem");
 
         setMaxStackSize(16);
     }
 
-    @Override
-    @Nonnull
-    public ActionResult<ItemStack> onItemRightClick(World world, EntityPlayer player, @Nonnull EnumHand hand) {
+    @Override @Nonnull
+    public ActionResult<ItemStack> onItemRightClick(World world, EntityPlayer player, @Nonnull EnumHand hand)
+    {
         player.getHeldItem(hand).shrink(1);
 
         player.swingArm(hand);
 
         player.playSound(CreepsSoundHandler.horseHeadGemSound, 1.0f, 1.0f);
 
-        if (!world.isRemote) {
-            double d = -MathHelper.sin((player.rotationYaw * (float) Math.PI) / 180f);
+        if (!world.isRemote)
+        {
+            double d = -MathHelper.sin((player.rotationYaw * (float)Math.PI) / 180f);
 
-            double d1 = MathHelper.cos((player.rotationYaw * (float) Math.PI) / 180f);
+            double d1 = MathHelper.cos((player.rotationYaw * (float)Math.PI) / 180f);
 
             EntityHorseHead horseHead = new EntityHorseHead(world);
 

@@ -5,9 +5,11 @@ import net.minecraft.client.renderer.entity.Render;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraftforge.fml.client.registry.IRenderFactory;
 
-public class RenderFloobFactory implements IRenderFactory<EntityFloob> {
+public class RenderFloobFactory implements IRenderFactory<EntityFloob>
+{
     @Override
-    public Render<? super EntityFloob> createRenderFor(RenderManager renderManager) {
+    public Render<? super EntityFloob> createRenderFor(RenderManager renderManager)
+    {
         return new RenderFloob<>(renderManager);
     }
 }

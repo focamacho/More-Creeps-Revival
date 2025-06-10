@@ -5,7 +5,8 @@ import net.minecraft.client.model.ModelRenderer;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.math.MathHelper;
 
-public class ModelGrowbotGregg extends ModelBiped {
+public class ModelGrowbotGregg extends ModelBiped
+{
     public ModelRenderer bipedHead;
     public ModelRenderer bipedBody;
     public ModelRenderer bipedBody2;
@@ -33,15 +34,18 @@ public class ModelGrowbotGregg extends ModelBiped {
     public float tailwag;
     public int taildirection;
 
-    public ModelGrowbotGregg() {
+    public ModelGrowbotGregg()
+    {
         this(0.0F);
     }
 
-    public ModelGrowbotGregg(float f) {
+    public ModelGrowbotGregg(float f)
+    {
         this(f, 0.0F);
     }
 
-    public ModelGrowbotGregg(float f, float f1) {
+    public ModelGrowbotGregg(float f, float f1)
+    {
         heldItemLeft = false;
         heldItemRight = false;
         isSneak = false;
@@ -130,7 +134,8 @@ public class ModelGrowbotGregg extends ModelBiped {
     }
 
     @Override
-    public void render(Entity entity, float f, float f1, float f2, float f3, float f4, float f5) {
+    public void render(Entity entity, float f, float f1, float f2, float f3, float f4, float f5)
+    {
         setRotationAngles(f, f1, f2, f3, f4, f5, entity);
         this.bipedHead.render(f5);
         this.bipedBody.render(f5);
@@ -155,17 +160,23 @@ public class ModelGrowbotGregg extends ModelBiped {
     }
 
     @Override
-    public void setRotationAngles(float f, float f1, float f2, float f3, float f4, float f5, Entity entity) {
-        if (this.taildirection > 0) {
+    public void setRotationAngles(float f, float f1, float f2, float f3, float f4, float f5, Entity entity)
+    {
+        if (this.taildirection > 0)
+        {
             this.tailwag += 1.0E-4F;
 
-            if (this.tailwag > 0.017F) {
+            if (this.tailwag > 0.017F)
+            {
                 this.taildirection *= -1;
             }
-        } else {
+        }
+        else
+        {
             this.tailwag -= 1.0E-4F;
 
-            if (this.tailwag < -0.016999999999999998D) {
+            if (this.tailwag < -0.016999999999999998D)
+            {
                 this.taildirection *= -1;
             }
         }
@@ -193,7 +204,8 @@ public class ModelGrowbotGregg extends ModelBiped {
         //this.capR.d -= this.tailwag;
         //this.capL.d += this.tailwag;
 
-        if (this.isRiding) {
+        if (this.isRiding)
+        {
             this.bipedRightArm.rotateAngleX += -0.6283185F;
             this.bipedLeftArm.rotateAngleX += -0.6283185F;
             this.bipedRightLeg.rotateAngleX = -1.256637F;
@@ -202,11 +214,13 @@ public class ModelGrowbotGregg extends ModelBiped {
             this.bipedLeftLeg.rotateAngleY = -0.3141593F;
         }
 
-        if (this.heldItemLeft) {
+        if (this.heldItemLeft)
+        {
             this.bipedLeftArm.rotateAngleX = this.bipedLeftArm.rotateAngleX * 0.5F - 0.1141593F;
         }
 
-        if (this.heldItemRight) {
+        if (this.heldItemRight)
+        {
             this.bipedRightArm.rotateAngleX = this.bipedRightArm.rotateAngleX * 0.5F - 0.1141593F;
         }
 
@@ -214,7 +228,8 @@ public class ModelGrowbotGregg extends ModelBiped {
 
         this.bipedLeftArm.rotateAngleY = 0.0F;
 
-        if (this.swingProgress > -9990.0F) {
+        if (this.swingProgress > -9990.0F)
+        {
             float f6 = this.swingProgress;
             this.bipedBody.rotateAngleY = MathHelper.sin(MathHelper.sqrt(f6) * 3.141593F * 2.0F) * 0.2F;
 
@@ -227,18 +242,21 @@ public class ModelGrowbotGregg extends ModelBiped {
             f6 = 1.0F - f6;
             float f7 = MathHelper.sin(f6 * 3.141593F);
             float f8 = MathHelper.sin(this.swingProgress * 3.141593F) * -(this.bipedHead.rotateAngleX - 0.7F) * 0.75F;
-            this.bipedRightArm.rotateAngleX = (float) (this.bipedRightArm.rotateAngleX - f7 * 1.2D + f8);
+            this.bipedRightArm.rotateAngleX = (float)(this.bipedRightArm.rotateAngleX - f7 * 1.2D + f8);
             this.bipedRightArm.rotateAngleY += this.bipedBody.rotateAngleY * 2.0F;
             this.bipedRightArm.rotateAngleZ = MathHelper.sin(this.swingProgress * 3.141593F) * -0.4F;
         }
 
-        if (this.isSneak) {
+        if (this.isSneak)
+        {
             this.bipedBody.rotateAngleX = 0.5F;
             this.bipedRightLeg.rotateAngleX -= 0.0F;
             this.bipedLeftLeg.rotateAngleX -= 0.0F;
             this.bipedRightArm.rotateAngleX += 0.4F;
             this.bipedLeftArm.rotateAngleX += 0.4F;
-        } else {
+        }
+        else
+        {
             this.bipedBody.rotateAngleX = 0.0F;
         }
 

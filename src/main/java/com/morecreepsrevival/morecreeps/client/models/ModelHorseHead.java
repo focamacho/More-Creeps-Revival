@@ -4,7 +4,8 @@ import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.model.ModelRenderer;
 import net.minecraft.entity.Entity;
 
-public class ModelHorseHead extends ModelBase {
+public class ModelHorseHead extends ModelBase
+{
     public ModelRenderer horseHead;
     public ModelRenderer snout;
     public ModelRenderer earL;
@@ -15,15 +16,18 @@ public class ModelHorseHead extends ModelBase {
     public ModelRenderer eyeL;
     public ModelRenderer eyeR;
 
-    public ModelHorseHead() {
+    public ModelHorseHead()
+    {
         this(0.0f);
     }
 
-    public ModelHorseHead(float f) {
+    public ModelHorseHead(float f)
+    {
         this(f, 0.0f);
     }
 
-    public ModelHorseHead(float f, float f1) {
+    public ModelHorseHead(float f, float f1)
+    {
         horseHead = new ModelRenderer(this, 0, 0);
         horseHead.addBox(-3F, -6F, -3F, 5, 5, 6, 0.0F);
         horseHead.setRotationPoint(1.0F, 11F, -7F);
@@ -90,7 +94,8 @@ public class ModelHorseHead extends ModelBase {
     }
 
     @Override
-    public void render(Entity entity, float f, float f1, float f2, float f3, float f4, float f5) {
+    public void render(Entity entity, float f, float f1, float f2, float f3, float f4, float f5)
+    {
         setRotationAngles(f, f1, f2, f3, f4, f5, entity);
         horseHead.render(f5);
         snout.render(f5);

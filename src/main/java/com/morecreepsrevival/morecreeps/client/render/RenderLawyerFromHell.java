@@ -17,23 +17,28 @@ import org.lwjgl.opengl.GL11;
 
 import javax.annotation.Nullable;
 
-public class RenderLawyerFromHell<T extends EntityLawyerFromHell> extends RenderCreep<T> {
-    public RenderLawyerFromHell(RenderManager renderManager) {
+public class RenderLawyerFromHell<T extends EntityLawyerFromHell> extends RenderCreep<T>
+{
+    public RenderLawyerFromHell(RenderManager renderManager)
+    {
         super(renderManager, new ModelLawyerFromHell(), 0.5f);
 
         addLayer(new LayerHeldItem(this));
     }
 
     @Override
-    public void transformHeldFull3DItemLayer() {
+    public void transformHeldFull3DItemLayer()
+    {
         GlStateManager.translate(0.0F, 0.1875F, 0.0F);
     }
 
     @Override
-    public void doRender(@Nullable T entity, double x, double y, double z, float entityYaw, float partialTicks) {
+    public void doRender(@Nullable T entity, double x, double y, double z, float entityYaw, float partialTicks)
+    {
         super.doRender(entity, x, y, z, entityYaw, partialTicks);
 
-        if (entity == null || entity.getUndead() || entity.getDistanceSq(renderManager.renderViewEntity) > 400) {
+        if (entity == null || entity.getUndead() || entity.getDistanceSq(renderManager.renderViewEntity) > 400)
+        {
             return;
         }
 
@@ -41,19 +46,22 @@ public class RenderLawyerFromHell<T extends EntityLawyerFromHell> extends Render
 
         ILawyerFine capability = player.getCapability(LawyerFineProvider.capability, null);
 
-        if (capability == null) {
+        if (capability == null)
+        {
             return;
         }
 
         int fine = capability.getFine();
 
-        if (fine < 1) {
+        if (fine < 1)
+        {
             return;
         }
 
         String str = "\247cFINE: \2472$\247f" + fine;
 
-        if (fine >= 2500) {
+        if (fine >= 2500)
+        {
             str += " \247cJAIL TIME";
         }
 
@@ -65,7 +73,7 @@ public class RenderLawyerFromHell<T extends EntityLawyerFromHell> extends Render
 
         GlStateManager.pushMatrix();
 
-        GlStateManager.translate((float) x, (float) y + 1.1f, (float) z);
+        GlStateManager.translate((float)x, (float)y + 1.1f, (float)z);
 
         GlStateManager.glNormal3f(0.0f, 1.0f, 0.0f);
 
@@ -73,7 +81,7 @@ public class RenderLawyerFromHell<T extends EntityLawyerFromHell> extends Render
 
         GlStateManager.rotate(-renderManager.playerViewX, 1.0f, 0.0f, 0.0f);
 
-        GlStateManager.scale(-f3, -f3, f3);
+        GlStateManager.scale(-f3,-f3, f3);
 
         GlStateManager.disableLighting();
 
@@ -85,7 +93,7 @@ public class RenderLawyerFromHell<T extends EntityLawyerFromHell> extends Render
 
         GlStateManager.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
 
-        int j = -60 + (int) ((1.0f - entity.getModelSize()) * 9.0f);
+        int j = -60 + (int)((1.0f - entity.getModelSize()) * 9.0f);
 
         GlStateManager.disableTexture2D();
 

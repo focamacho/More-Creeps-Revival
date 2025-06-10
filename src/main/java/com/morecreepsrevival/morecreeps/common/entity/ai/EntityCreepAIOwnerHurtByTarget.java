@@ -5,14 +5,16 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.ai.EntityAITarget;
 import net.minecraft.entity.player.EntityPlayer;
 
-public class EntityCreepAIOwnerHurtByTarget extends EntityAITarget {
+public class EntityCreepAIOwnerHurtByTarget extends EntityAITarget
+{
     private EntityCreepBase tamable;
 
     private EntityLivingBase attacker;
 
     private int timestamp;
 
-    public EntityCreepAIOwnerHurtByTarget(EntityCreepBase tamableIn) {
+    public EntityCreepAIOwnerHurtByTarget(EntityCreepBase tamableIn)
+    {
         super(tamableIn, false);
 
         tamable = tamableIn;
@@ -21,13 +23,16 @@ public class EntityCreepAIOwnerHurtByTarget extends EntityAITarget {
     }
 
     @Override
-    public boolean shouldExecute() {
+    public boolean shouldExecute()
+    {
         EntityPlayer owner = tamable.getOwner();
 
-        if (owner != null) {
+        if (owner != null)
+        {
             attacker = owner.getRevengeTarget();
 
-            if (owner.getRevengeTimer() != timestamp && isSuitableTarget(attacker, false) && tamable.shouldAttackEntity(attacker)) {
+            if (owner.getRevengeTimer() != timestamp && isSuitableTarget(attacker, false) && tamable.shouldAttackEntity(attacker))
+            {
                 return true;
             }
         }
@@ -36,8 +41,10 @@ public class EntityCreepAIOwnerHurtByTarget extends EntityAITarget {
     }
 
     @Override
-    public boolean shouldContinueExecuting() {
-        if (tamable.getOwner() == null) {
+    public boolean shouldContinueExecuting()
+    {
+        if (tamable.getOwner() == null)
+        {
             return false;
         }
 
@@ -45,12 +52,14 @@ public class EntityCreepAIOwnerHurtByTarget extends EntityAITarget {
     }
 
     @Override
-    public void startExecuting() {
+    public void startExecuting()
+    {
         taskOwner.setAttackTarget(attacker);
 
         EntityPlayer owner = tamable.getOwner();
 
-        if (owner != null) {
+        if (owner != null)
+        {
             timestamp = owner.getRevengeTimer();
         }
 

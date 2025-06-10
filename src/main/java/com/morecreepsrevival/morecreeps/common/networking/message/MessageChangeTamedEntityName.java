@@ -10,37 +10,44 @@ import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 
-public class MessageChangeTamedEntityName implements IMessage {
+public class MessageChangeTamedEntityName implements IMessage
+{
     private int entityId;
 
     private String name;
 
-    public MessageChangeTamedEntityName() {
+    public MessageChangeTamedEntityName()
+    {
     }
 
-    public MessageChangeTamedEntityName(int entityIdIn, String nameIn) {
+    public MessageChangeTamedEntityName(int entityIdIn, String nameIn)
+    {
         entityId = entityIdIn;
 
         name = nameIn;
     }
 
     @Override
-    public void toBytes(ByteBuf buf) {
+    public void toBytes(ByteBuf buf)
+    {
         buf.writeInt(entityId);
 
         ByteBufUtils.writeUTF8String(buf, name);
     }
 
     @Override
-    public void fromBytes(ByteBuf buf) {
+    public void fromBytes(ByteBuf buf)
+    {
         entityId = buf.readInt();
 
         name = ByteBufUtils.readUTF8String(buf);
     }
 
-    public static class MessageHandler implements IMessageHandler<MessageChangeTamedEntityName, IMessage> {
+    public static class MessageHandler implements IMessageHandler<MessageChangeTamedEntityName, IMessage>
+    {
         @Override
-        public IMessage onMessage(MessageChangeTamedEntityName message, MessageContext context) {
+        public IMessage onMessage(MessageChangeTamedEntityName message, MessageContext context)
+        {
             EntityPlayerMP player = context.getServerHandler().player;
 
             WorldServer world = player.getServerWorld();
@@ -48,10 +55,12 @@ public class MessageChangeTamedEntityName implements IMessage {
             world.addScheduledTask(() -> {
                 Entity entity = world.getEntityByID(message.entityId);
 
-                if (entity instanceof EntityCreepBase) {
-                    EntityCreepBase creep = (EntityCreepBase) entity;
+                if (entity instanceof EntityCreepBase)
+                {
+                    EntityCreepBase creep = (EntityCreepBase)entity;
 
-                    if (creep.isPlayerOwner(player) && !message.name.isEmpty()) {
+                    if (creep.isPlayerOwner(player) && !message.name.isEmpty())
+                    {
                         creep.setCreepName(message.name);
                     }
                 }

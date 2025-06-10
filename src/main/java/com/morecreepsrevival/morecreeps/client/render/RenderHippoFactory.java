@@ -6,9 +6,10 @@ import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraftforge.fml.client.registry.IRenderFactory;
 
 public class RenderHippoFactory implements IRenderFactory<EntityHippo> {
+    public RenderHippoFactory() {
+    }
 
-    @Override
     public Render<? super EntityHippo> createRenderFor(RenderManager renderManager) {
-        return new RenderHippo<>(renderManager);
+        return new RenderHippo(renderManager);
     }
 }

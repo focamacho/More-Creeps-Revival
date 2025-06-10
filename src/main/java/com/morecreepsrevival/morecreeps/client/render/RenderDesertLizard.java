@@ -6,6 +6,6 @@ import net.minecraft.client.renderer.entity.RenderManager;
 
 public class RenderDesertLizard<T extends EntityDesertLizard> extends RenderCreep<T> {
     public RenderDesertLizard(RenderManager renderManager) {
-        super(renderManager, new ModelDesertLizard(), 0.5f);
+        super(renderManager, new ModelDesertLizard(), 0.5F);
     }
 }

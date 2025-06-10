@@ -24,7 +24,8 @@ import net.minecraft.world.World;
 
 import javax.annotation.Nonnull;
 
-public class EntitySchlump extends EntityCreepBase {
+public class EntitySchlump extends EntityCreepBase
+{
     private static final DataParameter<Integer> age = EntityDataManager.createKey(EntitySchlump.class, DataSerializers.VARINT);
 
     private static final DataParameter<Integer> ageTimer = EntityDataManager.createKey(EntitySchlump.class, DataSerializers.VARINT);
@@ -37,14 +38,15 @@ public class EntitySchlump extends EntityCreepBase {
 
     private static final DataParameter<Integer> deathTimer = EntityDataManager.createKey(EntitySchlump.class, DataSerializers.VARINT);
 
-    public EntitySchlump(World worldIn) {
+    public EntitySchlump(World worldIn)
+    {
         super(worldIn);
 
         setCreepTypeName("Schlump");
 
         baseSpeed = 0.0d;
 
-        baseHealth = (float) rand.nextInt(10) + 10.0f;
+        baseHealth = (float)rand.nextInt(10) + 10.0f;
 
         setModelSize(0.4f);
 
@@ -54,7 +56,8 @@ public class EntitySchlump extends EntityCreepBase {
     }
 
     @Override
-    protected void entityInit() {
+    protected void entityInit()
+    {
         super.entityInit();
 
         dataManager.register(age, 0);
@@ -64,51 +67,60 @@ public class EntitySchlump extends EntityCreepBase {
         dataManager.register(placed, Boolean.valueOf(false));
 
         dataManager.register(payoutTimer, 0);
-
+        
         dataManager.register(waitTime, 0);
 
         dataManager.register(deathTimer, 0);
     }
 
     @Override
-    protected void updateTexture() {
+    protected void updateTexture()
+    {
         setTexture("textures/entity/schlump.png");
     }
 
     @Override
-    protected void initEntityAI() {
+    protected void initEntityAI()
+    {
         clearAITasks();
     }
 
     @Override
-    public void onLivingUpdate() {
+    public void onLivingUpdate()
+    {
         super.onLivingUpdate();
 
-        if (inWater) {
+        if (inWater)
+        {
             setDead();
         }
     }
 
     @Override
-    public void onUpdate() {
+    public void onUpdate()
+    {
         super.onUpdate();
 
         ignoreFrustumCheck = true;
 
         dataManager.set(ageTimer, dataManager.get(ageTimer) + 1);
 
-        if (dataManager.get(ageTimer) > 50) {
-            if (getAge() < 22000) {
+        if (dataManager.get(ageTimer) > 50)
+        {
+            if (getAge() < 22000)
+            {
                 setAge(getAge() + 1);
             }
 
-            if (getAge() > 20000) {
+            if (getAge() > 20000)
+            {
                 setDead();
             }
 
             // TODO: achievements
 
-            if (getModelSize() < 3.5f) {
+            if (getModelSize() < 3.5f)
+            {
                 setModelSize(getModelSize() + 0.001f);
             }
 
@@ -116,43 +128,54 @@ public class EntitySchlump extends EntityCreepBase {
 
             int i = (getAge() / 100) * 2;
 
-            if (i > 150) {
+            if (i > 150)
+            {
                 i = 150;
             }
 
-            if (getAge() > 200 && rand.nextInt(200 - i) == 0) {
+            if (getAge() > 200 && rand.nextInt(200 - i) == 0)
+            {
                 giveReward();
             }
         }
 
-        if (!getPlaced()) {
+        if (!getPlaced())
+        {
             setPlaced(true);
 
-            if (!checkHouse()) {
+            if (!checkHouse())
+            {
                 dataManager.set(deathTimer, 200);
             }
-        } else if (dataManager.get(deathTimer) > 0) {
+        }
+        else if (dataManager.get(deathTimer) > 0)
+        {
             dataManager.set(deathTimer, dataManager.get(deathTimer) - 1);
 
-            if (dataManager.get(deathTimer) == 0) {
+            if (dataManager.get(deathTimer) == 0)
+            {
                 setDead();
             }
         }
     }
 
     @Override
-    public boolean canDespawn() {
+    public boolean canDespawn()
+    {
         return (getHealth() < 1.0f);
     }
 
     @Override
-    public int getMaxSpawnedInChunk() {
+    public int getMaxSpawnedInChunk()
+    {
         return 1;
     }
 
     @Override
-    protected SoundEvent getAmbientSound() {
-        if (rand.nextInt(5) == 0) {
+    protected SoundEvent getAmbientSound()
+    {
+        if (rand.nextInt(5) == 0)
+        {
             return CreepsSoundHandler.schlumpSound;
         }
 
@@ -160,33 +183,40 @@ public class EntitySchlump extends EntityCreepBase {
     }
 
     @Override
-    protected SoundEvent getHurtSound(DamageSource damageSource) {
+    protected SoundEvent getHurtSound(DamageSource damageSource)
+    {
         return CreepsSoundHandler.schlumpHurtSound;
     }
 
     @Override
-    protected SoundEvent getDeathSound() {
+    protected SoundEvent getDeathSound()
+    {
         return CreepsSoundHandler.schlumpDeathSound;
     }
 
     @Override
-    public void setDead() {
+    public void setDead()
+    {
         super.setDead();
 
         SoundEvent deathSound = getDeathSound();
 
-        if (deathSound != null) {
+        if (deathSound != null)
+        {
             playSound(deathSound, getSoundVolume(), getSoundPitch());
         }
 
         smoke();
     }
 
-    private boolean checkItems() {
+    private boolean checkItems()
+    {
         int i = 0;
 
-        for (Entity entity : world.getEntitiesWithinAABBExcludingEntity(this, getEntityBoundingBox().expand(6.0d, 6.0d, 6.0d))) {
-            if (entity instanceof EntityItem) {
+        for (Entity entity : world.getEntitiesWithinAABBExcludingEntity(this, getEntityBoundingBox().expand(6.0d, 6.0d, 6.0d)))
+        {
+            if (entity instanceof EntityItem)
+            {
                 i++;
             }
         }
@@ -195,52 +225,64 @@ public class EntitySchlump extends EntityCreepBase {
     }
 
     @Override
-    public void smoke() {
-        for (int i = 0; i < 5; i++) {
-            for (int j = 0; j < 2; j++) {
+    public void smoke()
+    {
+        for (int i = 0; i < 5; i++)
+        {
+            for (int j = 0; j < 2; j++)
+            {
                 double d = rand.nextGaussian() * 0.02D;
                 double d1 = rand.nextGaussian() * 0.02D;
                 double d2 = rand.nextGaussian() * 0.02D;
 
-                world.spawnParticle(EnumParticleTypes.EXPLOSION_NORMAL, ((posX + (double) (rand.nextFloat() * width * 2.0f)) - (double) width) + (double) i, posY + (double) (rand.nextFloat() * height), (posZ + (double) (rand.nextFloat() * width * 2.0f)) - (double) width, d, d1, d2);
-                world.spawnParticle(EnumParticleTypes.EXPLOSION_NORMAL, (posX + (double) (rand.nextFloat() * width * 2.0f)) - (double) width - (double) i, posY + (double) (rand.nextFloat() * height), (posZ + (double) (rand.nextFloat() * width * 2.0f)) - (double) width, d, d1, d2);
-                world.spawnParticle(EnumParticleTypes.EXPLOSION_NORMAL, (posX + (double) (rand.nextFloat() * width * 2.0f)) - (double) width, posY + (double) (rand.nextFloat() * height), (posZ + (double) (rand.nextFloat() * width * 2.0f) + (double) i) - (double) width, d, d1, d2);
-                world.spawnParticle(EnumParticleTypes.EXPLOSION_NORMAL, (posX + (double) (rand.nextFloat() * width * 2.0f)) - (double) width, posY + (double) (rand.nextFloat() * height), (posZ + (double) (rand.nextFloat() * width * 2.0f)) - (double) i - (double) width, d, d1, d2);
-                world.spawnParticle(EnumParticleTypes.EXPLOSION_NORMAL, ((posX + (double) (rand.nextFloat() * width * 2.0f)) - (double) width) + (double) i, posY + (double) (rand.nextFloat() * height), (posZ + (double) (rand.nextFloat() * width * 2.0f) + (double) i) - (double) width, d, d1, d2);
-                world.spawnParticle(EnumParticleTypes.EXPLOSION_NORMAL, (posX + (double) (rand.nextFloat() * width * 2.0f)) - (double) width - (double) i, posY + (double) (rand.nextFloat() * height), (posZ + (double) (rand.nextFloat() * width * 2.0f)) - (double) i - (double) width, d, d1, d2);
-                world.spawnParticle(EnumParticleTypes.EXPLOSION_NORMAL, ((posX + (double) (rand.nextFloat() * width * 2.0f)) - (double) width) + (double) i, posY + (double) (rand.nextFloat() * height), (posZ + (double) (rand.nextFloat() * width * 2.0f) + (double) i) - (double) width, d, d1, d2);
-                world.spawnParticle(EnumParticleTypes.EXPLOSION_NORMAL, (posX + (double) (rand.nextFloat() * width * 2.0f)) - (double) width - (double) i, posY + (double) (rand.nextFloat() * height), (posZ + (double) (rand.nextFloat() * width * 2.0f)) - (double) i - (double) width, d, d1, d2);
+                world.spawnParticle(EnumParticleTypes.EXPLOSION_NORMAL, ((posX + (double)(rand.nextFloat() * width * 2.0f)) - (double)width) + (double)i, posY + (double)(rand.nextFloat() * height), (posZ + (double)(rand.nextFloat() * width * 2.0f)) - (double)width, d, d1, d2);
+                world.spawnParticle(EnumParticleTypes.EXPLOSION_NORMAL, (posX + (double)(rand.nextFloat() * width * 2.0f)) - (double)width - (double)i, posY + (double)(rand.nextFloat() * height), (posZ + (double)(rand.nextFloat() * width * 2.0f)) - (double)width, d, d1, d2);
+                world.spawnParticle(EnumParticleTypes.EXPLOSION_NORMAL, (posX + (double)(rand.nextFloat() * width * 2.0f)) - (double)width, posY + (double)(rand.nextFloat() * height), (posZ + (double)(rand.nextFloat() * width * 2.0f) + (double)i) - (double)width, d, d1, d2);
+                world.spawnParticle(EnumParticleTypes.EXPLOSION_NORMAL, (posX + (double)(rand.nextFloat() * width * 2.0f)) - (double)width, posY + (double)(rand.nextFloat() * height), (posZ + (double)(rand.nextFloat() * width * 2.0f)) - (double)i - (double)width, d, d1, d2);
+                world.spawnParticle(EnumParticleTypes.EXPLOSION_NORMAL, ((posX + (double)(rand.nextFloat() * width * 2.0f)) - (double)width) + (double)i, posY + (double)(rand.nextFloat() * height), (posZ + (double)(rand.nextFloat() * width * 2.0f) + (double)i) - (double)width, d, d1, d2);
+                world.spawnParticle(EnumParticleTypes.EXPLOSION_NORMAL, (posX + (double)(rand.nextFloat() * width * 2.0f)) - (double)width - (double)i, posY + (double)(rand.nextFloat() * height), (posZ + (double)(rand.nextFloat() * width * 2.0f)) - (double)i - (double)width, d, d1, d2);
+                world.spawnParticle(EnumParticleTypes.EXPLOSION_NORMAL, ((posX + (double)(rand.nextFloat() * width * 2.0f)) - (double)width) + (double)i, posY + (double)(rand.nextFloat() * height), (posZ + (double)(rand.nextFloat() * width * 2.0f) + (double)i) - (double)width, d, d1, d2);
+                world.spawnParticle(EnumParticleTypes.EXPLOSION_NORMAL, (posX + (double)(rand.nextFloat() * width * 2.0f)) - (double)width - (double)i, posY + (double)(rand.nextFloat() * height), (posZ + (double)(rand.nextFloat() * width * 2.0f)) - (double)i - (double)width, d, d1, d2);
             }
         }
     }
 
     @Override
-    public boolean isEntityInsideOpaqueBlock() {
+    public boolean isEntityInsideOpaqueBlock()
+    {
         return (getHealth() <= 0.0f);
     }
 
-    public int getAge() {
-        return dataManager.get(age);
-    }
-
-    public void setAge(int i) {
+    public void setAge(int i)
+    {
         dataManager.set(age, i);
     }
 
-    public boolean getPlaced() {
-        return ((Boolean) dataManager.get(placed)).booleanValue();
+    public int getAge()
+    {
+        return dataManager.get(age);
     }
 
-    private void setPlaced(boolean b) {
+    private void setPlaced(boolean b)
+    {
         dataManager.set(placed, Boolean.valueOf(b));
     }
 
-    private boolean checkHouse() {
+    public boolean getPlaced()
+    {
+        return ((Boolean)dataManager.get(placed)).booleanValue();
+    }
+
+    private boolean checkHouse()
+    {
         EntityPlayer owner = getOwner();
 
-        for (Entity entity : world.getEntitiesWithinAABBExcludingEntity(this, getEntityBoundingBox().expand(16.0d, 16.0d, 16.0d))) {
-            if (entity instanceof EntitySchlump) {
-                if (owner != null) {
+        for (Entity entity : world.getEntitiesWithinAABBExcludingEntity(this, getEntityBoundingBox().expand(16.0d, 16.0d, 16.0d)))
+        {
+            if (entity instanceof EntitySchlump)
+            {
+                if (owner != null)
+                {
                     owner.sendMessage(new TextComponentString("Too close to another Schlump. SCHLUMP OVERLOAD!"));
                 }
 
@@ -252,16 +294,21 @@ public class EntitySchlump extends EntityCreepBase {
 
         BlockPos blockPos = new BlockPos(MathHelper.floor(posX), MathHelper.floor(getEntityBoundingBox().minY), MathHelper.floor(posZ));
 
-        if (world.canBlockSeeSky(blockPos)) {
-            if (owner != null) {
+        if (world.canBlockSeeSky(blockPos))
+        {
+            if (owner != null)
+            {
                 owner.sendMessage(new TextComponentString("Your Schlump needs to be indoors or it will die!"));
             }
 
             playSound(CreepsSoundHandler.schlumpIndoorsSound, getSoundVolume(), getSoundPitch());
 
             return false;
-        } else if (world.getBlockLightOpacity(blockPos) > 11) {
-            if (owner != null) {
+        }
+        else if (world.getBlockLightOpacity(blockPos) > 11)
+        {
+            if (owner != null)
+            {
                 owner.sendMessage(new TextComponentString("It is too bright in here for your little Schlump!"));
             }
 
@@ -272,18 +319,24 @@ public class EntitySchlump extends EntityCreepBase {
 
         int l = 0;
 
-        for (int i = -2; i < 2; i++) {
-            for (int k = -2; k < 2; k++) {
-                for (int q = 0; q < 5; q++) {
-                    if (world.isAirBlock(new BlockPos(posX + i, posY + q, posZ + k))) {
+        for (int i = -2; i < 2; i++)
+        {
+            for (int k = -2; k < 2; k++)
+            {
+                for (int q = 0; q < 5; q++)
+                {
+                    if (world.isAirBlock(new BlockPos(posX + i, posY + q, posZ + k)))
+                    {
                         l++;
                     }
                 }
             }
         }
 
-        if (l < 60) {
-            if (owner != null) {
+        if (l < 60)
+        {
+            if (owner != null)
+            {
                 owner.sendMessage(new TextComponentString("Your Schlump doesn't have enough room to grow!"));
             }
 
@@ -294,47 +347,80 @@ public class EntitySchlump extends EntityCreepBase {
 
         int j1 = 0;
 
-        for (int i = -5; i < 5; i++) {
-            for (int k = -5; k < 5; k++) {
-                for (int q = -5; q < 5; q++) {
+        for (int i = -5; i < 5; i++)
+        {
+            for (int k = -5; k < 5; k++)
+            {
+                for (int q = -5; q < 5; q++)
+                {
                     Block block = world.getBlockState(new BlockPos(posX + i, posY + q, posZ + k)).getBlock();
 
-                    if (block == Blocks.OAK_DOOR) {
+                    if (block == Blocks.OAK_DOOR)
+                    {
                         j1 += 10;
-                    } else if (block == Blocks.IRON_DOOR) {
+                    }
+                    else if (block == Blocks.IRON_DOOR)
+                    {
                         j1 += 20;
-                    } else if (block == Blocks.GLASS) {
+                    }
+                    else if (block == Blocks.GLASS)
+                    {
                         j1 += 5;
-                    } else if (block == Blocks.CHEST) {
+                    }
+                    else if (block == Blocks.CHEST)
+                    {
                         j1 += 15;
-                    } else if (block == Blocks.BED) {
+                    }
+                    else if (block == Blocks.BED)
+                    {
                         j1 += 20;
-                    } else if (block == Blocks.BOOKSHELF) {
+                    }
+                    else if (block == Blocks.BOOKSHELF)
+                    {
                         j1 += 15;
-                    } else if (block == Blocks.BRICK_BLOCK) {
+                    }
+                    else if (block == Blocks.BRICK_BLOCK)
+                    {
                         j1 += 3;
-                    } else if (block == Blocks.PLANKS) {
+                    }
+                    else if (block == Blocks.PLANKS)
+                    {
                         j1 += 3;
-                    } else if (block == Blocks.WOOL) {
+                    }
+                    else if (block == Blocks.WOOL)
+                    {
                         j1 += 2;
-                    } else if (block == Blocks.CAKE) {
+                    }
+                    else if (block == Blocks.CAKE)
+                    {
                         j1 += 10;
-                    } else if (block == Blocks.FURNACE) {
+                    }
+                    else if (block == Blocks.FURNACE)
+                    {
                         j1 += 15;
-                    } else if (block == Blocks.LIT_FURNACE) {
+                    }
+                    else if (block == Blocks.LIT_FURNACE)
+                    {
                         j1 += 10;
-                    } else if (block == Blocks.RED_FLOWER) {
+                    }
+                    else if (block == Blocks.RED_FLOWER)
+                    {
                         j1 += 5;
-                    } else if (block == Blocks.CRAFTING_TABLE) {
+                    }
+                    else if (block == Blocks.CRAFTING_TABLE)
+                    {
                         j1 += 10;
                     }
                 }
             }
         }
 
-        if (j1 > 275) {
-            if (getAge() < 10) {
-                if (owner != null) {
+        if (j1 > 275)
+        {
+            if (getAge() < 10)
+            {
+                if (owner != null)
+                {
                     owner.sendMessage(new TextComponentString("This location is great! Your Schlump will love it here!"));
                 }
 
@@ -344,7 +430,8 @@ public class EntitySchlump extends EntityCreepBase {
             return true;
         }
 
-        if (owner != null) {
+        if (owner != null)
+        {
             owner.sendMessage(new TextComponentString("This is not a good location for your Schlump. It will die here!"));
         }
 
@@ -353,29 +440,36 @@ public class EntitySchlump extends EntityCreepBase {
         return false;
     }
 
-    private void giveReward() {
+    private void giveReward()
+    {
         EntityPlayer owner = getOwner();
 
-        if (!checkHouse()) {
+        if (!checkHouse())
+        {
             dataManager.set(deathTimer, 200);
 
             return;
-        } else if (checkItems()) {
+        }
+        else if (checkItems())
+        {
             return;
         }
 
         playSound(CreepsSoundHandler.schlumpRewardSound, getSoundVolume(), getSoundPitch());
 
-        if (owner != null && !world.isRemote) {
+        if (owner != null && !world.isRemote)
+        {
             EntityItem entityItem;
 
             int i = rand.nextInt(getAge() / 100) + 1;
 
-            if (i > 42) {
+            if (i > 42)
+            {
                 i = 42;
             }
 
-            switch (i) {
+            switch (i)
+            {
                 case 1:
                 case 18:
                     entityItem = entityDropItem(new ItemStack(CreepsItemHandler.lolly, rand.nextInt(2) + 1), 1.0f);
@@ -458,12 +552,12 @@ public class EntitySchlump extends EntityCreepBase {
 
                     break;
                 case 34:
-                    entityItem = entityDropItem(new ItemStack(CreepsItemHandler.atom, rand.nextInt(7) + 1), 1.0f);
+                    entityItem = entityDropItem(new ItemStack(Items.EMERALD, rand.nextInt(7) + 1), 1.0f);
 
                     break;
                 case 35:
                 case 37:
-                    entityItem = entityDropItem(new ItemStack(CreepsItemHandler.armyGem, 1), 1.0f);
+                    entityItem = entityDropItem(new ItemStack(CreepsItemHandler.sundae, 1), 1.0f);
 
                     break;
                 case 36:
@@ -496,10 +590,11 @@ public class EntitySchlump extends EntityCreepBase {
                     break;
             }
 
-            if (entityItem != null) {
-                double d = -MathHelper.sin((rotationYaw * (float) Math.PI) / 180.0f);
+            if (entityItem != null)
+            {
+                double d = -MathHelper.sin((rotationYaw * (float)Math.PI) / 180.0f);
 
-                double d1 = MathHelper.cos((rotationYaw * (float) Math.PI) / 180.0f);
+                double d1 = MathHelper.cos((rotationYaw * (float)Math.PI) / 180.0f);
 
                 entityItem.posX = owner.posX + d * 0.5d;
 
@@ -513,15 +608,19 @@ public class EntitySchlump extends EntityCreepBase {
     }
 
     @Override
-    public boolean processInteract(EntityPlayer player, EnumHand hand) {
-        if (hand == EnumHand.OFF_HAND) {
+    public boolean processInteract(EntityPlayer player, EnumHand hand)
+    {
+        if (hand == EnumHand.OFF_HAND)
+        {
             return super.processInteract(player, hand);
         }
 
         ItemStack itemStack = player.getHeldItem(hand);
 
-        if (itemStack.getItem() == CreepsItemHandler.babyJarEmpty) {
-            if (getModelSize() > 0.5f) {
+        if (itemStack.getItem() == CreepsItemHandler.babyJarEmpty)
+        {
+            if (getModelSize() > 0.5f)
+            {
                 player.sendMessage(new TextComponentString("That Schlump is too big to fit in a jar!"));
 
                 playSound(CreepsSoundHandler.schlumpBigSound, getSoundVolume(), getSoundPitch());
@@ -540,14 +639,16 @@ public class EntitySchlump extends EntityCreepBase {
     }
 
     @Override
-    public void onDeath(@Nonnull DamageSource cause) {
+    public void onDeath(@Nonnull DamageSource cause)
+    {
         super.onDeath(cause);
 
         giveReward();
     }
 
     @Override
-    public void writeEntityToNBT(NBTTagCompound compound) {
+    public void writeEntityToNBT(NBTTagCompound compound)
+    {
         super.writeEntityToNBT(compound);
 
         NBTTagCompound props = compound.getCompoundTag("MoreCreepsSchlump");
@@ -560,16 +661,19 @@ public class EntitySchlump extends EntityCreepBase {
     }
 
     @Override
-    public void readEntityFromNBT(NBTTagCompound compound) {
+    public void readEntityFromNBT(NBTTagCompound compound)
+    {
         super.readEntityFromNBT(compound);
 
         NBTTagCompound props = compound.getCompoundTag("MoreCreepsSchlump");
 
-        if (props.hasKey("Age")) {
+        if (props.hasKey("Age"))
+        {
             setAge(props.getInteger("Age"));
         }
 
-        if (props.hasKey("DeathTimer")) {
+        if (props.hasKey("DeathTimer"))
+        {
             dataManager.set(deathTimer, props.getInteger("DeathTimer"));
         }
     }

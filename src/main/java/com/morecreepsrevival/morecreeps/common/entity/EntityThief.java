@@ -2,11 +2,13 @@ package com.morecreepsrevival.morecreeps.common.entity;
 
 import com.morecreepsrevival.morecreeps.common.entity.ai.EntityAIThief;
 import com.morecreepsrevival.morecreeps.common.sounds.CreepsSoundHandler;
+import net.minecraft.block.Block;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.EnumCreatureType;
 import net.minecraft.entity.ai.*;
 import net.minecraft.entity.monster.IMob;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Blocks;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -18,246 +20,273 @@ import net.minecraft.util.DamageSource;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.SoundEvent;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.EnumDifficulty;
+import net.minecraft.world.EnumSkyBlock;
 import net.minecraft.world.World;
 
-public class EntityThief extends EntityCreepBase implements IMob, IEntityCanChangeSize {
+public class EntityThief extends EntityCreepBase implements IMob
+{
     private static final DataParameter<Boolean> stolen = EntityDataManager.<Boolean>createKey(EntityThief.class, DataSerializers.BOOLEAN);
-
     private static final DataParameter<ItemStack> ITEM = EntityDataManager.createKey(EntityThief.class, DataSerializers.ITEM_STACK);
-
     private double goX;
-
     private double goZ;
-
-    public EntityThief(World worldIn) {
+    public EntityThief(World worldIn)
+    {
         super(worldIn);
-
         setCreepTypeName("Thief");
-
         creatureType = EnumCreatureType.MONSTER;
-
-        baseHealth = (float) rand.nextInt(20) + 10.0f;
-
+        baseHealth = (float)rand.nextInt(20) + 10.0f;
         baseSpeed = 0.35d;
-
         updateAttributes();
     }
 
     @Override
-    public boolean canDespawn() {
+    public boolean canDespawn()
+    {
         return !getStolen();
     }
 
     @Override
-    protected void entityInit() {
+    protected void entityInit()
+    {
         super.entityInit();
-
         dataManager.register(stolen, Boolean.valueOf(false));
-
         dataManager.register(ITEM, ItemStack.EMPTY);
     }
 
     @Override
-    protected void updateTexture() {
+    protected void updateTexture()
+    {
         setTexture("textures/entity/thief.png");
     }
 
     @Override
-    protected void initEntityAI() {
+    protected void initEntityAI()
+    {
         clearAITasks();
-
         NodeProcessor nodeProcessor = getNavigator().getNodeProcessor();
-
         nodeProcessor.setCanSwim(true);
-
         nodeProcessor.setCanEnterDoors(true);
-
         tasks.addTask(1, new EntityAISwimming(this));
-
         tasks.addTask(2, new EntityAIBreakDoor(this));
-
         tasks.addTask(3, new EntityAIThief(this));
-
         tasks.addTask(4, new EntityAIMoveTowardsRestriction(this, 0.5d));
-
         tasks.addTask(5, new EntityAIWanderAvoidWater(this, 1.0d));
-
         tasks.addTask(6, new EntityAIWatchClosest(this, EntityPlayer.class, 8.0f));
-
         tasks.addTask(6, new EntityAILookIdle(this));
-
         targetTasks.addTask(1, new EntityAIHurtByTarget(this, false));
     }
 
     @Override
-    public void onLivingUpdate() {
-        super.onLivingUpdate();
+    protected boolean isDaylightMob() {
+        return true;
+    }
 
-        if (getHeldItem(EnumHand.MAIN_HAND).getItem() != dataManager.get(ITEM).getItem()) {
+    @Override
+    public boolean getCanSpawnHere() {
+        return super.getCanSpawnHere() && this.world.canSeeSky(new BlockPos(this));
+    }
+
+    @Override
+    public int getMaxSpawnedInChunk()
+    {
+        return 1;
+    }
+
+    @Override
+    public float getBlockPathWeight(BlockPos blockPos)
+    {
+        Block block = world.getBlockState(blockPos).getBlock();
+        if (block == Blocks.SAND || block == Blocks.GRAVEL || block == Blocks.GRASS)
+        {
+            return 10.0f;
+        }
+        return super.getBlockPathWeight(blockPos);
+    }
+
+    protected boolean isValidLightLevel() {
+        return this.world.getLightFor(EnumSkyBlock.BLOCK, new BlockPos(this.posX, this.getEntityBoundingBox().minY, this.posZ)) <= 15;
+    }
+
+    @Override
+    public void onLivingUpdate()
+    {
+        super.onLivingUpdate();
+        if (getHeldItem(EnumHand.MAIN_HAND).getItem() != dataManager.get(ITEM).getItem())
+        {
             setHeldItem(EnumHand.MAIN_HAND, dataManager.get(ITEM).copy());
         }
-
-        if (world.getClosestPlayerToEntity(this, 25.0d) != null && !getStolen()) {
+        if (world.getClosestPlayerToEntity(this, 25.0d) != null && !getStolen())
+        {
             findPlayerToAttack();
-        } else {
+        }
+        else
+        {
             setAttackTarget(null);
         }
-
-        if (getStolen()) {
+        if (getStolen())
+        {
             setAttackTarget(null);
-
-            if (isJumping) {
+            if (isJumping)
+            {
                 motionX += goX * 0.30000001192092896d;
-
                 motionZ += goZ * 0.30000001192092896d;
-            } else {
+            }
+            else
+            {
                 motionX += goX;
-
                 motionZ += goZ;
             }
-
-            if (prevPosY / posY == 1.0d) {
-                if (rand.nextInt(25) == 0) {
+            if (prevPosY / posY == 1.0d)
+            {
+                if (rand.nextInt(25) == 0)
+                {
                     motionX -= goX;
-                } else {
+                }
+                else
+                {
                     motionX += goX;
                 }
-
-                if (rand.nextInt(25) == 0) {
+                if (rand.nextInt(25) == 0)
+                {
                     motionZ -= goZ;
-                } else {
+                }
+                else
+                {
                     motionZ += goZ;
                 }
             }
-
-            if (prevPosX == posX && rand.nextInt(50) == 0) {
+            if (prevPosX == posX && rand.nextInt(50) == 0)
+            {
                 goX *= -1.0d;
             }
-
-            if (prevPosZ == posZ && rand.nextInt(50) == 0) {
+            if (prevPosZ == posZ && rand.nextInt(50) == 0)
+            {
                 goZ *= -1.0d;
             }
-
-            if (rand.nextInt(500) == 0) {
+            if (rand.nextInt(500) == 0)
+            {
                 goX *= -1.0d;
             }
-
-            if (rand.nextInt(700) == 0) {
+            if (rand.nextInt(700) == 0)
+            {
                 goZ *= -1.0d;
             }
-        } else {
+        }
+        else
+        {
             EntityLivingBase target = getAttackTarget();
-
-            if (target instanceof EntityPlayer && getDistanceSq(target) < 16.0d && canEntityBeSeen(target) && getHealth() > 0) {
-                EntityPlayer player = (EntityPlayer) target;
-
+            if (target instanceof EntityPlayer && getDistanceSq(target) < 16.0d && canEntityBeSeen(target) && getHealth() > 0)
+            {
+                EntityPlayer player = (EntityPlayer)target;
                 ItemStack itemStack = null;
-
-                for (ItemStack itemStack1 : player.inventory.mainInventory) {
-                    if (!itemStack1.isEmpty()) {
+                for (ItemStack itemStack1 : player.inventory.mainInventory)
+                {
+                    if (!itemStack1.isEmpty())
+                    {
                         itemStack = itemStack1;
 
-                        if (rand.nextInt(4) == 0) {
+                        if (rand.nextInt(4) == 0)
+                        {
                             break;
                         }
                     }
                 }
-
-                if (itemStack == null) {
+                if (itemStack == null)
+                {
                     setAttackTarget(null);
-                } else {
-                    playSound(SoundEvents.BLOCK_LAVA_POP, getSoundVolume(), (rand.nextFloat() - rand.nextFloat()) * 6.2f + 1.0f);
-
+                }
+                else
+                {
+                    playSound(SoundEvents.ENTITY_CHICKEN_EGG, getSoundVolume(), (rand.nextFloat() - rand.nextFloat()) * 6.2f + 1.0f);
                     int count = itemStack.getCount();
-
                     int stolenAmount = rand.nextInt(count) + 1;
-
-                    if (stolenAmount > count) {
+                    if (stolenAmount > count)
+                    {
                         stolenAmount = count;
                     }
-
                     setStolen(true);
-
-                    if (!world.isRemote) {
+                    if (!world.isRemote)
+                    {
                         ItemStack copy = itemStack.copy();
-
                         copy.setCount(stolenAmount);
-
                         dataManager.set(ITEM, copy);
-
                         dataManager.setDirty(ITEM);
-
                         itemStack.shrink(stolenAmount);
                     }
-
                     playSound(CreepsSoundHandler.thiefStealSound, getSoundVolume(), getSoundPitch());
-
                     setAttackTarget(null);
-
                     goX = 0.044999999999999998d;
-
                     goZ = 0.044999999999999998d;
-
-                    if (rand.nextInt(5) == 0) {
+                    if (rand.nextInt(5) == 0)
+                    {
                         goX *= -1.0d;
                     }
-
-                    if (rand.nextInt(5) == 0) {
+                    if (rand.nextInt(5) == 0)
+                    {
                         goZ *= -1.0d;
                     }
-
-                    for (int i = 0; i < 10; i++) {
-                        world.spawnParticle(EnumParticleTypes.SMOKE_LARGE, (posX + (double) (rand.nextFloat() * width * 2.0f)) - (double) width, posY + (double) (rand.nextFloat() * height), (posZ + (double) (rand.nextFloat() * width * 2.0f)) - (double) width, rand.nextGaussian() * 0.02d, rand.nextGaussian() * 0.02d, rand.nextGaussian() * 0.02d);
+                    for (int i = 0; i < 10; i++)
+                    {
+                        world.spawnParticle(EnumParticleTypes.SMOKE_LARGE, (posX + (double)(rand.nextFloat() * width * 2.0f)) - (double)width, posY + (double)(rand.nextFloat() * height), (posZ + (double)(rand.nextFloat() * width * 2.0f)) - (double)width, rand.nextGaussian() * 0.02d, rand.nextGaussian() * 0.02d, rand.nextGaussian() * 0.02d);
                     }
                 }
             }
         }
     }
 
+    protected void playStepSound(BlockPos pos, Block blockIn)
+    {
+        this.playSound(SoundEvents.ENTITY_PIG_STEP, 0.0F, 1.0F);
+    }
+
     @Override
-    protected SoundEvent getAmbientSound() {
+    protected SoundEvent getAmbientSound()
+    {
         return CreepsSoundHandler.thiefSound;
     }
 
     @Override
-    protected SoundEvent getHurtSound(DamageSource damageSource) {
+    protected SoundEvent getHurtSound(DamageSource damageSource)
+    {
         return CreepsSoundHandler.thiefHurtSound;
     }
 
     @Override
-    protected SoundEvent getDeathSound() {
+    protected SoundEvent getDeathSound()
+    {
         return CreepsSoundHandler.thiefDeathSound;
     }
 
-    @Override
-    public int getMaxSpawnedInChunk() {
-        return 1;
-    }
-
-    public boolean getStolen() {
-        return ((Boolean) dataManager.get(stolen)).booleanValue();
-    }
-
-    public void setStolen(boolean b) {
+    public void setStolen(boolean b)
+    {
         dataManager.set(stolen, Boolean.valueOf(b));
     }
 
-    public void findPlayerToAttack() {
-        if (getStolen() || getAttackTarget() != null) {
+    public boolean getStolen()
+    {
+        return ((Boolean)dataManager.get(stolen)).booleanValue();
+    }
+
+    public void findPlayerToAttack()
+    {
+        if (getStolen() || getAttackTarget() != null)
+        {
             return;
         }
-
         EntityPlayer player = world.getNearestPlayerNotCreative(this, 16.0d);
-
-        if (player != null) {
-            for (ItemStack itemStack : player.inventory.mainInventory) {
-                if (!itemStack.isEmpty()) {
-                    if (rand.nextInt(2) == 0) {
+        if (player != null)
+        {
+            for (ItemStack itemStack : player.inventory.mainInventory)
+            {
+                if (!itemStack.isEmpty())
+                {
+                    if (rand.nextInt(2) == 0)
+                    {
                         playSound(CreepsSoundHandler.thiefFindPlayerSound, getSoundVolume(), getSoundPitch());
                     }
-
                     setAttackTarget(player);
-
                     return;
                 }
             }
@@ -265,73 +294,40 @@ public class EntityThief extends EntityCreepBase implements IMob, IEntityCanChan
     }
 
     @Override
-    public void writeEntityToNBT(NBTTagCompound compound) {
+    public void writeEntityToNBT(NBTTagCompound compound)
+    {
         super.writeEntityToNBT(compound);
-
         NBTTagCompound props = compound.getCompoundTag("MoreCreepsThief");
-
         props.setBoolean("Stolen", getStolen());
-
         props.setTag("Item", dataManager.get(ITEM).writeToNBT(new NBTTagCompound()));
-
         compound.setTag("MoreCreepsThief", props);
     }
 
     @Override
-    public void readEntityFromNBT(NBTTagCompound compound) {
+    public void readEntityFromNBT(NBTTagCompound compound)
+    {
         super.readEntityFromNBT(compound);
-
         NBTTagCompound props = compound.getCompoundTag("MoreCreepsThief");
-
-        if (props.hasKey("Stolen")) {
+        if (props.hasKey("Stolen"))
+        {
             setStolen(props.getBoolean("Stolen"));
         }
-
         dataManager.set(ITEM, new ItemStack(props.getCompoundTag("Item")));
-
         dataManager.setDirty(ITEM);
     }
 
     @Override
-    protected void dropItemsOnDeath() {
+    protected void dropItemsOnDeath()
+    {
         ItemStack itemStack = dataManager.get(ITEM).copy();
-
-        if (!itemStack.isEmpty()) {
+        if (!itemStack.isEmpty())
+        {
             entityDropItem(itemStack, 0.0f);
         }
     }
 
     @Override
-    protected void dropEquipment(boolean wasRecentlyHit, int lootingModifier) {
-    }
-
-    @Override
-    public float maxShrink() {
-        return 0.4f;
-    }
-
-    @Override
-    public float getShrinkRayAmount() {
-        return 0.2f;
-    }
-
-    @Override
-    public void onShrink(EntityShrink source) {
-
-    }
-
-    @Override
-    public float maxGrowth() {
-        return 4.0f;
-    }
-
-    @Override
-    public float getGrowRayAmount() {
-        return 0.2F;
-    }
-
-    @Override
-    public void onGrow(EntityGrow source) {
-
+    protected void dropEquipment(boolean wasRecentlyHit, int lootingModifier)
+    {
     }
 }

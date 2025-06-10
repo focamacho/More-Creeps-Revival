@@ -5,9 +5,11 @@ import net.minecraft.client.renderer.entity.Render;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraftforge.fml.client.registry.IRenderFactory;
 
-public class RenderLawyerFromHellFactory implements IRenderFactory<EntityLawyerFromHell> {
+public class RenderLawyerFromHellFactory implements IRenderFactory<EntityLawyerFromHell>
+{
     @Override
-    public Render<? super EntityLawyerFromHell> createRenderFor(RenderManager renderManager) {
+    public Render<? super EntityLawyerFromHell> createRenderFor(RenderManager renderManager)
+    {
         return new RenderLawyerFromHell<>(renderManager);
     }
 }

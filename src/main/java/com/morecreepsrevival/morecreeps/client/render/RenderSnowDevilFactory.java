@@ -5,9 +5,11 @@ import net.minecraft.client.renderer.entity.Render;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraftforge.fml.client.registry.IRenderFactory;
 
-public class RenderSnowDevilFactory implements IRenderFactory<EntitySnowDevil> {
+public class RenderSnowDevilFactory implements IRenderFactory<EntitySnowDevil>
+{
     @Override
-    public Render<? super EntitySnowDevil> createRenderFor(RenderManager renderManager) {
+    public Render<? super EntitySnowDevil> createRenderFor(RenderManager renderManager)
+    {
         return new RenderSnowDevil<>(renderManager);
     }
 }

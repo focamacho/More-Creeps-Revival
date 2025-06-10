@@ -5,9 +5,11 @@ import net.minecraft.client.renderer.entity.Render;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraftforge.fml.client.registry.IRenderFactory;
 
-public class RenderGrowbotGreggFactory implements IRenderFactory<EntityGrowbotGregg> {
+public class RenderGrowbotGreggFactory implements IRenderFactory<EntityGrowbotGregg>
+{
     @Override
-    public Render<? super EntityGrowbotGregg> createRenderFor(RenderManager renderManager) {
+    public Render<? super EntityGrowbotGregg> createRenderFor(RenderManager renderManager)
+    {
         return new RenderGrowbotGregg<>(renderManager);
     }
 }

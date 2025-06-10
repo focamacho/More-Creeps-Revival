@@ -17,8 +17,10 @@ import net.minecraft.world.World;
 
 import javax.annotation.Nonnull;
 
-public class ItemFireGem extends CreepsItem {
-    public ItemFireGem() {
+public class ItemFireGem extends CreepsItem
+{
+    public ItemFireGem()
+    {
         super("fire_gem");
 
         setMaxStackSize(1);
@@ -26,27 +28,30 @@ public class ItemFireGem extends CreepsItem {
         setMaxDamage(64);
     }
 
-    @Override
-    @Nonnull
-    public ActionResult<ItemStack> onItemRightClick(World world, EntityPlayer player, @Nonnull EnumHand hand) {
+    @Override @Nonnull
+    public ActionResult<ItemStack> onItemRightClick(World world, EntityPlayer player, @Nonnull EnumHand hand)
+    {
         player.playSound(CreepsSoundHandler.fireGemSound, 1.0f, 1.0f);
 
         player.getHeldItem(hand).damageItem(1, player);
 
         player.swingArm(hand);
 
-        for (Entity entity : world.getEntitiesWithinAABB(EntityLivingBase.class, player.getEntityBoundingBox().expand(10.0d, 10.0d, 10.0d))) {
-            EntityLivingBase livingEntity = (EntityLivingBase) entity;
+        for (Entity entity : world.getEntitiesWithinAABB(EntityLivingBase.class, player.getEntityBoundingBox().expand(10.0d, 10.0d, 10.0d)))
+        {
+            EntityLivingBase livingEntity = (EntityLivingBase)entity;
 
-            if (livingEntity instanceof EntityHotdog || livingEntity instanceof EntityHunchback || livingEntity instanceof EntityPlayer || livingEntity instanceof EntityGuineaPig || livingEntity instanceof EntityPreacher) {
+            if (livingEntity instanceof EntityHotdog || livingEntity instanceof EntityHunchback || livingEntity instanceof EntityPlayer || livingEntity instanceof EntityGuineaPig || livingEntity instanceof EntityPreacher)
+            {
                 continue;
             }
 
-            for (int i = 0; i < 10; i++) {
+            for (int i = 0; i < 10; i++)
+            {
                 double d = itemRand.nextGaussian() * 0.02D;
                 double d1 = itemRand.nextGaussian() * 0.02D;
                 double d2 = itemRand.nextGaussian() * 0.02D;
-                world.spawnParticle(EnumParticleTypes.SMOKE_NORMAL, livingEntity.posX + (double) (itemRand.nextFloat() * 1.5F), livingEntity.posY + 0.5D + (double) (itemRand.nextFloat() * 2.5F), livingEntity.posZ + (double) (itemRand.nextFloat() * 1.5F), d, d1, d2);
+                world.spawnParticle(EnumParticleTypes.SMOKE_NORMAL, livingEntity.posX + (double)(itemRand.nextFloat() * 1.5F), livingEntity.posY + 0.5D + (double)(itemRand.nextFloat() * 2.5F), livingEntity.posZ + (double)(itemRand.nextFloat() * 1.5F), d, d1, d2);
             }
 
             livingEntity.attackEntityFrom(DamageSource.IN_FIRE, 2.0f);

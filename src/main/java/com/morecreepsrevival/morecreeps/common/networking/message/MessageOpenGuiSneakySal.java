@@ -11,37 +11,45 @@ import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-public class MessageOpenGuiSneakySal implements IMessage {
+public class MessageOpenGuiSneakySal implements IMessage
+{
     private int salEntityId;
 
-    public MessageOpenGuiSneakySal() {
+    public MessageOpenGuiSneakySal()
+    {
     }
 
-    public MessageOpenGuiSneakySal(int salEntityIdIn) {
+    public MessageOpenGuiSneakySal(int salEntityIdIn)
+    {
         salEntityId = salEntityIdIn;
     }
 
     @Override
-    public void toBytes(ByteBuf buf) {
+    public void toBytes(ByteBuf buf)
+    {
         buf.writeInt(salEntityId);
     }
 
     @Override
-    public void fromBytes(ByteBuf buf) {
+    public void fromBytes(ByteBuf buf)
+    {
         salEntityId = buf.readInt();
     }
 
-    public static class MessageHandler implements IMessageHandler<MessageOpenGuiSneakySal, IMessage> {
-        @SideOnly(Side.CLIENT)
-        @Override
-        public IMessage onMessage(MessageOpenGuiSneakySal message, MessageContext context) {
+    public static class MessageHandler implements IMessageHandler<MessageOpenGuiSneakySal, IMessage>
+    {
+        @SideOnly(Side.CLIENT) @Override
+        public IMessage onMessage(MessageOpenGuiSneakySal message, MessageContext context)
+        {
             Minecraft minecraft = Minecraft.getMinecraft();
 
             minecraft.addScheduledTask(() -> {
-                EntitySneakySal sal = (EntitySneakySal) minecraft.world.getEntityByID(message.salEntityId);
+                EntitySneakySal sal = (EntitySneakySal)minecraft.world.getEntityByID(message.salEntityId);
 
-                if (sal != null) {
+                if (sal != null)
+                {
                     minecraft.player.playSound(CreepsSoundHandler.salGreetingSound, 1.0f, 1.0f);
+
                     minecraft.displayGuiScreen(new GuiSneakySal(sal));
                 }
             });

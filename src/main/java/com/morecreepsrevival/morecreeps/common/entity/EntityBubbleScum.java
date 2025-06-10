@@ -11,8 +11,10 @@ import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
 
-public class EntityBubbleScum extends EntityCreepBase implements IEntityCanChangeSize {
-    public EntityBubbleScum(World worldIn) {
+public class EntityBubbleScum extends EntityCreepBase
+{
+    public EntityBubbleScum(World worldIn)
+    {
         super(worldIn);
 
         setCreepTypeName("Bubble Scum");
@@ -21,13 +23,14 @@ public class EntityBubbleScum extends EntityCreepBase implements IEntityCanChang
 
         baseSpeed = 0.3d;
 
-        baseHealth = (float) rand.nextInt(15) + 5.0f;
+        baseHealth = (float)rand.nextInt(15) + 5.0f;
 
         updateAttributes();
     }
 
     @Override
-    public void initEntityAI() {
+    public void initEntityAI()
+    {
         clearAITasks();
 
         NodeProcessor nodeProcessor = getNavigator().getNodeProcessor();
@@ -36,7 +39,8 @@ public class EntityBubbleScum extends EntityCreepBase implements IEntityCanChang
 
         nodeProcessor.setCanEnterDoors(true);
 
-        if (!isRiding()) {
+        if (!isRiding())
+        {
             tasks.addTask(1, new EntityAISwimming(this));
 
             tasks.addTask(2, new EntityAIBreakDoor(this));
@@ -56,8 +60,10 @@ public class EntityBubbleScum extends EntityCreepBase implements IEntityCanChang
     }
 
     @Override
-    public boolean canMount(Entity entity) {
-        if (getAttackTarget() instanceof EntityPlayer) {
+    public boolean canMount(Entity entity)
+    {
+        if (getAttackTarget() instanceof EntityPlayer)
+        {
             return false;
         }
 
@@ -65,25 +71,31 @@ public class EntityBubbleScum extends EntityCreepBase implements IEntityCanChang
     }
 
     @Override
-    public boolean canRidePlayer() {
+    public boolean canRidePlayer()
+    {
         return true;
     }
 
     @Override
-    public int getMaxSpawnedInChunk() {
+    public int getMaxSpawnedInChunk()
+    {
         return 1;
     }
 
     @Override
-    protected void dropItemsOnDeath() {
-        if (rand.nextInt(25) == 0) {
+    protected void dropItemsOnDeath()
+    {
+        if (rand.nextInt(25) == 0)
+        {
             dropItem(Items.COOKIE, 1);
         }
     }
 
     @Override
-    protected SoundEvent getAmbientSound() {
-        if (!isRiding() && rand.nextInt(1) == 0) {
+    protected SoundEvent getAmbientSound()
+    {
+        if (!isRiding() && rand.nextInt(1) == 0)
+        {
             return CreepsSoundHandler.bubbleScumSound;
         }
 
@@ -91,72 +103,48 @@ public class EntityBubbleScum extends EntityCreepBase implements IEntityCanChang
     }
 
     @Override
-    protected SoundEvent getHurtSound(DamageSource damageSource) {
+    protected SoundEvent getHurtSound(DamageSource damageSource)
+    {
         return CreepsSoundHandler.bubbleScumHurtSound;
     }
 
     @Override
-    protected SoundEvent getDeathSound() {
+    protected SoundEvent getDeathSound()
+    {
         return CreepsSoundHandler.bubbleScumDeathSound;
     }
 
     @Override
-    protected void updateTexture() {
+    protected void updateTexture()
+    {
         setTexture("textures/entity/bubblescum.png");
     }
 
     @Override
-    protected SoundEvent getMountSound() {
+    protected SoundEvent getMountSound()
+    {
         return CreepsSoundHandler.bubbleScumPickupSound;
     }
 
     @Override
-    protected SoundEvent getUnmountSound() {
+    protected SoundEvent getUnmountSound()
+    {
         return CreepsSoundHandler.bubbleScumPutDownSound;
     }
 
     @Override
-    protected void onDismount(Entity entity) {
-        double d = -MathHelper.sin((entity.rotationYaw * (float) Math.PI) / 180.0f);
+    protected void onDismount(Entity entity)
+    {
+        double d = -MathHelper.sin((entity.rotationYaw * (float)Math.PI) / 180.0f);
 
-        double d1 = MathHelper.cos((entity.rotationYaw * (float) Math.PI) / 180.0f);
+        double d1 = MathHelper.cos((entity.rotationYaw * (float)Math.PI) / 180.0f);
 
-        double d2 = -MathHelper.sin((entity.rotationPitch / 180.0f) * (float) Math.PI);
+        double d2 = -MathHelper.sin((entity.rotationPitch / 180.0f) * (float)Math.PI);
 
         motionX = 1.0d * d;
 
         motionZ = 1.0d * d1;
 
         motionY = 1.0d * d2;
-    }
-
-    @Override
-    public float maxShrink() {
-        return 0.3f;
-    }
-
-    @Override
-    public float getShrinkRayAmount() {
-        return 0.15f;
-    }
-
-    @Override
-    public void onShrink(EntityShrink source) {
-
-    }
-
-    @Override
-    public float maxGrowth() {
-        return 3.0f;
-    }
-
-    @Override
-    public float getGrowRayAmount() {
-        return 0.15F;
-    }
-
-    @Override
-    public void onGrow(EntityGrow source) {
-
     }
 }

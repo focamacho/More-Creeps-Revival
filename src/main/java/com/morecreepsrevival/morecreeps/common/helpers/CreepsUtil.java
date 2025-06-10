@@ -1,190 +1,162 @@
 package com.morecreepsrevival.morecreeps.common.helpers;
 
+import java.util.Random;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockTorch;
 import net.minecraft.block.state.BlockFaceShape;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.particle.Particle;
-import net.minecraft.client.particle.ParticleBreaking;
+import net.minecraft.client.particle.ParticleBreaking.Factory;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.Item;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.EnumFacing.Axis;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec2f;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
-public class CreepsUtil {
-    static final float fullRadian = 3.1415926536F;
+public class
+CreepsUtil {
+    static final float fullRadian = 3.1415927F;
+    @SideOnly(Side.CLIENT)
+    static Factory eatingParticlesFactory = new Factory();
 
-    static ParticleBreaking.Factory eatingParticlesFactory = new ParticleBreaking.Factory();
+    public CreepsUtil() {
+    }
 
-    /**
-     * Returns a random 2d position vector.
-     */
-    public static Vec2f RandomVector2dNormalized(java.util.Random rand) {
-        //Guliver Jham here, this code does 2 things:
-        //it randomises the 2d angle and then turns it into a vector.
-        float randfactor = (float) GetRandomUnit(rand);
-        float resultangle = fullRadian * randfactor;
-
+    public static Vec2f RandomVector2dNormalized(Random rand) {
+        float randfactor = (float)GetRandomUnit(rand);
+        float resultangle = 3.1415927F * randfactor;
         return new Vec2f(MathHelper.cos(resultangle), MathHelper.sin(resultangle));
     }
 
-    /**
-     * Returns a random 3d position vector.
-     */
-    public static Vec3d RandomVector3dNormalized(java.util.Random rand) {
-        //Guliver Jham here, this code does 2 things:
-        //it randomises both vertical and horizontal angles, and then turns them into a vector.
-        float randfactorhorizontal = (float) GetRandomUnit(rand);
-        float randfactorvertical = (float) GetRandomUnit(rand);
-        float horizontalangle = fullRadian * randfactorhorizontal;
-        float verticalangle = fullRadian * randfactorvertical;
-
-        return new Vec3d(MathHelper.cos(horizontalangle), MathHelper.cos(verticalangle), MathHelper.sin(horizontalangle));
+    public static Vec3d RandomVector3dNormalized(Random rand) {
+        float randfactorhorizontal = (float)GetRandomUnit(rand);
+        float randfactorvertical = (float)GetRandomUnit(rand);
+        float horizontalangle = 3.1415927F * randfactorhorizontal;
+        float verticalangle = 3.1415927F * randfactorvertical;
+        return new Vec3d((double)MathHelper.cos(horizontalangle), (double)MathHelper.cos(verticalangle), (double)MathHelper.sin(horizontalangle));
     }
 
-    /**
-     * Returns a number between 0 and 1.
-     */
-    public static double GetRandomUnit(java.util.Random rand) {
-        return rand.nextInt(100000) * 0.00001;
+    public static double GetRandomUnit(Random rand) {
+        return (double)rand.nextInt(100000) * 1.0E-5D;
     }
 
-    /**
-     * Returns a number between -1 and 1.
-     */
-    public static double GetRandomUnitMinus(java.util.Random rand) {
-        return (rand.nextInt(200000) - 100000) * 0.00001;
+    public static double GetRandomUnitMinus(Random rand) {
+        return (double)(rand.nextInt(200000) - 100000) * 1.0E-5D;
     }
 
-    public static Particle SpawnEatingParticle(
-            World world, double xCoordIn, double yCoordIn, double zCoordIn,
-            double xSpeedIn, double ySpeedIn, double zSpeedIn, float size, Item itemFodder) {
-        if (Minecraft.getMinecraft().isGamePaused()) return null;
-
-        Particle toSpawn = eatingParticlesFactory.createParticle(
-                -1,
-                world,
-                xCoordIn,
-                yCoordIn,
-                zCoordIn,
-                xSpeedIn,
-                ySpeedIn,
-                zSpeedIn,
-                Item.getIdFromItem(itemFodder)
-        );
-
-        toSpawn.multipleParticleScaleBy(size);
-
-        Minecraft.getMinecraft().effectRenderer.addEffect(toSpawn);
-
-        return toSpawn;
+    @SideOnly(Side.CLIENT)
+    public static Particle SpawnEatingParticle(World world, double xCoordIn, double yCoordIn, double zCoordIn, double xSpeedIn, double ySpeedIn, double zSpeedIn, float size, Item itemFodder) {
+        if (Minecraft.getMinecraft().isGamePaused()) {
+            return null;
+        } else {
+            Particle toSpawn = eatingParticlesFactory.createParticle(-1, world, xCoordIn, yCoordIn, zCoordIn, xSpeedIn, ySpeedIn, zSpeedIn, new int[]{Item.getIdFromItem(itemFodder)});
+            toSpawn.multipleParticleScaleBy(size);
+            Minecraft.getMinecraft().effectRenderer.addEffect(toSpawn);
+            return toSpawn;
+        }
     }
 
-    public static void SpawnEatingParticleRGB(
-            World world, double xCoordIn, double yCoordIn, double zCoordIn,
-            double xSpeedIn, double ySpeedIn, double zSpeedIn, float size,
-            float colorRed, float colorGreen, float colorBlue, Item itemFodder) {
-        if (Minecraft.getMinecraft().isGamePaused()) return;
-
-        Particle toSpawn = eatingParticlesFactory.createParticle(
-                -1,
-                world,
-                xCoordIn,
-                yCoordIn,
-                zCoordIn,
-                xSpeedIn,
-                ySpeedIn,
-                zSpeedIn,
-                Item.getIdFromItem(itemFodder)
-        );
-
-        toSpawn.multipleParticleScaleBy(size);
-        toSpawn.setRBGColorF(colorRed, colorGreen, colorBlue);
-
-        Minecraft.getMinecraft().effectRenderer.addEffect(toSpawn);
+    public static void SpawnEatingParticleRGB(World world, double xCoordIn, double yCoordIn, double zCoordIn, double xSpeedIn, double ySpeedIn, double zSpeedIn, float size, float colorRed, float colorGreen, float colorBlue, Item itemFodder) {
+        if (!Minecraft.getMinecraft().isGamePaused()) {
+            Particle toSpawn = eatingParticlesFactory.createParticle(-1, world, xCoordIn, yCoordIn, zCoordIn, xSpeedIn, ySpeedIn, zSpeedIn, new int[]{Item.getIdFromItem(itemFodder)});
+            toSpawn.multipleParticleScaleBy(size);
+            toSpawn.setRBGColorF(colorRed, colorGreen, colorBlue);
+            Minecraft.getMinecraft().effectRenderer.addEffect(toSpawn);
+        }
     }
 
     public static boolean TryPlaceTorch(World world, BlockPos pos) {
         IBlockState basestate = Blocks.TORCH.getDefaultState();
-        //Blocks.TORCH.getBlockState().getBaseState().withProperty(BlockTorch.FACING, EnumFacing.DOWN);
+        if (!world.isAirBlock(pos)) {
+            return false;
+        } else {
+            Block block = basestate.getBlock();
+            EnumFacing facing = EnumFacing.DOWN;
+            if (CanPlaceTorchOn(world, pos, EnumFacing.NORTH, block)) {
+                facing = EnumFacing.NORTH;
+            }
 
-        if (!world.isAirBlock(pos)) return false;
+            if (CanPlaceTorchOn(world, pos, EnumFacing.SOUTH, block)) {
+                facing = EnumFacing.SOUTH;
+            }
 
-        Block block = basestate.getBlock();
+            if (CanPlaceTorchOn(world, pos, EnumFacing.WEST, block)) {
+                facing = EnumFacing.WEST;
+            }
 
-        EnumFacing facing = EnumFacing.DOWN;
+            if (CanPlaceTorchOn(world, pos, EnumFacing.EAST, block)) {
+                facing = EnumFacing.EAST;
+            }
 
-        if (CreepsUtil.CanPlaceTorchOn(world, pos, EnumFacing.NORTH, block))
-            facing = EnumFacing.NORTH;
+            if (CanPlaceTorchOn(world, pos, EnumFacing.UP, block)) {
+                facing = EnumFacing.UP;
+            }
 
-        if (CreepsUtil.CanPlaceTorchOn(world, pos, EnumFacing.SOUTH, block))
-            facing = EnumFacing.SOUTH;
+            boolean sucess = facing != EnumFacing.DOWN;
+            if (sucess) {
+                world.setBlockState(pos, basestate.withProperty(BlockTorch.FACING, facing), 2);
+            }
 
-        if (CreepsUtil.CanPlaceTorchOn(world, pos, EnumFacing.WEST, block))
-            facing = EnumFacing.WEST;
-
-        if (CreepsUtil.CanPlaceTorchOn(world, pos, EnumFacing.EAST, block))
-            facing = EnumFacing.EAST;
-
-        if (CreepsUtil.CanPlaceTorchOn(world, pos, EnumFacing.UP, block))
-            facing = EnumFacing.UP;
-
-        boolean sucess = facing != EnumFacing.DOWN;
-
-        if (sucess) world.setBlockState(pos, basestate.withProperty(BlockTorch.FACING, facing), 2);
-
-        return sucess;
+            return sucess;
+        }
     }
 
     public static boolean TryPlaceRedstoneTorch(World world, BlockPos pos) {
         IBlockState basestate = Blocks.REDSTONE_TORCH.getDefaultState();
-        //Blocks.TORCH.getBlockState().getBaseState().withProperty(BlockTorch.FACING, EnumFacing.DOWN);
+        if (!world.isAirBlock(pos)) {
+            return false;
+        } else {
+            Block block = basestate.getBlock();
+            EnumFacing facing = EnumFacing.DOWN;
+            if (CanPlaceTorchOn(world, pos, EnumFacing.NORTH, block)) {
+                facing = EnumFacing.NORTH;
+            }
 
-        if (!world.isAirBlock(pos)) return false;
+            if (CanPlaceTorchOn(world, pos, EnumFacing.SOUTH, block)) {
+                facing = EnumFacing.SOUTH;
+            }
 
-        Block block = basestate.getBlock();
+            if (CanPlaceTorchOn(world, pos, EnumFacing.WEST, block)) {
+                facing = EnumFacing.WEST;
+            }
 
-        EnumFacing facing = EnumFacing.DOWN;
+            if (CanPlaceTorchOn(world, pos, EnumFacing.EAST, block)) {
+                facing = EnumFacing.EAST;
+            }
 
-        if (CreepsUtil.CanPlaceTorchOn(world, pos, EnumFacing.NORTH, block))
-            facing = EnumFacing.NORTH;
+            if (CanPlaceTorchOn(world, pos, EnumFacing.UP, block)) {
+                facing = EnumFacing.UP;
+            }
 
-        if (CreepsUtil.CanPlaceTorchOn(world, pos, EnumFacing.SOUTH, block))
-            facing = EnumFacing.SOUTH;
+            boolean sucess = facing != EnumFacing.DOWN;
+            if (sucess) {
+                world.setBlockState(pos, basestate.withProperty(BlockTorch.FACING, facing), 2);
+            }
 
-        if (CreepsUtil.CanPlaceTorchOn(world, pos, EnumFacing.WEST, block))
-            facing = EnumFacing.WEST;
-
-        if (CreepsUtil.CanPlaceTorchOn(world, pos, EnumFacing.EAST, block))
-            facing = EnumFacing.EAST;
-
-        if (CreepsUtil.CanPlaceTorchOn(world, pos, EnumFacing.UP, block))
-            facing = EnumFacing.UP;
-
-        boolean sucess = facing != EnumFacing.DOWN;
-
-        if (sucess) world.setBlockState(pos, basestate.withProperty(BlockTorch.FACING, facing), 2);
-
-        return sucess;
+            return sucess;
+        }
     }
 
     private static boolean CanPlaceTorchOn(World worldIn, BlockPos pos, EnumFacing facing, Block block) {
-        EnumFacing enumfacing = facing;
-        EnumFacing.Axis enumfacing$axis = enumfacing.getAxis();
-        EnumFacing enumfacing1 = enumfacing.getOpposite();
+        Axis enumfacing$axis = facing.getAxis();
+        EnumFacing enumfacing1 = facing.getOpposite();
         BlockPos blockpos = pos.offset(enumfacing1);
+        worldIn.getBlockState(pos);
+        return worldIn.getBlockState(blockpos).getBlockFaceShape(worldIn, blockpos, facing) == BlockFaceShape.SOLID;
+    }
 
-        IBlockState state = worldIn.getBlockState(pos);
-
-        if (worldIn.getBlockState(blockpos).getBlockFaceShape(worldIn, blockpos, enumfacing) != BlockFaceShape.SOLID) {
-            return false;
+    public static int getLightLevel(World world, BlockPos position, boolean ignoreSkyLight, boolean ignoreBlockLight) {
+        if (ignoreBlockLight && ignoreSkyLight) {
+            ignoreBlockLight = false;
+            ignoreSkyLight = false;
         }
-
-        return true;
+        return 0;
     }
 }

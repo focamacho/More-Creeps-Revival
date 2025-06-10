@@ -8,7 +8,8 @@ import net.minecraft.util.math.MathHelper;
 
 import javax.annotation.Nonnull;
 
-public class ModelPony extends ModelBase {
+public class ModelPony extends ModelBase
+{
     public ModelRenderer leg1;
     public ModelRenderer leg2;
     public ModelRenderer leg3;
@@ -47,7 +48,8 @@ public class ModelPony extends ModelBase {
     protected float moveForward;
     protected boolean notmoving;
 
-    public ModelPony() {
+    public ModelPony()
+    {
         taildirection = 1;
 
         this.leg1 = new ModelRenderer(this, 18, 23);
@@ -90,9 +92,11 @@ public class ModelPony extends ModelBase {
         this.ponyHead.setRotationPoint(1.5F, 10.0F, -7.0F);
 
 
+
         this.eyeL = new ModelRenderer(this, 7, 18);
         this.eyeL.addBox(0.0F, 0.0F, 0.0F, 1, 1, 1, 0.0F);
         this.eyeL.setRotationPoint(2.0F, 5.0F, -9.0F);
+
 
 
         this.snout = new ModelRenderer(this, 0, 11);
@@ -183,10 +187,12 @@ public class ModelPony extends ModelBase {
     }
 
     @Override
-    public void render(@Nonnull Entity entity, float f, float f1, float f2, float f3, float f4, float f5) {
+    public void render(@Nonnull Entity entity, float f, float f1, float f2, float f3, float f4, float f5)
+    {
         setRotationAngles(f, f1, f2, f3, f4, f5, entity);
 
-        if (!this.adult) {
+        if (!this.adult)
+        {
             float var8 = 2.0F;
             GlStateManager.pushMatrix();
             GlStateManager.translate(0.0F, 5.0F * f5, 2.0F * f5);
@@ -199,7 +205,8 @@ public class ModelPony extends ModelBase {
             this.mane2.render(f5);
             this.mane1.render(f5);
             this.neck.render(f5);
-            if (this.ponybreed == 8) {
+            if (this.ponybreed == 8)
+            {
                 this.horn.render(f5);
             }
             GlStateManager.popMatrix();
@@ -222,12 +229,15 @@ public class ModelPony extends ModelBase {
             this.saddle3.render(f5);
             this.saddle4.render(f5);
             this.saddle5.render(f5);
-            if (this.ponybreed == 8) {
+            if (this.ponybreed == 8)
+            {
                 this.wingL.render(f5);
                 this.wingR.render(f5);
             }
             GlStateManager.popMatrix();
-        } else {
+        }
+        else
+        {
             this.leg1.render(f5);
             this.leg2.render(f5);
             this.leg3.render(f5);
@@ -253,7 +263,8 @@ public class ModelPony extends ModelBase {
             this.saddle3.render(f5);
             this.saddle4.render(f5);
             this.saddle5.render(f5);
-            if (this.ponybreed == 8) {
+            if (this.ponybreed == 8)
+            {
                 this.wingL.render(f5);
                 this.wingR.render(f5);
                 this.horn.render(f5);
@@ -262,21 +273,29 @@ public class ModelPony extends ModelBase {
     }
 
     @Override
-    public void setRotationAngles(float f, float f1, float f2, float f3, float f4, float f5, @Nonnull Entity entity) {
-        if (this.taildirection > 0) {
+    public void setRotationAngles(float f, float f1, float f2, float f3, float f4, float f5, @Nonnull Entity entity)
+    {
+        if (this.taildirection > 0)
+        {
             this.tailwag += 2.2E-5F;
-            if (this.tailwag > 0.067F) {
+            if (this.tailwag > 0.067F)
+            {
                 this.taildirection *= -1;
             }
-        } else {
+        }
+        else
+        {
             this.tailwag -= 2.2E-5F;
-            if (this.tailwag < -0.067D) {
+            if (this.tailwag < -0.067D)
+            {
                 this.taildirection *= -1;
             }
         }
 
-        if (this.attackpose) {
-            if (this.ponybreed == 8) {
+        if (this.attackpose)
+        {
+            if (this.ponybreed == 8)
+            {
                 this.wingL.rotateAngleZ = MathHelper.sin(f2 * 0.6662F + 3.141593F) * 0.24F - 1.33F;
                 this.wingR.rotateAngleZ = -MathHelper.sin(f2 * 0.6662F + 3.141593F) * 0.24F + 1.33F;
             }
@@ -304,7 +323,9 @@ public class ModelPony extends ModelBase {
             this.earR.setRotationPoint(-1.5F, 0.0F, -8.0F);
 
             this.horn.setRotationPoint(0.0F, 1.0F, -8.0F);
-        } else {
+        }
+        else
+        {
             this.leg1.setRotationPoint(-1.5F, 17.0F, -2.0F);
             this.leg2.setRotationPoint(2.5F, 17.0F, -2.0F);
             this.leg1hoof.setRotationPoint(-1.5F, 17.0F, -2.0F);
@@ -326,8 +347,9 @@ public class ModelPony extends ModelBase {
             this.horn.setRotationPoint(0.0F, 3.0F, -8.0F);
 
 
-            if (this.ponybreed == 8) {
-                if (!this.notmoving) ;
+            if (this.ponybreed == 8)
+            {
+                if (!this.notmoving);
                 this.wingL.rotateAngleZ = MathHelper.sin(f2 * 0.6662F + 3.141593F) * 0.24F - 1.33F;
                 this.wingR.rotateAngleZ = -MathHelper.sin(f2 * 0.6662F + 3.141593F) * 0.24F + 1.33F;
             }
@@ -335,11 +357,14 @@ public class ModelPony extends ModelBase {
             this.body.rotateAngleX = 0.0F;
         }
 
-        if (this.sicky > 0) {
+        if (this.sicky > 0)
+        {
 
             this.leg4.rotateAngleZ = -0.7F + MathHelper.sin(f2 * 0.6662F + 3.141593F) * 0.0324F;
             this.leg3.rotateAngleZ = -2.0F - MathHelper.sin(f2 * 0.6662F + 3.141593F) * 0.0524F;
-        } else {
+        }
+        else
+        {
             this.leg4.rotateAngleZ = 0.0F;
             this.leg3.rotateAngleZ = 0.0F;
             this.tail2.rotateAngleY = MathHelper.sin(f2 * 0.6662F + 3.141593F) * 0.24F;

@@ -1,7 +1,8 @@
 package com.morecreepsrevival.morecreeps.common.capabilities;
 
-public interface IGuineaPigPickedUp {
-    boolean getPickedUp();
-
+public interface IGuineaPigPickedUp
+{
     void setPickedUp(boolean pickedUpIn);
+
+    boolean getPickedUp();
 }

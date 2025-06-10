@@ -5,9 +5,11 @@ import net.minecraft.client.renderer.entity.Render;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraftforge.fml.client.registry.IRenderFactory;
 
-public class RenderEvilCreatureFactory implements IRenderFactory<EntityEvilCreature> {
+public class RenderEvilCreatureFactory implements IRenderFactory<EntityEvilCreature>
+{
     @Override
-    public Render<? super EntityEvilCreature> createRenderFor(RenderManager renderManager) {
+    public Render<? super EntityEvilCreature> createRenderFor(RenderManager renderManager)
+    {
         return new RenderEvilCreature<>(renderManager);
     }
 }

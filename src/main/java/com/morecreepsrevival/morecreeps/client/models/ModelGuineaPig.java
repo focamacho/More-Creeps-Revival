@@ -5,7 +5,8 @@ import net.minecraft.client.model.ModelRenderer;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.math.MathHelper;
 
-public class ModelGuineaPig extends ModelBase {
+public class ModelGuineaPig extends ModelBase
+{
     public ModelRenderer headGGpig;
     public ModelRenderer body;
     public ModelRenderer leg1;
@@ -14,11 +15,13 @@ public class ModelGuineaPig extends ModelBase {
     public ModelRenderer leg4;
     public ModelRenderer ears;
 
-    public ModelGuineaPig() {
+    public ModelGuineaPig()
+    {
         this(0.0f);
     }
 
-    public ModelGuineaPig(float f) {
+    public ModelGuineaPig(float f)
+    {
         byte byte0 = 16;
         headGGpig = new ModelRenderer(this, 8, 8);
         headGGpig.addBox(-2F, -2F, -4F, 4, 3, 4, f);
@@ -44,7 +47,8 @@ public class ModelGuineaPig extends ModelBase {
     }
 
     @Override
-    public void render(Entity entity, float f, float f1, float f2, float f3, float f4, float f5) {
+    public void render(Entity entity, float f, float f1, float f2, float f3, float f4, float f5)
+    {
         setRotationAngles(f, f1, f2, f3, f4, f5, entity);
         headGGpig.render(f5);
         body.render(f5);
@@ -56,13 +60,14 @@ public class ModelGuineaPig extends ModelBase {
     }
 
     @Override
-    public void setRotationAngles(float f, float f1, float f2, float f3, float f4, float f5, Entity entity) {
-        ears.rotateAngleX = headGGpig.rotateAngleX = -(f4 / (180F / (float) Math.PI));
-        ears.rotateAngleY = headGGpig.rotateAngleY = f3 / (180F / (float) Math.PI);
-        body.rotateAngleX = ((float) Math.PI / 2F);
+    public void setRotationAngles(float f, float f1, float f2, float f3, float f4, float f5, Entity entity)
+    {
+        ears.rotateAngleX = headGGpig.rotateAngleX = -(f4 / (180F / (float)Math.PI));
+        ears.rotateAngleY = headGGpig.rotateAngleY = f3 / (180F / (float)Math.PI);
+        body.rotateAngleX = ((float)Math.PI / 2F);
         leg1.rotateAngleX = MathHelper.cos(f * 0.6662F) * 1.4F * f1;
-        leg2.rotateAngleX = MathHelper.cos(f * 0.6662F + (float) Math.PI) * 1.4F * f1;
-        leg3.rotateAngleX = MathHelper.cos(f * 0.6662F + (float) Math.PI) * 1.4F * f1;
+        leg2.rotateAngleX = MathHelper.cos(f * 0.6662F + (float)Math.PI) * 1.4F * f1;
+        leg3.rotateAngleX = MathHelper.cos(f * 0.6662F + (float)Math.PI) * 1.4F * f1;
         leg4.rotateAngleX = MathHelper.cos(f * 0.6662F) * 1.4F * f1;
     }
 }

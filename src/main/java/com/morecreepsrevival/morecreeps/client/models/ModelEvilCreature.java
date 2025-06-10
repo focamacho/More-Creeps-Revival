@@ -5,7 +5,8 @@ import net.minecraft.client.model.ModelRenderer;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.math.MathHelper;
 
-public class ModelEvilCreature extends ModelBase {
+public class ModelEvilCreature extends ModelBase
+{
     public ModelRenderer bipedHead;
     public ModelRenderer bipedHeadwear;
     public ModelRenderer bipedBody;
@@ -22,15 +23,18 @@ public class ModelEvilCreature extends ModelBase {
 
     public boolean isSneak = false;
 
-    public ModelEvilCreature() {
+    public ModelEvilCreature()
+    {
         this(0.0f);
     }
 
-    public ModelEvilCreature(float f) {
+    public ModelEvilCreature(float f)
+    {
         this(f, 0.0f);
     }
 
-    public ModelEvilCreature(float f, float f1) {
+    public ModelEvilCreature(float f, float f1)
+    {
         bipedCloak = new ModelRenderer(this, 0, 0);
         bipedCloak.addBox(-5F, 0.0F, -1F, 10, 16, 1, f);
         bipedEars = new ModelRenderer(this, 24, 0);
@@ -61,7 +65,8 @@ public class ModelEvilCreature extends ModelBase {
     }
 
     @Override
-    public void render(Entity entity, float f, float f1, float f2, float f3, float f4, float f5) {
+    public void render(Entity entity, float f, float f1, float f2, float f3, float f4, float f5)
+    {
         setRotationAngles(f, f1, f2, f3, f4, f5, entity);
         bipedHead.render(f5);
         bipedBody.render(f5);
@@ -73,33 +78,37 @@ public class ModelEvilCreature extends ModelBase {
     }
 
     @Override
-    public void setRotationAngles(float f, float f1, float f2, float f3, float f4, float f5, Entity entity) {
-        bipedBody.rotateAngleX = MathHelper.cos(f * 0.6662F + (float) Math.PI) * 2.0F * f1 * 1.5F;
-        bipedHead.rotateAngleY = f3 / (180F / (float) Math.PI);
-        bipedHead.rotateAngleX = f4 / (180F / (float) Math.PI);
+    public void setRotationAngles(float f, float f1, float f2, float f3, float f4, float f5, Entity entity)
+    {
+        bipedBody.rotateAngleX = MathHelper.cos(f * 0.6662F + (float)Math.PI) * 2.0F * f1 * 1.5F;
+        bipedHead.rotateAngleY = f3 / (180F / (float)Math.PI);
+        bipedHead.rotateAngleX = f4 / (180F / (float)Math.PI);
         bipedHeadwear.rotateAngleY = bipedHead.rotateAngleY;
         bipedHeadwear.rotateAngleX = bipedHead.rotateAngleX;
         bipedRightArm.rotateAngleZ = 0.0F;
         bipedLeftArm.rotateAngleZ = 0.0F;
         bipedRightLeg.rotateAngleX = MathHelper.cos(f * 0.6662F) * 1.4F * f1;
-        bipedLeftLeg.rotateAngleX = MathHelper.cos(f * 0.6662F + (float) Math.PI) * 1.4F * f1;
+        bipedLeftLeg.rotateAngleX = MathHelper.cos(f * 0.6662F + (float)Math.PI) * 1.4F * f1;
         bipedRightLeg.rotateAngleY = 0.0F;
         bipedLeftLeg.rotateAngleY = 0.0F;
         bipedRightArm.rotateAngleX = -1.05708F + MathHelper.cos(f2 / 10F);
         bipedLeftArm.rotateAngleX = -1.05708F + MathHelper.sin(f2 / 10F);
 
-        if (heldItemLeft) {
-            bipedLeftArm.rotateAngleX = bipedLeftArm.rotateAngleX * 0.5F - ((float) Math.PI / 10F);
+        if (heldItemLeft)
+        {
+            bipedLeftArm.rotateAngleX = bipedLeftArm.rotateAngleX * 0.5F - ((float)Math.PI / 10F);
         }
 
-        if (heldItemRight) {
-            bipedRightArm.rotateAngleX = bipedRightArm.rotateAngleX * 0.5F - ((float) Math.PI / 10F);
+        if (heldItemRight)
+        {
+            bipedRightArm.rotateAngleX = bipedRightArm.rotateAngleX * 0.5F - ((float)Math.PI / 10F);
         }
 
         bipedRightArm.rotateAngleY = 0.0F;
         bipedLeftArm.rotateAngleY = 0.0F;
 
-        if (isSneak) {
+        if (isSneak)
+        {
             bipedBody.rotateAngleX = 0.5F;
             bipedRightLeg.rotateAngleX -= 0.0F;
             bipedLeftLeg.rotateAngleX -= 0.0F;
@@ -108,7 +117,9 @@ public class ModelEvilCreature extends ModelBase {
             bipedRightLeg.rotationPointY = 9F;
             bipedLeftLeg.rotationPointY = 9F;
             bipedHead.rotationPointY = 1.0F;
-        } else {
+        }
+        else
+        {
             bipedBody.rotateAngleX = 0.0F;
             bipedRightLeg.rotationPointZ = 0.0F;
             bipedLeftLeg.rotationPointZ = 0.0F;

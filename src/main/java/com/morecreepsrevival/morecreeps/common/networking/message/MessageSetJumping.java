@@ -9,29 +9,36 @@ import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 
-public class MessageSetJumping implements IMessage {
+public class MessageSetJumping implements IMessage
+{
     private boolean jumping;
 
-    public MessageSetJumping() {
+    public MessageSetJumping()
+    {
     }
 
-    public MessageSetJumping(boolean jumpingIn) {
+    public MessageSetJumping(boolean jumpingIn)
+    {
         jumping = jumpingIn;
     }
 
     @Override
-    public void toBytes(ByteBuf buf) {
+    public void toBytes(ByteBuf buf)
+    {
         buf.writeBoolean(jumping);
     }
 
     @Override
-    public void fromBytes(ByteBuf buf) {
+    public void fromBytes(ByteBuf buf)
+    {
         jumping = buf.readBoolean();
     }
 
-    public static class MessageHandler implements IMessageHandler<MessageSetJumping, IMessage> {
+    public static class MessageHandler implements IMessageHandler<MessageSetJumping, IMessage>
+    {
         @Override
-        public IMessage onMessage(MessageSetJumping message, MessageContext context) {
+        public IMessage onMessage(MessageSetJumping message, MessageContext context)
+        {
             EntityPlayerMP player = context.getServerHandler().player;
 
             WorldServer world = player.getServerWorld();
@@ -39,7 +46,8 @@ public class MessageSetJumping implements IMessage {
             world.addScheduledTask(() -> {
                 IPlayerJumping capability = player.getCapability(PlayerJumpingProvider.capability, null);
 
-                if (capability != null) {
+                if (capability != null)
+                {
                     capability.setJumping(message.jumping);
                 }
             });
