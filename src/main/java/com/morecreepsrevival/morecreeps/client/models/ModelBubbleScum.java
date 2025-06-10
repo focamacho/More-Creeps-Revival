@@ -2,8 +2,10 @@ package com.morecreepsrevival.morecreeps.client.models;
 
 import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.model.ModelRenderer;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.math.MathHelper;
+import org.lwjgl.opengl.GLSync;
 
 public class ModelBubbleScum extends ModelBase {
     public ModelRenderer bipedBody;
@@ -59,6 +61,9 @@ public class ModelBubbleScum extends ModelBase {
 
     @Override
     public void render(Entity entity, float f, float f1, float f2, float f3, float f4, float f5) {
+        if(entity.isRiding())
+            GlStateManager.translate(0.0F, 0.32F, 0.0F);
+
         setRotationAngles(f, f1, f2, f3, f4, f5, entity);
         bipedBody.render(f5);
         bipedRightArm.render(f5);
