@@ -29,6 +29,11 @@ public class RenderCreep<T extends EntityCreepBase> extends RenderLiving<T> {
         return new ResourceLocation(MoreCreepsAndWeirdos.modid, entity.getTexture());
     }
 
+    @Override
+    protected boolean canRenderName(T entity) {
+        return !entity.isTamed() && super.canRenderName(entity);
+    }
+
     protected void drawTamedStatus(T entity, double x, double y, double z) {
         if (entity.getDistanceSq(renderManager.renderViewEntity) > 400) {
             return;
