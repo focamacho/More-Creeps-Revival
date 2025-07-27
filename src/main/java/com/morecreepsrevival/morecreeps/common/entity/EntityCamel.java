@@ -349,11 +349,11 @@ public class EntityCamel extends EntityCreepBase implements IEntityCanChangeSize
                         if (!world.isRemote) {
                             player.sendMessage(new TextComponentString("You need \2476" + cookieCount + " cookie" + ((cookieCount == 1) ? "" : "s") + " \247fto tame this lovely camel."));
                         }
+                        smokePlain();
                     } else {
                         tame(player);
+                        smoke();
                     }
-
-                    smoke();
 
                     return true;
                 }

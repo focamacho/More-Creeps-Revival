@@ -49,9 +49,7 @@ public class EntityBlorp extends EntityCreepBase implements IEntityCanChangeSize
     @Override
     protected void entityInit() {
         super.entityInit();
-
-        dataManager.register(hungry, Boolean.valueOf(false));
-
+        dataManager.register(hungry, false);
         dataManager.register(hungryTime, rand.nextInt(20) + 20);
     }
 

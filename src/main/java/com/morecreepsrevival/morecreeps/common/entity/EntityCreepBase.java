@@ -1219,13 +1219,8 @@ public class EntityCreepBase extends EntityCreature implements IEntityOwnable {
 
     public void tame(EntityPlayer player) {
         setInterest(0);
-
         setOwner(player);
-
-        //spawnTrophy(player);
-
-        // TODO: only spawn trophy when the player gets an achievement
-
+        
         updateAttributes();
         setHealth(getMaxHealth());
         setWanderState(2);
