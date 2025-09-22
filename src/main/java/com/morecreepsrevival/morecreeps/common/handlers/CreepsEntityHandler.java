@@ -2,7 +2,6 @@ package com.morecreepsrevival.morecreeps.common.handlers;
 
 import com.morecreepsrevival.morecreeps.common.MoreCreepsAndWeirdos;
 import com.morecreepsrevival.morecreeps.common.config.MoreCreepsConfig;
-import com.morecreepsrevival.morecreeps.common.config.MoreCreepsConfig.SpawnNumbers;
 import com.morecreepsrevival.morecreeps.common.entity.*;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EnumCreatureType;
@@ -16,7 +15,10 @@ import net.minecraftforge.fml.common.registry.EntityEntry;
 import net.minecraftforge.fml.common.registry.EntityEntryBuilder;
 import net.minecraftforge.fml.common.registry.ForgeRegistries;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Objects;
 
 public class CreepsEntityHandler {  
     

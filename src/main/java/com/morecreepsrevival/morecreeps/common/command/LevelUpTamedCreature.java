@@ -1,6 +1,5 @@
 package com.morecreepsrevival.morecreeps.common.command;
 
-import com.morecreepsrevival.morecreeps.common.entity.EntityCreepBase;
 import com.morecreepsrevival.morecreeps.common.entity.EntityCreepBaseOwnable;
 import com.morecreepsrevival.morecreeps.common.networking.CreepsPacketHandler;
 import com.morecreepsrevival.morecreeps.common.networking.message.MessageLevelUpTamedEntity;

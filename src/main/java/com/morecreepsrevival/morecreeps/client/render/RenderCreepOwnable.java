@@ -1,14 +1,12 @@
 package com.morecreepsrevival.morecreeps.client.render;
 
 import com.morecreepsrevival.morecreeps.common.MoreCreepsAndWeirdos;
-import com.morecreepsrevival.morecreeps.common.entity.EntityCreepBase;
 import com.morecreepsrevival.morecreeps.common.entity.EntityCreepBaseOwnable;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.entity.RenderLiving;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.util.ResourceLocation;

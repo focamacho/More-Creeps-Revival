@@ -1,6 +1,5 @@
 package com.morecreepsrevival.morecreeps.common.entity.ai;
 
-import com.morecreepsrevival.morecreeps.common.entity.EntityCreepBase;
 import com.morecreepsrevival.morecreeps.common.entity.EntityCreepBaseOwnable;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;

@@ -1,6 +1,5 @@
 package com.morecreepsrevival.morecreeps.client.gui;
 
-import com.morecreepsrevival.morecreeps.common.entity.EntityCreepBase;
 import com.morecreepsrevival.morecreeps.common.entity.EntityCreepBaseOwnable;
 import com.morecreepsrevival.morecreeps.common.entity.EntityGuineaPig;
 import com.morecreepsrevival.morecreeps.common.entity.EntityHotdog;

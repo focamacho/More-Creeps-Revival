@@ -1,8 +1,6 @@
 package com.morecreepsrevival.morecreeps.common.config;
 
 import net.minecraftforge.common.config.Config;
-import net.minecraftforge.common.config.Configuration;
-import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 
 @Config(modid = "morecreeps", category = "General")
 public class MoreCreepsConfig {
