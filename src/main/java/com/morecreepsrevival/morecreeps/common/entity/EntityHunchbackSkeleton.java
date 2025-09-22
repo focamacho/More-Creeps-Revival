@@ -23,7 +23,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-public class EntityHunchbackSkeleton extends EntityCreepBase implements IRangedAttackMob, IEntityCanChangeSize {
+public class EntityHunchbackSkeleton extends EntityCreepBaseOwnable implements IRangedAttackMob, IEntityCanChangeSize {
     private static final DataParameter<Integer> timeLeft = EntityDataManager.createKey(EntityHunchbackSkeleton.class, DataSerializers.VARINT);
 
     private static final DataParameter<Boolean> SWINGING_ARMS = EntityDataManager.<Boolean>createKey(EntityHunchbackSkeleton.class, DataSerializers.BOOLEAN);
@@ -110,7 +110,7 @@ public class EntityHunchbackSkeleton extends EntityCreepBase implements IRangedA
 
         EntityPlayer owner = getOwner();
 
-        if (target != null && owner != null && (target.equals(owner) || (target instanceof EntityCreepBase && owner.equals(((EntityCreepBase) target).getOwner())) || (target instanceof EntityTameable && owner.equals(((EntityTameable) target).getOwner())))) {
+        if (target != null && owner != null && (target.equals(owner) || (target instanceof EntityCreepBaseOwnable && owner.equals(((EntityCreepBaseOwnable) target).getOwner())) || (target instanceof EntityTameable && owner.equals(((EntityTameable) target).getOwner())))) {
             setAttackTarget(null);
         }
 

@@ -298,8 +298,8 @@ public class EntityLawyerFromHell extends EntityCreepBase implements IMob, IEnti
                         }
                     }
                 }
-            } else if (entity instanceof EntityCreepBase) {
-                EntityCreepBase creep = (EntityCreepBase) entity;
+            } else if (entity instanceof EntityCreepBaseOwnable) {
+                EntityCreepBaseOwnable creep = (EntityCreepBaseOwnable) entity;
 
                 if (creep.isTamed()) {
                     playerTarget = creep.getOwner();

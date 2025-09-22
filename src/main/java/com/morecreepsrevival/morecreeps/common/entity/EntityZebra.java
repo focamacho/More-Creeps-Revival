@@ -33,7 +33,7 @@ import net.minecraft.world.World;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-public class EntityZebra extends EntityCreepBase implements IEntityCanChangeSize {
+public class EntityZebra extends EntityCreepBaseOwnable implements IEntityCanChangeSize {
 
     private static final DataParameter<Integer> tamedCookies = EntityDataManager.createKey(EntityZebra.class, DataSerializers.VARINT);
 

@@ -717,8 +717,8 @@ public class JailManager {
     private static void populateCell(EntityPlayer player, World world, Random rand, int placeX, int placeY, int placeZ, boolean flag) {
         if (flag) {
             for (Entity entity : world.getEntitiesWithinAABBExcludingEntity(player, player.getEntityBoundingBox().expand(26.0d, 26.0d, 26.0d))) {
-                if (entity instanceof EntityCreepBase) {
-                    EntityCreepBase creep = (EntityCreepBase) entity;
+                if (entity instanceof EntityCreepBaseOwnable) {
+                    EntityCreepBaseOwnable creep = (EntityCreepBaseOwnable) entity;
 
                     if (creep.isTamed()) {
                         creep.setWanderState(1);

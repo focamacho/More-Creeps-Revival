@@ -32,7 +32,7 @@ import net.minecraft.world.World;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-public class EntityCamel extends EntityCreepBase implements IEntityCanChangeSize {
+public class EntityCamel extends EntityCreepBaseOwnable implements IEntityCanChangeSize {
     private static final String[] textures = {
             "textures/entity/camel",
             "textures/entity/camel",

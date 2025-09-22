@@ -12,7 +12,7 @@ import org.lwjgl.opengl.GL11;
 
 import javax.annotation.Nullable;
 
-public class RenderTombstone<T extends EntityTombstone> extends RenderCreep<T> {
+public class RenderTombstone<T extends EntityTombstone> extends RenderCreepOwnable<T> {
     public RenderTombstone(RenderManager renderManager) {
         super(renderManager, new ModelTombstone(), 0.5f);
     }

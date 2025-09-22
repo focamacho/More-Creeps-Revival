@@ -24,7 +24,7 @@ import net.minecraft.world.World;
 
 import javax.annotation.Nonnull;
 
-public class EntitySchlump extends EntityCreepBase {
+public class EntitySchlump extends EntityCreepBaseOwnable {
     private static final DataParameter<Integer> age = EntityDataManager.createKey(EntitySchlump.class, DataSerializers.VARINT);
 
     private static final DataParameter<Integer> ageTimer = EntityDataManager.createKey(EntitySchlump.class, DataSerializers.VARINT);

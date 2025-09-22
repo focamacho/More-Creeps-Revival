@@ -30,7 +30,7 @@ import net.minecraft.world.World;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-public class EntityRocketGiraffe extends EntityCreepBase implements IEntityCanChangeSize {
+public class EntityRocketGiraffe extends EntityCreepBaseOwnable implements IEntityCanChangeSize {
 
     private static final DataParameter<Integer> tamedCookies = EntityDataManager.createKey(EntityRocketGiraffe.class, DataSerializers.VARINT);
 

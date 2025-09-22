@@ -15,7 +15,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
 
-public class EntityGooGoat extends EntityCreepBase implements IEntityCanChangeSize {
+public class EntityGooGoat extends EntityCreepBaseOwnable implements IEntityCanChangeSize {
     private static final DataParameter<Integer> hungryTime = EntityDataManager.createKey(EntityGooGoat.class, DataSerializers.VARINT);
 
     private static final DataParameter<Boolean> hungry = EntityDataManager.<Boolean>createKey(EntityGooGoat.class, DataSerializers.BOOLEAN);

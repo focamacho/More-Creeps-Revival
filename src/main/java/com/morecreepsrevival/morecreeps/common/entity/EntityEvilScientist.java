@@ -580,8 +580,6 @@ public class EntityEvilScientist extends EntityCreepBase implements IMob, IEntit
 
             updateTexture();
 
-            setHealthBoost(50);
-
             updateHealth();
 
             addHealth(50.0f);

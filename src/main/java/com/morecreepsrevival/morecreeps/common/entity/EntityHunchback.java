@@ -22,7 +22,7 @@ import net.minecraft.world.World;
 
 import javax.annotation.Nonnull;
 
-public class EntityHunchback extends EntityCreepBase implements IEntityCanChangeSize {
+public class EntityHunchback extends EntityCreepBaseOwnable implements IEntityCanChangeSize {
     private static final DataParameter<Integer> cakeTimer = EntityDataManager.createKey(EntityHunchback.class, DataSerializers.VARINT);
 
     public EntityHunchback(World world) {

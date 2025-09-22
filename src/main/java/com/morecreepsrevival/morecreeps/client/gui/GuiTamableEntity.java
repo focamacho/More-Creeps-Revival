@@ -1,6 +1,7 @@
 package com.morecreepsrevival.morecreeps.client.gui;
 
 import com.morecreepsrevival.morecreeps.common.entity.EntityCreepBase;
+import com.morecreepsrevival.morecreeps.common.entity.EntityCreepBaseOwnable;
 import com.morecreepsrevival.morecreeps.common.networking.CreepsPacketHandler;
 import com.morecreepsrevival.morecreeps.common.networking.message.MessageChangeTamedEntityName;
 import com.morecreepsrevival.morecreeps.common.networking.message.MessageSetEntityWanderState;
@@ -15,10 +16,10 @@ import java.io.IOException;
 
 public class GuiTamableEntity extends GuiScreen {
 
-    private final EntityCreepBase entity;
+    private final EntityCreepBaseOwnable entity;
     private GuiTextField nameScreen;
 
-    public GuiTamableEntity(EntityCreepBase entityIn) {
+    public GuiTamableEntity(EntityCreepBaseOwnable entityIn) {
         entity = entityIn;
     }
 

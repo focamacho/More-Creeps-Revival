@@ -15,7 +15,7 @@ import net.minecraft.world.World;
 
 import javax.annotation.Nonnull;
 
-public class EntityPony extends EntityCreepBase {
+public class EntityPony extends EntityCreepBaseOwnable {
     private static final DataParameter<Boolean> adult = EntityDataManager.<Boolean>createKey(EntityPony.class, DataSerializers.BOOLEAN);
 
     private static final DataParameter<Integer> sicky = EntityDataManager.createKey(EntityPony.class, DataSerializers.VARINT);

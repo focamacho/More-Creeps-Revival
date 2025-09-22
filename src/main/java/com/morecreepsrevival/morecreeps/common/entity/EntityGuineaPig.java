@@ -27,7 +27,7 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.world.World;
 
-public class EntityGuineaPig extends EntityCreepBase implements IEntityCanChangeSize {
+public class EntityGuineaPig extends EntityCreepBaseOwnable implements IEntityCanChangeSize {
     private static final DataParameter<Boolean> hotelBuilt = EntityDataManager.<Boolean>createKey(EntityGuineaPig.class, DataSerializers.BOOLEAN);
 
     private static final String[] textures = {

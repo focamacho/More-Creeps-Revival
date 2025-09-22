@@ -22,7 +22,7 @@ import net.minecraftforge.fml.common.registry.EntityRegistry;
 import javax.annotation.Nullable;
 import java.util.function.Function;
 
-public class EntityTombstone extends EntityCreepBase {
+public class EntityTombstone extends EntityCreepBaseOwnable {
 
     private NBTTagCompound additionalProps;
     private static final DataParameter<String> tombstoneType = EntityDataManager.createKey(EntityTombstone.class, DataSerializers.STRING);
@@ -34,7 +34,7 @@ public class EntityTombstone extends EntityCreepBase {
         additionalProps = new NBTTagCompound();
     }
 
-    public EntityTombstone(World worldIn, EntityCreepBase deadEntity) {
+    public EntityTombstone(World worldIn, EntityCreepBaseOwnable deadEntity) {
         this(worldIn);
 
         creatureType = EnumCreatureType.AMBIENT;
@@ -162,7 +162,7 @@ public class EntityTombstone extends EntityCreepBase {
         smoke();
 
         if (!world.isRemote && this.type != null) {
-            EntityCreepBase entity = this.type.getNewInstance().apply(getEntityWorld());
+            EntityCreepBaseOwnable entity = this.type.getNewInstance().apply(getEntityWorld());
 
             if (entity != null) {
                 entity.setPositionAndRotation(player.posX, player.posY, player.posZ, player.rotationYaw, player.rotationPitch);
@@ -238,9 +238,9 @@ public class EntityTombstone extends EntityCreepBase {
         HOTDOG(EntityHotdog.class, EntityHotdog::new);
 
         private final Class<? extends Entity> entityClass;
-        private final Function<World, EntityCreepBase> newInstance;
+        private final Function<World, EntityCreepBaseOwnable> newInstance;
 
-        TombstoneType(Class<? extends Entity> entityClass, Function<World, EntityCreepBase> newInstance) {
+        TombstoneType(Class<? extends Entity> entityClass, Function<World, EntityCreepBaseOwnable> newInstance) {
             this.entityClass = entityClass;
             this.newInstance = newInstance;
         }
@@ -249,7 +249,7 @@ public class EntityTombstone extends EntityCreepBase {
             return entityClass;
         }
 
-        public Function<World, EntityCreepBase> getNewInstance() {
+        public Function<World, EntityCreepBaseOwnable> getNewInstance() {
             return newInstance;
         }
 

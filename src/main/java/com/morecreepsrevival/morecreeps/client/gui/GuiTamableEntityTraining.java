@@ -1,6 +1,7 @@
 package com.morecreepsrevival.morecreeps.client.gui;
 
 import com.morecreepsrevival.morecreeps.common.entity.EntityCreepBase;
+import com.morecreepsrevival.morecreeps.common.entity.EntityCreepBaseOwnable;
 import com.morecreepsrevival.morecreeps.common.entity.EntityGuineaPig;
 import com.morecreepsrevival.morecreeps.common.entity.EntityHotdog;
 import com.morecreepsrevival.morecreeps.common.helpers.InventoryHelper;
@@ -14,9 +15,9 @@ import net.minecraft.init.Items;
 import org.lwjgl.input.Keyboard;
 
 public class GuiTamableEntityTraining extends GuiScreen {
-    private final EntityCreepBase entity;
+    private final EntityCreepBaseOwnable entity;
 
-    public GuiTamableEntityTraining(EntityCreepBase entityIn) {
+    public GuiTamableEntityTraining(EntityCreepBaseOwnable entityIn) {
         entity = entityIn;
     }
 

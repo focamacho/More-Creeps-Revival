@@ -24,7 +24,7 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.world.World;
 
-public class EntityHotdog extends EntityCreepBase implements IEntityCanChangeSize {
+public class EntityHotdog extends EntityCreepBaseOwnable implements IEntityCanChangeSize {
     private static final DataParameter<Boolean> heavenBuilt = EntityDataManager.<Boolean>createKey(EntityHotdog.class, DataSerializers.BOOLEAN);
 
     private static final String[] textures = {
