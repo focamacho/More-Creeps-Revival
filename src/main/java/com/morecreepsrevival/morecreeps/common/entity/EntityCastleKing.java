@@ -57,23 +57,15 @@ public class EntityCastleKing extends EntityCreepBase {
         clearAITasks();
 
         NodeProcessor nodeProcessor = getNavigator().getNodeProcessor();
-
         nodeProcessor.setCanSwim(true);
 
         tasks.addTask(1, new EntityAISwimming(this));
-
         tasks.addTask(2, new EntityCreepAIAttackMelee(this, 1.0d, 4.0d, true));
-
         tasks.addTask(3, new EntityAIMoveTowardsRestriction(this, 0.5d));
-
         tasks.addTask(4, new EntityAIWanderAvoidWater(this, 1.0d));
-
         tasks.addTask(5, new EntityAIWatchClosest(this, EntityPlayer.class, 8.0f));
-
         tasks.addTask(5, new EntityAILookIdle(this));
-
         targetTasks.addTask(1, new EntityAIHurtByTarget(this, false));
-
         targetTasks.addTask(2, new EntityAINearestAttackableTarget<>(this, EntityPlayer.class, true));
     }
 
@@ -167,4 +159,5 @@ public class EntityCastleKing extends EntityCreepBase {
     public boolean getCanSpawnHere() {
         return true;
     }
+
 }

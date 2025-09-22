@@ -4,6 +4,7 @@ import com.morecreepsrevival.morecreeps.common.entity.EntityCastleKing;
 import net.minecraft.client.model.ModelBiped;
 import net.minecraft.client.model.ModelRenderer;
 import net.minecraft.entity.Entity;
+import net.minecraft.util.EnumHandSide;
 import net.minecraft.util.math.MathHelper;
 
 import javax.annotation.Nonnull;
@@ -96,5 +97,15 @@ public class ModelCastleKing extends ModelBiped {
         bipedLeftArm.rotateAngleX = MathHelper.cos(f * 0.6662F) * 2.0F * f1 * 0.5F;
         bipedRightArm.rotateAngleZ = 0.0F;
         bipedLeftArm.rotateAngleZ = 0.0F;
+    }
+
+    @Override
+    public void postRenderArm(float scale, EnumHandSide side) {
+        if (side == EnumHandSide.RIGHT) {
+            bipedRightArm.postRender(scale);
+        }
+        else {
+            bipedLeftArm.postRender(scale);
+        }
     }
 }

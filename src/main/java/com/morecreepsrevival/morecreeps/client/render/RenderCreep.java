@@ -30,11 +30,6 @@ public class RenderCreep<T extends EntityCreepBase> extends RenderLiving<T> {
     }
 
     @Override
-    protected boolean canRenderName(T entity) {
-        return super.canRenderName(entity);
-    }
-
-    @Override
     public void doRender(@Nonnull T entity, double x, double y, double z, float entityYaw, float partialTicks) {
         shadowSize = getShadowSize(entity);
         super.doRender(entity, x, y, z, entityYaw, partialTicks);
@@ -54,7 +49,6 @@ public class RenderCreep<T extends EntityCreepBase> extends RenderLiving<T> {
         }
     }
 
-
     protected boolean shouldDoScaling(T entity) {
         return true;
     }
@@ -66,4 +60,5 @@ public class RenderCreep<T extends EntityCreepBase> extends RenderLiving<T> {
     protected boolean shouldDrawHealthBar() {
         return true;
     }
+
 }
