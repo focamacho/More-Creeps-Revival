@@ -26,7 +26,6 @@ public class EntityEvilCreature extends EntityCreepBase implements IMob, IEntity
     public EntityEvilCreature(World world) {
         super(world);
 
-        setCreepTypeName("Evil Creature");
 
         creatureType = EnumCreatureType.MONSTER;
 

@@ -27,7 +27,6 @@ public class EntityTrophy extends EntityCreepBase {
     public EntityTrophy(World world) {
         super(world);
 
-        setCreepName("Trophy");
 
         setModelSize(1.5f);
 

@@ -29,20 +29,13 @@ public class EntityBabyMummy extends EntityCreepBase implements IMob {
 
         setSize(0.6f, 0.6f);
 
-        setCreepTypeName("Baby Mummy");
-
         creatureType = EnumCreatureType.MONSTER;
-
         spawnOnlyAtNight = true;
-
         baseHealth = 15.0f;
-
         baseSpeed = 0.25d;
-
         baseAttackDamage = 1.0d;
 
         setModelSize((rand.nextFloat() * 0.45f) + 0.25f);
-
         updateAttributes();
     }
 

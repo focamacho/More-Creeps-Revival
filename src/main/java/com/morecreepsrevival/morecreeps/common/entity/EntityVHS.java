@@ -20,6 +20,7 @@ import javax.annotation.Nullable;
 import java.util.List;
 import java.util.UUID;
 
+// TODO: Current disabled
 public class EntityVHS extends EntityCreepBase implements IEntityCanChangeSize {
 
     public int angerLevel;
@@ -28,7 +29,6 @@ public class EntityVHS extends EntityCreepBase implements IEntityCanChangeSize {
     public EntityVHS(World worldIn) {
         super(worldIn);
 
-        setCreepTypeName("Walking VHS");
         creatureType = EnumCreatureType.MONSTER;
 
         baseSpeed = 0.35d;

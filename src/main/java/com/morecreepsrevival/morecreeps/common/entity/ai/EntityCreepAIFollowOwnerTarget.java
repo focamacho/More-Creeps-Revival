@@ -1,6 +1,6 @@
 package com.morecreepsrevival.morecreeps.common.entity.ai;
 
-import com.morecreepsrevival.morecreeps.common.entity.EntityCreepBase;
+import com.morecreepsrevival.morecreeps.common.entity.EntityCreepBaseOwnable;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.ai.EntityAITarget;
@@ -9,11 +9,11 @@ import net.minecraft.entity.player.EntityPlayer;
 import java.util.List;
 
 public class EntityCreepAIFollowOwnerTarget extends EntityAITarget {
-    private EntityCreepBase tamable;
+    private EntityCreepBaseOwnable tamable;
 
     private EntityLivingBase target;
 
-    public EntityCreepAIFollowOwnerTarget(EntityCreepBase tamableIn) {
+    public EntityCreepAIFollowOwnerTarget(EntityCreepBaseOwnable tamableIn) {
         super(tamableIn, false);
 
         tamable = tamableIn;

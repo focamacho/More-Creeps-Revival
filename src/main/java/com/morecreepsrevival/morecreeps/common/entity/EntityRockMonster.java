@@ -18,7 +18,6 @@ public class EntityRockMonster extends EntityCreepBase implements IEntityCanChan
     public EntityRockMonster(World worldIn) {
         super(worldIn);
 
-        setCreepTypeName("Rock Monster");
         creatureType = EnumCreatureType.MONSTER;
 
         setSize(2f, 2f);

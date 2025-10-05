@@ -15,6 +15,7 @@ import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.text.TextComponentString;
+import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
 
@@ -36,7 +37,6 @@ public class EntityHorseHead extends EntityCreepBase {
     public EntityHorseHead(World worldIn) {
         super(worldIn);
 
-        setCreepTypeName("Horse Head");
 
         setSize(0.6f, 2.0f);
 
@@ -184,7 +184,7 @@ public class EntityHorseHead extends EntityCreepBase {
         if (hand == EnumHand.OFF_HAND) {
             return false;
         } else if (player.isBeingRidden()) {
-            player.sendMessage(new TextComponentString("Unmount all creatures before riding your Horse Head."));
+            player.sendMessage(new TextComponentTranslation("entity.morecreeps.horse_head.unmount"));
 
             return false;
         }

@@ -26,8 +26,8 @@ public class WorldGenStructures implements IWorldGenerator {
     }
 
     private void generateStructures(World world, Random rand, int chunkX, int chunkZ) {
-        if (MoreCreepsConfig.pyramidGen) {
-            if (pyramidCount >= (1100 - (MoreCreepsConfig.pyramidRarity * 100) + 100)) {
+        if (MoreCreepsConfig.WorldGen.pyramidGen) {
+            if (pyramidCount >= (1100 - (MoreCreepsConfig.WorldGen.pyramidRarity * 100) + 100)) {
                 if (rand.nextInt(30) == 0) {
                     BlockPos pos = new BlockPos((chunkX << 4) + rand.nextInt(16) + 16, 65, (chunkZ << 4) + rand.nextInt(16) + 16);
 
@@ -44,8 +44,8 @@ public class WorldGenStructures implements IWorldGenerator {
             }
         }
 
-        if (MoreCreepsConfig.castleGen) {
-            if (castleCount >= (1100 - (MoreCreepsConfig.castleRarity * 100) + 1300)) {
+        if (MoreCreepsConfig.WorldGen.castleGen) {
+            if (castleCount >= (1100 - (MoreCreepsConfig.WorldGen.castleRarity * 100) + 1300)) {
                 if (rand.nextInt(30) == 0) {
                     BlockPos pos = new BlockPos((chunkX << 4) + rand.nextInt(16) + 16, rand.nextInt(40) + 80, (chunkZ << 4) + rand.nextInt(16) + 16);
 

@@ -1,6 +1,8 @@
 package com.morecreepsrevival.morecreeps.common.entity;
 
 import com.morecreepsrevival.morecreeps.common.MoreCreepsAndWeirdos;
+import com.morecreepsrevival.morecreeps.common.config.MoreCreepsConfig;
+import com.morecreepsrevival.morecreeps.common.helpers.EffectHelper;
 import com.morecreepsrevival.morecreeps.common.items.CreepsItemHandler;
 import com.morecreepsrevival.morecreeps.common.networking.CreepsPacketHandler;
 import com.morecreepsrevival.morecreeps.common.networking.message.MessageOpenGuiTamableEntityName;
@@ -27,17 +29,13 @@ import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.text.TextComponentString;
+import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.world.World;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-public class EntityZebra extends EntityCreepBase implements IEntityCanChangeSize {
-    private static final String[] names = {
-            "Stanley", "Cid", "Hunchy", "The Heat", "Herman the Hump", "Dr. Hump", "Little Lousie", "Spoony G", "Mixmaster C", "The Maestro",
-            "Duncan the Dude", "Charlie Camel", "Chip", "Charles Angstrom III", "Mr. Charles", "Cranky Carl", "Carl the Rooster", "Tiny the Peach", "Desert Dan", "Dungby",
-            "Doofus"
-    };
+public class EntityZebra extends EntityCreepBaseOwnable implements IEntityCanChangeSize {
 
     private static final DataParameter<Integer> tamedCookies = EntityDataManager.createKey(EntityZebra.class, DataSerializers.VARINT);
 
@@ -46,7 +44,6 @@ public class EntityZebra extends EntityCreepBase implements IEntityCanChangeSize
     public EntityZebra(World worldIn) {
         super(worldIn);
 
-        setCreepTypeName("Zebra");
 
         setModelSize(2.0f);
 
@@ -75,7 +72,7 @@ public class EntityZebra extends EntityCreepBase implements IEntityCanChangeSize
 
     @Override
     protected String[] getTamedNames() {
-        return names;
+        return MoreCreepsConfig.TamedNames.entityZebraNames;
     }
 
     @Override
@@ -302,20 +299,19 @@ public class EntityZebra extends EntityCreepBase implements IEntityCanChangeSize
 
                     if (cookieCount > 0) {
                         if (!world.isRemote) {
-                            player.sendMessage(new TextComponentString("You need \2476" + cookieCount + " cookie" + ((cookieCount == 1) ? "" : "s") + " \247fto tame this speedy Zebra."));
+                            player.sendMessage(new TextComponentTranslation("entity.morecreeps.zebra.cookie", cookieCount));
                         }
                     } else {
                         tame(player);
                     }
 
-                    smoke();
-
+                    EffectHelper.smoke(world, this, rand, false);
                     return true;
                 }
             } else if (!world.isRemote) {
                 int cookieCount = getTamedCookies();
 
-                player.sendMessage(new TextComponentString("You need \2476" + cookieCount + " cookie" + ((cookieCount == 1) ? "" : "s") + " \247fto tame this speedy Zebra."));
+                player.sendMessage(new TextComponentTranslation("entity.morecreeps.zebra.cookie", cookieCount));
             }
         }
 
@@ -335,7 +331,7 @@ public class EntityZebra extends EntityCreepBase implements IEntityCanChangeSize
     public boolean canPlayerRide(EntityPlayer player) {
         if (isPlayerOwner(player) && getModelSize() < 1.0f) {
             if (!world.isRemote) {
-                player.sendMessage(new TextComponentString("Your Zebra is too small to ride!"));
+                player.sendMessage(new TextComponentTranslation("entity.morecreeps.zebra.small"));
             }
 
             return false;

@@ -29,7 +29,6 @@ public class EntityLolliman extends EntityCreepBase implements IEntityCanChangeS
     public EntityLolliman(World world) {
         super(world);
 
-        setCreepTypeName("Lolliman");
 
         setSize(0.9f, 3.0f);
 

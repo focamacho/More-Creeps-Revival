@@ -1,6 +1,6 @@
 package com.morecreepsrevival.morecreeps.common.command;
 
-import com.morecreepsrevival.morecreeps.common.entity.EntityCreepBase;
+import com.morecreepsrevival.morecreeps.common.entity.EntityCreepBaseOwnable;
 import com.morecreepsrevival.morecreeps.common.networking.CreepsPacketHandler;
 import com.morecreepsrevival.morecreeps.common.networking.message.MessageLevelUpTamedEntity;
 import net.minecraft.client.Minecraft;
@@ -29,7 +29,7 @@ public class LevelUpTamedCreature extends CommandBase implements IClientCommand 
     public void execute(@Nullable MinecraftServer server, @Nullable ICommandSender sender, @Nullable String[] args) {
         Minecraft client = Minecraft.getMinecraft();
 
-        if (client.objectMouseOver.entityHit instanceof EntityCreepBase && ((EntityCreepBase) client.objectMouseOver.entityHit).isTamed()) {
+        if (client.objectMouseOver.entityHit instanceof EntityCreepBaseOwnable && ((EntityCreepBaseOwnable) client.objectMouseOver.entityHit).isTamed()) {
             CreepsPacketHandler.INSTANCE.sendToServer(new MessageLevelUpTamedEntity(client.objectMouseOver.entityHit.getEntityId()));
         }
     }

@@ -21,7 +21,6 @@ public class EntityHippo extends EntityCreepBase implements IEntityCanChangeSize
     public EntityHippo(World worldin) {
         super(worldin);
 
-        setCreepTypeName("Hippo");
         setSize(2.5f, 2.0f);
         setModelSize(2.0f);
 

@@ -18,6 +18,7 @@ import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.text.TextComponentString;
+import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.world.World;
 
 import javax.annotation.Nonnull;
@@ -28,7 +29,6 @@ public class EntityPonyGirl extends EntityCreepBase {
     public EntityPonyGirl(World worldIn) {
         super(worldIn);
 
-        setCreepTypeName("Pony Girl");
 
         setSize(0.6f, 0.6f);
 
@@ -131,10 +131,11 @@ public class EntityPonyGirl extends EntityCreepBase {
             } else if (item == CreepsItemHandler.money && getCellPhone()) {
                 if (world.canBlockSeeSky(new BlockPos(posX, posY, posZ))) {
                     int cash = InventoryHelper.getItemCount(player.inventory, CreepsItemHandler.money);
+                    int price = 50;
 
-                    if (cash < 50) {
+                    if (cash < price) {
                         if (!world.isRemote) {
-                            player.sendMessage(new TextComponentString("You need $50 for a Pony!"));
+                            player.sendMessage(new TextComponentTranslation("entity.morecreeps.ponygirl.money", price));
                         }
 
                         return true;
@@ -143,9 +144,9 @@ public class EntityPonyGirl extends EntityCreepBase {
                     playSound(CreepsSoundHandler.ponyGirlWaitHereSound, getSoundVolume(), getSoundPitch());
 
                     if (!world.isRemote) {
-                        InventoryHelper.takeItem(player.inventory, CreepsItemHandler.money, 50);
+                        InventoryHelper.takeItem(player.inventory, CreepsItemHandler.money, price);
 
-                        player.sendMessage(new TextComponentString("LOOK UP! Your new Pony is being delivered by a PonyCloud!"));
+                        player.sendMessage(new TextComponentTranslation("entity.morecreeps.ponygirl.deliver"));
                     }
 
                     double xHeading = -MathHelper.sin(player.rotationYaw * (float) Math.PI / 180.0f);
@@ -175,7 +176,7 @@ public class EntityPonyGirl extends EntityCreepBase {
                     playSound(CreepsSoundHandler.ponyCloudSound, getSoundVolume(), getSoundPitch());
                 } else {
                     if (!world.isRemote) {
-                        player.sendMessage(new TextComponentString("I have to get better reception to order a pony!"));
+                        player.sendMessage(new TextComponentTranslation("entity.morecreeps.ponygirl.reception"));
                     }
                 }
 

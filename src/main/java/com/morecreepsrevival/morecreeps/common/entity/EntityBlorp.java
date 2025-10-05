@@ -20,15 +20,13 @@ import net.minecraft.world.World;
 
 import javax.annotation.Nonnull;
 
-public class EntityBlorp extends EntityCreepBase implements IEntityCanChangeSize {
-    private static final DataParameter<Boolean> hungry = EntityDataManager.<Boolean>createKey(EntityBlorp.class, DataSerializers.BOOLEAN);
+public class EntityBlorp extends EntityCreepBaseOwnable implements IEntityCanChangeSize {
 
+    private static final DataParameter<Boolean> hungry = EntityDataManager.<Boolean>createKey(EntityBlorp.class, DataSerializers.BOOLEAN);
     private static final DataParameter<Integer> hungryTime = EntityDataManager.createKey(EntityBlorp.class, DataSerializers.VARINT);
 
     public EntityBlorp(World worldIn) {
         super(worldIn);
-
-        setCreepTypeName("Blorp");
 
         setModelSize(1.0f);
 
@@ -51,9 +49,7 @@ public class EntityBlorp extends EntityCreepBase implements IEntityCanChangeSize
     @Override
     protected void entityInit() {
         super.entityInit();
-
-        dataManager.register(hungry, Boolean.valueOf(false));
-
+        dataManager.register(hungry, false);
         dataManager.register(hungryTime, rand.nextInt(20) + 20);
     }
 

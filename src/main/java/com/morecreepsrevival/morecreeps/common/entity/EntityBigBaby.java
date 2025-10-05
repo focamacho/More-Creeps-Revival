@@ -18,6 +18,7 @@ import net.minecraft.util.DamageSource;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.text.TextComponentString;
+import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.world.World;
 
 import javax.annotation.Nonnull;
@@ -31,8 +32,6 @@ public class EntityBigBaby extends EntityCreepBase implements IMob, IEntityCanCh
 
     public EntityBigBaby(World worldIn) {
         super(worldIn);
-
-        setCreepTypeName("Big Baby");
 
         creatureType = EnumCreatureType.MONSTER;
 
@@ -179,13 +178,13 @@ public class EntityBigBaby extends EntityCreepBase implements IMob, IEntityCanCh
                 playSound(CreepsSoundHandler.babyTakeHomeSound, 1.0f, 1.0f);
 
                 if (!world.isRemote) {
-                    player.sendMessage(new TextComponentString("Now turn that baby into a Schlump on the floor!"));
+                    player.sendMessage(new TextComponentTranslation("entity.morecreeps.bigbaby.schlump"));
                 }
             } else {
                 playSound(CreepsSoundHandler.babyShrinkSound, 1.0f, 1.0f);
 
                 if (!world.isRemote) {
-                    player.sendMessage(new TextComponentString("That baby is too large."));
+                    player.sendMessage(new TextComponentTranslation("entity.morecreeps.bigbaby.large"));
                 }
             }
 

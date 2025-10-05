@@ -1,6 +1,6 @@
 package com.morecreepsrevival.morecreeps.common.networking.message;
 
-import com.morecreepsrevival.morecreeps.common.entity.EntityCreepBase;
+import com.morecreepsrevival.morecreeps.common.entity.EntityCreepBaseOwnable;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -48,11 +48,11 @@ public class MessageChangeTamedEntityName implements IMessage {
             world.addScheduledTask(() -> {
                 Entity entity = world.getEntityByID(message.entityId);
 
-                if (entity instanceof EntityCreepBase) {
-                    EntityCreepBase creep = (EntityCreepBase) entity;
+                if (entity instanceof EntityCreepBaseOwnable) {
+                    EntityCreepBaseOwnable creep = (EntityCreepBaseOwnable) entity;
 
                     if (creep.isPlayerOwner(player) && !message.name.isEmpty()) {
-                        creep.setCreepName(message.name);
+                        creep.setCustomNameTag(message.name);
                     }
                 }
             });

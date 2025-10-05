@@ -1,5 +1,7 @@
 package com.morecreepsrevival.morecreeps.common.entity;
 
+import com.morecreepsrevival.morecreeps.common.config.MoreCreepsConfig;
+import com.morecreepsrevival.morecreeps.common.helpers.EffectHelper;
 import com.morecreepsrevival.morecreeps.common.networking.CreepsPacketHandler;
 import com.morecreepsrevival.morecreeps.common.networking.message.MessageOpenGuiTamableEntityName;
 import com.morecreepsrevival.morecreeps.common.sounds.CreepsSoundHandler;
@@ -18,25 +20,14 @@ import net.minecraft.util.EnumHand;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.world.World;
 
-public class EntitySnowDevil extends EntityCreepBase implements IMob, IEntityCanChangeSize {
+public class EntitySnowDevil extends EntityCreepBaseOwnable implements IMob, IEntityCanChangeSize {
     private static final String[] textures = {
             "textures/entity/snowdevil1",
             "textures/entity/snowdevil2"
     };
 
-    private static final String[] names = {
-            "Satan", "The Butcher", "Killer", "Tad", "Death Spanker", "Death Toll", "Bruiser", "Bones", "The Devil", "Little Devil",
-            "Skinny", "Death to All", "I Will Hurt You", "Pierre", "Bonecruncher", "Bone Breaker", "Blood 'N Guts", "Kill Kill", "Murder", "The Juicer",
-            "Scream", "Bloody Buddy", "Sawblade", "Ripper", "Razor", "Valley Strangler", "Choppy Joe", "Wiconsin Shredder", "Urinal", "Johnny Choke",
-            "Annihilation", "Bloodshed", "Destructo", "Rub Out", "Massacre", "Felony", "The Mangler", "Destroyer", "The Marauder", "Wreck",
-            "Vaporizer", "Wasteland", "Demolition Duo", "Two Knocks", "Double Trouble", "Thing One & Thing Two", "Wipeout", "Devil Duo", "Two Shot", "Misunderstood",
-            "Twice As Nice"
-    };
-
     public EntitySnowDevil(World worldIn) {
         super(worldIn);
-
-        setCreepTypeName("Snow Devil");
 
         creatureType = EnumCreatureType.MONSTER;
 
@@ -58,7 +49,7 @@ public class EntitySnowDevil extends EntityCreepBase implements IMob, IEntityCan
 
     @Override
     protected String[] getTamedNames() {
-        return names;
+        return MoreCreepsConfig.TamedNames.entitySnowDevilNames;
     }
 
     @Override
@@ -149,7 +140,7 @@ public class EntitySnowDevil extends EntityCreepBase implements IMob, IEntityCan
 
                     itemStack.shrink(1);
 
-                    smoke();
+                    EffectHelper.smoke(world, this, rand, false);
 
                     return true;
                 }

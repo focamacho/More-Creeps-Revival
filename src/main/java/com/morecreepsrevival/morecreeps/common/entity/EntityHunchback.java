@@ -1,6 +1,7 @@
 package com.morecreepsrevival.morecreeps.common.entity;
 
 import com.morecreepsrevival.morecreeps.common.entity.ai.EntityCreepAIFollowOwner;
+import com.morecreepsrevival.morecreeps.common.helpers.EffectHelper;
 import com.morecreepsrevival.morecreeps.common.sounds.CreepsSoundHandler;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
@@ -22,13 +23,12 @@ import net.minecraft.world.World;
 
 import javax.annotation.Nonnull;
 
-public class EntityHunchback extends EntityCreepBase implements IEntityCanChangeSize {
+public class EntityHunchback extends EntityCreepBaseOwnable implements IEntityCanChangeSize {
     private static final DataParameter<Integer> cakeTimer = EntityDataManager.createKey(EntityHunchback.class, DataSerializers.VARINT);
 
     public EntityHunchback(World world) {
         super(world);
 
-        setCreepTypeName("Hunchback");
 
         baseSpeed = 0.3f;
 
@@ -108,9 +108,8 @@ public class EntityHunchback extends EntityCreepBase implements IEntityCanChange
         if (isEntityAlive()) {
             if (isTamed()) {
                 if (itemStack.getItem() == Items.BONE) {
-                    smoke();
-
-                    smoke();
+                    EffectHelper.smoke(world, this, rand, false);
+                    EffectHelper.smoke(world, this, rand, false);
 
                     playSound(CreepsSoundHandler.guineaPigArmorSound, getSoundVolume(), getSoundPitch());
 
@@ -139,7 +138,7 @@ public class EntityHunchback extends EntityCreepBase implements IEntityCanChange
                     return true;
                 }
             } else if (itemStack.getItem() == Items.CAKE || Item.getIdFromItem(itemStack.getItem()) == 92) {
-                smoke();
+                EffectHelper.smoke(world, this, rand, false);
 
                 tame(player);
 

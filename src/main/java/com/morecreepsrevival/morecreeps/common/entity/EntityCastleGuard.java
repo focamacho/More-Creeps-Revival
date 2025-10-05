@@ -30,7 +30,6 @@ public class EntityCastleGuard extends EntityCreepBase implements IMob, IEntityC
     public EntityCastleGuard(World worldIn) {
         super(worldIn);
 
-        setCreepTypeName("Castle Guard");
 
         creatureType = EnumCreatureType.MONSTER;
 

@@ -15,7 +15,6 @@ public class EntityRatMan extends EntityCreepBase implements IMob, IEntityCanCha
     public EntityRatMan(World worldIn) {
         super(worldIn);
 
-        setCreepTypeName("Rat Man");
 
         creatureType = EnumCreatureType.MONSTER;
 

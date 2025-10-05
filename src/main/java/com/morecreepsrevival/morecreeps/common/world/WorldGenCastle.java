@@ -75,10 +75,6 @@ public class WorldGenCastle extends WorldGenerator {
 
         PlacementSettings settings = new PlacementSettings().setIgnoreStructureBlock(false).setIgnoreEntities(false);
 
-        Minecraft.getMinecraft().player.sendMessage(
-                new TextComponentString(structurepos.toString())
-        );
-
         IBlockState state = world.getBlockState(structurepos);
 
         world.notifyBlockUpdate(structurepos, state, state, 3);
@@ -133,7 +129,7 @@ public class WorldGenCastle extends WorldGenerator {
 
         king.setInitialHealth();
 
-        king.setNoDespawn(true);
+        king.enablePersistence();
 
         world.spawnEntity(king);
 
@@ -143,7 +139,7 @@ public class WorldGenCastle extends WorldGenerator {
     public boolean oldGenerate(@Nonnull World world, @Nonnull Random rand, @Nonnull BlockPos pos) {
         Biome biome = world.getBiome(pos);
 
-        if (!((MoreCreepsConfig.spawnInNonVanillaBiomes && MoreCreepsConfig.hasBiome(Objects.requireNonNull(biome.getRegistryName()).toString())) || Objects.requireNonNull(biome.getRegistryName()).getResourceDomain().equals("minecraft"))) {
+        if (!((MoreCreepsConfig.Spawn.spawnInNonVanillaBiomes && MoreCreepsConfig.hasBiome(Objects.requireNonNull(biome.getRegistryName()).toString())) || Objects.requireNonNull(biome.getRegistryName()).getResourceDomain().equals("minecraft"))) {
             return false;
         }
 
@@ -592,7 +588,7 @@ public class WorldGenCastle extends WorldGenerator {
 
         king.setInitialHealth();
 
-        king.setNoDespawn(true);
+        king.enablePersistence();
 
         world.spawnEntity(king);
 
@@ -980,7 +976,7 @@ public class WorldGenCastle extends WorldGenerator {
     public BlockPos findStructurePos(@Nonnull World world, @Nonnull Random rand, @Nonnull BlockPos pos) {
         Biome biome = world.getBiome(pos);
 
-        if (!((MoreCreepsConfig.spawnInNonVanillaBiomes && MoreCreepsConfig.hasBiome(Objects.requireNonNull(biome.getRegistryName()).toString())) || Objects.requireNonNull(biome.getRegistryName()).getResourceDomain().equals("minecraft"))) {
+        if (!((MoreCreepsConfig.Spawn.spawnInNonVanillaBiomes && MoreCreepsConfig.hasBiome(Objects.requireNonNull(biome.getRegistryName()).toString())) || Objects.requireNonNull(biome.getRegistryName()).getResourceDomain().equals("minecraft"))) {
             return null;
         }
 

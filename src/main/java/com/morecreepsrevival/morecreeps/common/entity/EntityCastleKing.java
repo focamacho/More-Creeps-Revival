@@ -1,6 +1,7 @@
 package com.morecreepsrevival.morecreeps.common.entity;
 
 import com.morecreepsrevival.morecreeps.common.entity.ai.EntityCreepAIAttackMelee;
+import com.morecreepsrevival.morecreeps.common.helpers.EffectHelper;
 import com.morecreepsrevival.morecreeps.common.helpers.InventoryHelper;
 import com.morecreepsrevival.morecreeps.common.items.CreepsItemHandler;
 import com.morecreepsrevival.morecreeps.common.sounds.CreepsSoundHandler;
@@ -28,7 +29,6 @@ public class EntityCastleKing extends EntityCreepBase {
     public EntityCastleKing(World worldIn) {
         super(worldIn);
 
-        setCreepTypeName("Castle King");
 
         baseSpeed = 0.0d;
 
@@ -57,23 +57,15 @@ public class EntityCastleKing extends EntityCreepBase {
         clearAITasks();
 
         NodeProcessor nodeProcessor = getNavigator().getNodeProcessor();
-
         nodeProcessor.setCanSwim(true);
 
         tasks.addTask(1, new EntityAISwimming(this));
-
         tasks.addTask(2, new EntityCreepAIAttackMelee(this, 1.0d, 4.0d, true));
-
         tasks.addTask(3, new EntityAIMoveTowardsRestriction(this, 0.5d));
-
         tasks.addTask(4, new EntityAIWanderAvoidWater(this, 1.0d));
-
         tasks.addTask(5, new EntityAIWatchClosest(this, EntityPlayer.class, 8.0f));
-
         tasks.addTask(5, new EntityAILookIdle(this));
-
         targetTasks.addTask(1, new EntityAIHurtByTarget(this, false));
-
         targetTasks.addTask(2, new EntityAINearestAttackableTarget<>(this, EntityPlayer.class, true));
     }
 
@@ -81,7 +73,7 @@ public class EntityCastleKing extends EntityCreepBase {
     public void onLivingUpdate() {
         super.onLivingUpdate();
 
-        smoke2();
+        EffectHelper.smoke2(world, this, rand);
 
         if (dataManager.get(intruderCheck) > 0) {
             dataManager.set(intruderCheck, dataManager.get(intruderCheck) - 1);
@@ -167,4 +159,5 @@ public class EntityCastleKing extends EntityCreepBase {
     public boolean getCanSpawnHere() {
         return true;
     }
+
 }

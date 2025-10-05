@@ -28,7 +28,6 @@ public class EntityPonyCloud extends EntityCreepBase {
 
         creatureType = EnumCreatureType.AMBIENT;
 
-        setCreepTypeName("Pony Cloud");
 
         setSize(width * 0.8f, height * 0.5f);
 

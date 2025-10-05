@@ -1,13 +1,13 @@
 package com.morecreepsrevival.morecreeps.common.entity.ai;
 
-import com.morecreepsrevival.morecreeps.common.entity.EntityCreepBase;
+import com.morecreepsrevival.morecreeps.common.entity.EntityCreepBaseOwnable;
 import net.minecraft.entity.ai.EntityAIBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.pathfinding.PathNavigate;
 import net.minecraft.pathfinding.PathNodeType;
 
 public class EntityCreepAIFollowOwner extends EntityAIBase {
-    private final EntityCreepBase tamable;
+    private final EntityCreepBaseOwnable tamable;
 
     private final double followSpeed;
 
@@ -19,7 +19,7 @@ public class EntityCreepAIFollowOwner extends EntityAIBase {
 
     private float oldWaterCost = 0.0f;
 
-    public EntityCreepAIFollowOwner(EntityCreepBase tamableIn, double followSpeedIn, float minDistIn, float maxDistIn) {
+    public EntityCreepAIFollowOwner(EntityCreepBaseOwnable tamableIn, double followSpeedIn, float minDistIn, float maxDistIn) {
         tamable = tamableIn;
 
         followSpeed = followSpeedIn;

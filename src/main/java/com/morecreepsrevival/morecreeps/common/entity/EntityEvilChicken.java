@@ -28,7 +28,6 @@ public class EntityEvilChicken extends EntityCreepBase implements IMob, IEntityC
     public EntityEvilChicken(World worldIn) {
         super(worldIn);
 
-        setCreepTypeName("Evil Chicken");
 
         creatureType = EnumCreatureType.MONSTER;
 

@@ -363,7 +363,7 @@ public class EntityRay extends Entity implements IProjectile {
                 this.inTile.onEntityCollidedWithBlock(this.world, blockpos, iblockstate, this);
 
                 if (!world.isRemote && this.inTile != Blocks.BEDROCK && rand.nextInt(3) == 0) {
-                    if (MoreCreepsConfig.rayGunFire) {
+                    if (MoreCreepsConfig.Miscellaneous.rayGunFire) {
                         world.setBlockState(blockpos, Blocks.FIRE.getDefaultState());
                     } else {
                         world.setBlockToAir(blockpos);
@@ -478,7 +478,7 @@ public class EntityRay extends Entity implements IProjectile {
     }
 
     private void checkMeltBlock(double x, double y, double z) {
-        if (!MoreCreepsConfig.rayGunMelt) {
+        if (!MoreCreepsConfig.Miscellaneous.rayGunMelt) {
             return;
         }
 
@@ -490,7 +490,7 @@ public class EntityRay extends Entity implements IProjectile {
     }
 
     private void checkFireBlock(double x, double y, double z) {
-        if (!MoreCreepsConfig.rayGunFire) {
+        if (!MoreCreepsConfig.Miscellaneous.rayGunFire) {
             return;
         }
 

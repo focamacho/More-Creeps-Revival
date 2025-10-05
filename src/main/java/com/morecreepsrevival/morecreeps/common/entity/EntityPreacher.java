@@ -39,7 +39,6 @@ public class EntityPreacher extends EntityCreepBase implements IMob {
     public EntityPreacher(World world) {
         super(world);
 
-        setCreepTypeName("Preacher");
 
         creatureType = EnumCreatureType.MONSTER;
 
@@ -311,7 +310,6 @@ public class EntityPreacher extends EntityCreepBase implements IMob {
         motionY += 0.5d;
     }
 
-    @Override
     public void smoke() {
         for (int i = 0; i < 5; i++) {
             for (int j = 0; j < 2; j++) {

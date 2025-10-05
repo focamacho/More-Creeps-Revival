@@ -23,7 +23,6 @@ public class EntityKid extends EntityCreepBase implements IEntityCanChangeSize {
     public EntityKid(World world) {
         super(world);
 
-        setCreepTypeName("Kid");
 
         setModelSize(0.6f);
 

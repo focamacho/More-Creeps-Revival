@@ -1,18 +1,18 @@
 package com.morecreepsrevival.morecreeps.common.entity.ai;
 
-import com.morecreepsrevival.morecreeps.common.entity.EntityCreepBase;
+import com.morecreepsrevival.morecreeps.common.entity.EntityCreepBaseOwnable;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.ai.EntityAITarget;
 import net.minecraft.entity.player.EntityPlayer;
 
 public class EntityCreepAIOwnerHurtByTarget extends EntityAITarget {
-    private EntityCreepBase tamable;
+    private EntityCreepBaseOwnable tamable;
 
     private EntityLivingBase attacker;
 
     private int timestamp;
 
-    public EntityCreepAIOwnerHurtByTarget(EntityCreepBase tamableIn) {
+    public EntityCreepAIOwnerHurtByTarget(EntityCreepBaseOwnable tamableIn) {
         super(tamableIn, false);
 
         tamable = tamableIn;

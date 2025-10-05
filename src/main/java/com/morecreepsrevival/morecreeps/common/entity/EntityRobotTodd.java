@@ -15,7 +15,6 @@ public class EntityRobotTodd extends EntityCreepBase implements IMob, IEntityCan
     public EntityRobotTodd(World worldIn) {
         super(worldIn);
 
-        setCreepTypeName("Robot Todd");
 
         creatureType = EnumCreatureType.MONSTER;
 

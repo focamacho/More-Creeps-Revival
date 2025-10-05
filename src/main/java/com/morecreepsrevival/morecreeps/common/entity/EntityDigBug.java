@@ -48,7 +48,6 @@ public class EntityDigBug extends EntityCreepBase implements IEntityCanChangeSiz
     public EntityDigBug(World worldIn) {
         super(worldIn);
 
-        setCreepTypeName("Dig Bug");
 
         setSize(0.5f, 1.2f);
 

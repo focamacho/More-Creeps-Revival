@@ -8,8 +8,9 @@ import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.GuiTextField;
 import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.client.resources.I18n;
+import net.minecraft.entity.EntityList;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.text.translation.I18n;
 import org.lwjgl.input.Keyboard;
 
 import java.io.IOException;
@@ -25,28 +26,17 @@ public class GuiTamableEntityName extends GuiScreen {
     public GuiTamableEntityName(EntityCreepBase entityIn) {
         entity = entityIn;
 
-        switch (entityIn.getCreepTypeName()) {
-            case "Zebra":
-                entityTypeName = "Z E B R A";
-
-                break;
-            case "Camel":
-                entityTypeName = "C A M E L";
-
-                break;
-            case "Rocket Giraffe":
-                entityTypeName = "R O C K E T   G I R A F F E";
-
-                break;
-            case "Snow Devil":
-                entityTypeName = "S N O W   D E V I L";
-
-                break;
-            default:
-                entityTypeName = "E N T I T Y";
-
-                break;
+        String s = EntityList.getEntityString(entityIn);
+        if (s == null) {
+            s = "generic";
         }
+
+        s = I18n.translateToLocal("entity." + s + ".name").toUpperCase();
+        StringBuilder spacedName = new StringBuilder();
+        for (char c : s.toCharArray()) {
+            spacedName.append(c).append(" ");
+        }
+        entityTypeName = spacedName.toString().trim();
     }
 
     @Override
@@ -57,20 +47,13 @@ public class GuiTamableEntityName extends GuiScreen {
     @Override
     public void initGui() {
         Keyboard.enableRepeatEvents(true);
-
         buttonList.clear();
-
         buttonList.add(0, new GuiButton(0, width / 2 - 100, height / 4 + 42, "Save"));
-
-        buttonList.add(1, new GuiButton(1, width / 2 - 100, height / 4 + 72, I18n.format("gui.cancel")));
-
+        buttonList.add(1, new GuiButton(1, width / 2 - 100, height / 4 + 72, I18n.translateToLocal("gui.cancel")));
         nameScreen = new GuiTextField(1, fontRenderer, width / 2 - 100, height / 4 + 10, 200, 20);
-
         nameScreen.setMaxStringLength(31);
-
         nameScreen.setCanLoseFocus(true);
-
-        nameScreen.setText(entity.getCreepName());
+        nameScreen.setText(entity.getName());
     }
 
     @Override

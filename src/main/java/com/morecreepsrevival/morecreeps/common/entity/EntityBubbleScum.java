@@ -14,15 +14,9 @@ import net.minecraft.world.World;
 public class EntityBubbleScum extends EntityCreepBase implements IEntityCanChangeSize {
     public EntityBubbleScum(World worldIn) {
         super(worldIn);
-
-        setCreepTypeName("Bubble Scum");
-
         setSize(0.5f, 0.5f);
-
         baseSpeed = 0.3d;
-
         baseHealth = (float) rand.nextInt(15) + 5.0f;
-
         updateAttributes();
     }
 

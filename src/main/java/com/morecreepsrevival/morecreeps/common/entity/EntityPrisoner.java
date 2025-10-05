@@ -38,8 +38,6 @@ public class EntityPrisoner extends EntityCreepBase {
     public EntityPrisoner(World worldIn) {
         super(worldIn);
 
-        setCreepTypeName("Prisoner");
-
         baseHealth = (float) rand.nextInt(10) + 15.0f;
 
         baseSpeed = 0.25d;
@@ -176,7 +174,6 @@ public class EntityPrisoner extends EntityCreepBase {
         }
     }
 
-    @Override
     public void smoke() {
         for (int i = 0; i < 5; i++) {
             for (int j = 0; j < 2; j++) {

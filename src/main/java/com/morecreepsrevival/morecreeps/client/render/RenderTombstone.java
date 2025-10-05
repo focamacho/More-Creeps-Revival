@@ -12,13 +12,18 @@ import org.lwjgl.opengl.GL11;
 
 import javax.annotation.Nullable;
 
-public class RenderTombstone<T extends EntityTombstone> extends RenderCreep<T> {
+public class RenderTombstone<T extends EntityTombstone> extends RenderCreepOwnable<T> {
     public RenderTombstone(RenderManager renderManager) {
         super(renderManager, new ModelTombstone(), 0.5f);
     }
 
     @Override
     protected boolean shouldDrawTamedStatus(T entity) {
+        return false;
+    }
+
+    @Override
+    protected boolean canRenderName(T entity) {
         return false;
     }
 
@@ -33,9 +38,9 @@ public class RenderTombstone<T extends EntityTombstone> extends RenderCreep<T> {
 
         float f3 = 0.01666667f * f2;
 
-        String s = "\247fHere lies \2476" + entity.getCreepName();
+        String s = "§fHere lies §6" + entity.getName();
 
-        String s1 = "\247f a level \2476" + entity.getLevel() + " \247f" + entity.getCreepTypeName();
+        String s1 = "§f a level §6" + entity.getLevel() + " §f" + entity.getDeadCreatureTypeName();
 
         FontRenderer fontRenderer = getFontRendererFromRenderManager();
 

@@ -26,7 +26,6 @@ public class EntityGrowbotGregg extends EntityCreepBase {
     public EntityGrowbotGregg(World worldIn) {
         super(worldIn);
 
-        setCreepTypeName("Growbot Gregg");
 
         setModelSize(1.5f);
 

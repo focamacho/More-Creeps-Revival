@@ -25,7 +25,6 @@ public class EntityDesertLizard extends EntityCreepBase implements IEntityCanCha
 
         super(worldin);
 
-        setCreepTypeName("Desert Lizard");
         creatureType = EnumCreatureType.MONSTER;
 
         baseHealth = 15.0f;

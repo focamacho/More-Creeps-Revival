@@ -17,7 +17,6 @@ public class EntityMummy extends EntityCreepBase implements IMob {
     public EntityMummy(World world) {
         super(world);
 
-        setCreepTypeName("Mummy");
 
         creatureType = EnumCreatureType.MONSTER;
 

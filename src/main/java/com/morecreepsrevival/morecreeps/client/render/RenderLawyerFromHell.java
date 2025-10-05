@@ -51,10 +51,10 @@ public class RenderLawyerFromHell<T extends EntityLawyerFromHell> extends Render
             return;
         }
 
-        String str = "\247cFINE: \2472$\247f" + fine;
+        String str = "§cFINE: §2$§f" + fine;
 
         if (fine >= 2500) {
-            str += " \247cJAIL TIME";
+            str += " §cJAIL TIME";
         }
 
         float f2 = 1.6f;

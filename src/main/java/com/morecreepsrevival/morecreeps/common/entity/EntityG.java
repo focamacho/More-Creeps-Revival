@@ -18,7 +18,6 @@ public class EntityG extends EntityCreepBase implements IMob, IEntityCanChangeSi
     public EntityG(World worldIn) {
         super(worldIn);
 
-        setCreepTypeName("G");
 
         creatureType = EnumCreatureType.MONSTER;
 

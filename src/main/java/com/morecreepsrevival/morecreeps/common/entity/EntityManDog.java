@@ -1,5 +1,6 @@
 package com.morecreepsrevival.morecreeps.common.entity;
 
+import com.morecreepsrevival.morecreeps.common.helpers.EffectHelper;
 import com.morecreepsrevival.morecreeps.common.items.CreepsItemHandler;
 import com.morecreepsrevival.morecreeps.common.sounds.CreepsSoundHandler;
 import net.minecraft.entity.Entity;
@@ -20,7 +21,7 @@ import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
 
-public class EntityManDog extends EntityCreepBase {
+public class EntityManDog extends EntityCreepBaseOwnable {
     private static final DataParameter<Boolean> superDog = EntityDataManager.<Boolean>createKey(EntityManDog.class, DataSerializers.BOOLEAN);
 
     private static final DataParameter<Integer> tamedFood = EntityDataManager.createKey(EntityManDog.class, DataSerializers.VARINT);
@@ -44,7 +45,6 @@ public class EntityManDog extends EntityCreepBase {
     public EntityManDog(World worldIn) {
         super(worldIn);
 
-        setCreepTypeName("Mandog");
 
         baseHealth = 45.0f;
 
@@ -134,10 +134,10 @@ public class EntityManDog extends EntityCreepBase {
 
                 setTamedFood(getTamedFood() - 1);
 
-                smoke();
+                EffectHelper.smoke(world, this, rand, false);
 
                 if (getTamedFood() < 1) {
-                    smoke();
+                    EffectHelper.smoke(world, this, rand, false);
 
                     tame(player);
                 }

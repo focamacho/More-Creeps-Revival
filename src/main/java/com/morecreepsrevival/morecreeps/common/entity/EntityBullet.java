@@ -334,7 +334,7 @@ public class EntityBullet extends Entity {
         }
 
         if (entityHit != null && entityHit.attackEntityFrom(DamageSource.causeThrownDamage(this, getShootingEntity()), damage)) {
-            if (MoreCreepsConfig.blood && !(entityHit instanceof EntityCreepBase && !((EntityCreepBase) entityHit).canBleed())) {
+            if (MoreCreepsConfig.Miscellaneous.blood && !(entityHit instanceof EntityCreepBase && !((EntityCreepBase) entityHit).canBleed())) {
                 blood(rtr.hitVec);
             }
         }

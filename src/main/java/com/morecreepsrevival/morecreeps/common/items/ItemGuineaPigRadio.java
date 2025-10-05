@@ -10,6 +10,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.text.TextComponentString;
+import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.world.World;
 
 import javax.annotation.Nonnull;
@@ -26,7 +27,7 @@ public class ItemGuineaPigRadio extends CreepsItem {
     public ActionResult<ItemStack> onItemRightClick(World world, EntityPlayer player, @Nonnull EnumHand hand) {
         if (!player.isSneaking()) {
             if (player.isRiding()) {
-                player.sendMessage(new TextComponentString("Get off that creature before using the Guinea Pig Radio!"));
+                player.sendMessage(new TextComponentTranslation("item.morecreeps.guinea_pig_radio.riding"));
             } else {
                 IGuineaPigPickedUp capability = player.getHeldItem(hand).getCapability(GuineaPigPickedUpProvider.capability, null);
 

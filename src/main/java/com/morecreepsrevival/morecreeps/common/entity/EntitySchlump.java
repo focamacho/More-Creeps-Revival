@@ -20,11 +20,12 @@ import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.text.TextComponentString;
+import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.world.World;
 
 import javax.annotation.Nonnull;
 
-public class EntitySchlump extends EntityCreepBase {
+public class EntitySchlump extends EntityCreepBaseOwnable {
     private static final DataParameter<Integer> age = EntityDataManager.createKey(EntitySchlump.class, DataSerializers.VARINT);
 
     private static final DataParameter<Integer> ageTimer = EntityDataManager.createKey(EntitySchlump.class, DataSerializers.VARINT);
@@ -40,7 +41,6 @@ public class EntitySchlump extends EntityCreepBase {
     public EntitySchlump(World worldIn) {
         super(worldIn);
 
-        setCreepTypeName("Schlump");
 
         baseSpeed = 0.0d;
 
@@ -194,7 +194,6 @@ public class EntitySchlump extends EntityCreepBase {
         return (i > 25);
     }
 
-    @Override
     public void smoke() {
         for (int i = 0; i < 5; i++) {
             for (int j = 0; j < 2; j++) {
@@ -241,7 +240,7 @@ public class EntitySchlump extends EntityCreepBase {
         for (Entity entity : world.getEntitiesWithinAABBExcludingEntity(this, getEntityBoundingBox().expand(16.0d, 16.0d, 16.0d))) {
             if (entity instanceof EntitySchlump) {
                 if (owner != null) {
-                    owner.sendMessage(new TextComponentString("Too close to another Schlump. SCHLUMP OVERLOAD!"));
+                    owner.sendMessage(new TextComponentTranslation("entity.morecreeps.schlump.overload"));
                 }
 
                 playSound(CreepsSoundHandler.schlumpOverloadSound, getSoundVolume(), getSoundPitch());
@@ -254,7 +253,7 @@ public class EntitySchlump extends EntityCreepBase {
 
         if (world.canBlockSeeSky(blockPos)) {
             if (owner != null) {
-                owner.sendMessage(new TextComponentString("Your Schlump needs to be indoors or it will die!"));
+                owner.sendMessage(new TextComponentTranslation("entity.morecreeps.schlump.indoors"));
             }
 
             playSound(CreepsSoundHandler.schlumpIndoorsSound, getSoundVolume(), getSoundPitch());
@@ -262,7 +261,7 @@ public class EntitySchlump extends EntityCreepBase {
             return false;
         } else if (world.getBlockLightOpacity(blockPos) > 11) {
             if (owner != null) {
-                owner.sendMessage(new TextComponentString("It is too bright in here for your little Schlump!"));
+                owner.sendMessage(new TextComponentTranslation("entity.morecreeps.schlump.bright"));
             }
 
             playSound(CreepsSoundHandler.schlumpBrightSound, getSoundVolume(), getSoundPitch());
@@ -284,7 +283,7 @@ public class EntitySchlump extends EntityCreepBase {
 
         if (l < 60) {
             if (owner != null) {
-                owner.sendMessage(new TextComponentString("Your Schlump doesn't have enough room to grow!"));
+                owner.sendMessage(new TextComponentTranslation("entity.morecreeps.schlump.room"));
             }
 
             playSound(CreepsSoundHandler.schlumpRoomSound, getSoundVolume(), getSoundPitch());
@@ -335,7 +334,7 @@ public class EntitySchlump extends EntityCreepBase {
         if (j1 > 275) {
             if (getAge() < 10) {
                 if (owner != null) {
-                    owner.sendMessage(new TextComponentString("This location is great! Your Schlump will love it here!"));
+                    owner.sendMessage(new TextComponentTranslation("entity.morecreeps.schlump.great"));
                 }
 
                 playSound(CreepsSoundHandler.schlumpOkSound, getSoundVolume(), getSoundPitch());
@@ -345,7 +344,7 @@ public class EntitySchlump extends EntityCreepBase {
         }
 
         if (owner != null) {
-            owner.sendMessage(new TextComponentString("This is not a good location for your Schlump. It will die here!"));
+            owner.sendMessage(new TextComponentTranslation("entity.morecreeps.schlump.bad"));
         }
 
         playSound(CreepsSoundHandler.schlumpSucksSound, getSoundVolume(), getSoundPitch());
@@ -522,7 +521,7 @@ public class EntitySchlump extends EntityCreepBase {
 
         if (itemStack.getItem() == CreepsItemHandler.babyJarEmpty) {
             if (getModelSize() > 0.5f) {
-                player.sendMessage(new TextComponentString("That Schlump is too big to fit in a jar!"));
+                player.sendMessage(new TextComponentTranslation("entity.morecreeps.schlump.big"));
 
                 playSound(CreepsSoundHandler.schlumpBigSound, getSoundVolume(), getSoundPitch());
 

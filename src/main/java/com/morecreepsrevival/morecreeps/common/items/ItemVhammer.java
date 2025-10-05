@@ -2,6 +2,7 @@ package com.morecreepsrevival.morecreeps.common.items;
 
 import net.minecraft.block.state.IBlockState;
 
+// TODO: Currently disabled
 public class ItemVhammer extends CreepsItemSword {
 
     public ItemVhammer() {

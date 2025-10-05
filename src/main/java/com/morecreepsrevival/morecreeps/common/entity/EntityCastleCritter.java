@@ -16,7 +16,6 @@ public class EntityCastleCritter extends EntityCreepBase implements IMob, IEntit
     public EntityCastleCritter(World worldIn) {
         super(worldIn);
 
-        setCreepTypeName("Castle Critter");
 
         creatureType = EnumCreatureType.MONSTER;
 

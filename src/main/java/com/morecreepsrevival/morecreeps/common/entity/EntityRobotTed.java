@@ -2,6 +2,7 @@ package com.morecreepsrevival.morecreeps.common.entity;
 
 import com.morecreepsrevival.morecreeps.common.items.CreepsItemHandler;
 import com.morecreepsrevival.morecreeps.common.sounds.CreepsSoundHandler;
+import net.minecraft.block.Block;
 import net.minecraft.entity.EnumCreatureType;
 import net.minecraft.entity.ai.*;
 import net.minecraft.entity.monster.IMob;
@@ -9,6 +10,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.pathfinding.NodeProcessor;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.SoundEvent;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
 public class EntityRobotTed extends EntityCreepBase implements IMob, IEntityCanChangeSize {
@@ -18,23 +20,13 @@ public class EntityRobotTed extends EntityCreepBase implements IMob, IEntityCanC
     public EntityRobotTed(World worldIn) {
         super(worldIn);
 
-        setCreepTypeName("Robot Ted");
-
         creatureType = EnumCreatureType.MONSTER;
-
         setModelSize(2.5f);
-
         setSize(2.5f * 0.75f, 2.5f * 1.85f);
-
         baseHealth = (float) rand.nextInt(20) + 25.0f;
-
         baseSpeed = 0.25d;
-
         floattimer = 0;
-
         updateAttributes();
-
-
     }
 
     @Override
@@ -47,32 +39,19 @@ public class EntityRobotTed extends EntityCreepBase implements IMob, IEntityCanC
         clearAITasks();
 
         NodeProcessor nodeProcessor = getNavigator().getNodeProcessor();
-
         nodeProcessor.setCanSwim(true);
-
         nodeProcessor.setCanEnterDoors(true);
 
-
         tasks.addTask(1, new EntityAISwimming(this));
-
         tasks.addTask(2, new EntityAIBreakDoor(this));
-
         tasks.addTask(3, new EntityAIAttackMelee(this, 1.0d, true));
-
         tasks.addTask(4, new EntityAIMoveTowardsRestriction(this, 0.5d));
-
         tasks.addTask(5, new EntityAIWanderAvoidWater(this, 1.0d));
-
         tasks.addTask(6, new EntityAIWatchClosest(this, EntityPlayer.class, 8.0f));
-
         tasks.addTask(6, new EntityAIWatchClosest(this, EntityRobotTodd.class, 8.0f));
-
         tasks.addTask(6, new EntityAILookIdle(this));
-
         targetTasks.addTask(1, new EntityAIHurtByTarget(this, false));
-
         targetTasks.addTask(2, new EntityAINearestAttackableTarget<>(this, EntityPlayer.class, true));
-
         targetTasks.addTask(2, new EntityAINearestAttackableTarget<>(this, EntityRobotTodd.class, true));
     }
 
@@ -124,6 +103,11 @@ public class EntityRobotTed extends EntityCreepBase implements IMob, IEntityCanC
     @Override
     protected SoundEvent getDeathSound() {
         return CreepsSoundHandler.tedDeadSound;
+    }
+
+    @Override
+    protected void playStepSound(BlockPos pos, Block blockIn) {
+
     }
 
     @Override

@@ -14,7 +14,6 @@ public class EntityEvilPig extends EntityCreepBase implements IMob, IEntityCanCh
     public EntityEvilPig(World worldIn) {
         super(worldIn);
 
-        setCreepTypeName("Evil Pig");
 
         creatureType = EnumCreatureType.MONSTER;
 

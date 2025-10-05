@@ -17,8 +17,6 @@ public class EntityCamelJockey extends EntityCreepBase implements IEntityCanChan
     public EntityCamelJockey(World worldIn) {
         super(worldIn);
 
-        setCreepTypeName("Camel Jockey");
-
         setSize(width * 0.6f, height * 0.6f);
 
         setModelSize(0.6f);

@@ -1,6 +1,8 @@
 package com.morecreepsrevival.morecreeps.common.entity;
 
 import com.morecreepsrevival.morecreeps.common.MoreCreepsAndWeirdos;
+import com.morecreepsrevival.morecreeps.common.config.MoreCreepsConfig;
+import com.morecreepsrevival.morecreeps.common.helpers.EffectHelper;
 import com.morecreepsrevival.morecreeps.common.items.CreepsItemHandler;
 import com.morecreepsrevival.morecreeps.common.networking.CreepsPacketHandler;
 import com.morecreepsrevival.morecreeps.common.networking.message.MessageOpenGuiTamableEntityName;
@@ -24,15 +26,13 @@ import net.minecraft.util.EnumHand;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.text.TextComponentString;
+import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.world.World;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-public class EntityRocketGiraffe extends EntityCreepBase implements IEntityCanChangeSize {
-    private static final String[] names = {
-            "Rory", "Stan", "Clarence", "FirePower", "Lightning", "Rocket Jockey", "Rocket Ralph", "Tim"
-    };
+public class EntityRocketGiraffe extends EntityCreepBaseOwnable implements IEntityCanChangeSize {
 
     private static final DataParameter<Integer> tamedCookies = EntityDataManager.createKey(EntityRocketGiraffe.class, DataSerializers.VARINT);
 
@@ -41,7 +41,6 @@ public class EntityRocketGiraffe extends EntityCreepBase implements IEntityCanCh
     public EntityRocketGiraffe(World worldIn) {
         super(worldIn);
 
-        setCreepTypeName("Rocket Giraffe");
 
         setSize(1.5f, 4.0f);
 
@@ -53,15 +52,15 @@ public class EntityRocketGiraffe extends EntityCreepBase implements IEntityCanCh
     }
 
     @Override
-    protected String[] getTamedNames() {
-        return names;
-    }
-
-    @Override
     protected void entityInit() {
         super.entityInit();
 
         dataManager.register(tamedCookies, rand.nextInt(7) + 1);
+    }
+
+    @Override
+    protected String[] getTamedNames() {
+        return MoreCreepsConfig.TamedNames.entityRocketGiraffeNames;
     }
 
     @Override
@@ -147,8 +146,7 @@ public class EntityRocketGiraffe extends EntityCreepBase implements IEntityCanCh
 
     @Override
     public void onDeath(@Nonnull DamageSource damageSource) {
-        smoke();
-
+        EffectHelper.smoke(world, this, rand, false);
         super.onDeath(damageSource);
     }
 
@@ -325,20 +323,20 @@ public class EntityRocketGiraffe extends EntityCreepBase implements IEntityCanCh
 
                     if (cookieCount > 0) {
                         if (!world.isRemote) {
-                            player.sendMessage(new TextComponentString("You need \2476" + cookieCount + " cookie" + ((cookieCount == 1) ? "" : "s") + " \247fto tame this Rocket Giraffe."));
+                            player.sendMessage(new TextComponentTranslation("entity.morecreeps.rocket_giraffe.cookie", cookieCount));
                         }
                     } else {
                         tame(player);
                     }
 
-                    smoke();
+                    EffectHelper.smoke(world, this, rand, false);
 
                     return true;
                 }
             } else if (!world.isRemote) {
                 int cookieCount = getTamedCookies();
 
-                player.sendMessage(new TextComponentString("You need \2476" + cookieCount + " cookie" + ((cookieCount == 1) ? "" : "s") + " \247fto tame this Rocket Giraffe."));
+                player.sendMessage(new TextComponentTranslation("entity.morecreeps.rocket_giraffe.cookie", cookieCount));
             }
         }
 
@@ -349,7 +347,7 @@ public class EntityRocketGiraffe extends EntityCreepBase implements IEntityCanCh
     public boolean canPlayerRide(EntityPlayer player) {
         if (isPlayerOwner(player) && getModelSize() < 1.0f) {
             if (!world.isRemote) {
-                player.sendMessage(new TextComponentString("Your Rocket Giraffe is too small to ride!"));
+                player.sendMessage(new TextComponentTranslation("entity.morecreeps.rocket_giraffe.small"));
             }
 
             return false;

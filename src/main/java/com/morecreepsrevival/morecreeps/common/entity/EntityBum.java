@@ -41,8 +41,6 @@ public class EntityBum extends EntityCreepBase implements IMob, IEntityCanChange
     public EntityBum(World worldIn) {
         super(worldIn);
 
-        setCreepTypeName("Bum");
-
         creatureType = EnumCreatureType.MONSTER;
 
         baseSpeed = 0.25d;
@@ -108,7 +106,7 @@ public class EntityBum extends EntityCreepBase implements IMob, IEntityCanChange
 
     @Override
     protected SoundEvent getAmbientSound() {
-        if (getTimeToPee() > 0 || getBumGave() || !MoreCreepsConfig.publicUrination) {
+        if (getTimeToPee() > 0 || getBumGave() || !MoreCreepsConfig.Miscellaneous.publicUrination) {
             return CreepsSoundHandler.bumSound;
         }
 
@@ -291,7 +289,7 @@ public class EntityBum extends EntityCreepBase implements IMob, IEntityCanChange
 
         setTimeToPee(getTimeToPee() - 1);
 
-        if (getAttackTarget() == null && getTimeToPee() < 0 && !getBumGave() && MoreCreepsConfig.publicUrination) {
+        if (getAttackTarget() == null && getTimeToPee() < 0 && !getBumGave() && MoreCreepsConfig.Miscellaneous.publicUrination) {
             isJumping = false;
 
             if (bumRotation == 999.0f) {

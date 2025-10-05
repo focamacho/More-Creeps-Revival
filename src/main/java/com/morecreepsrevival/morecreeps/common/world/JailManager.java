@@ -26,6 +26,7 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3i;
 import net.minecraft.util.text.TextComponentString;
+import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
 import net.minecraft.world.gen.structure.template.PlacementSettings;
@@ -54,7 +55,7 @@ public class JailManager {
 
         boolean loaded = tryCasheStructure(world);
         if (!loaded) {
-            player.sendMessage(new TextComponentString("Couldn't generate jail 2."));
+            player.sendMessage(new TextComponentTranslation("worldgen.morecreeps.jail.fail2"));
             return false;
         }
 
@@ -78,7 +79,7 @@ public class JailManager {
         int jailZ = (int) player.posZ + randInt;
 
         if (!isJailPossible(player, world, rand, jailX, jailY, jailZ)) {
-            player.sendMessage(new TextComponentString("Couldn't generate jail. 1"));
+            player.sendMessage(new TextComponentTranslation("worldgen.morecreeps.jail.fail1"));
             return false;
         }
 
@@ -717,8 +718,8 @@ public class JailManager {
     private static void populateCell(EntityPlayer player, World world, Random rand, int placeX, int placeY, int placeZ, boolean flag) {
         if (flag) {
             for (Entity entity : world.getEntitiesWithinAABBExcludingEntity(player, player.getEntityBoundingBox().expand(26.0d, 26.0d, 26.0d))) {
-                if (entity instanceof EntityCreepBase) {
-                    EntityCreepBase creep = (EntityCreepBase) entity;
+                if (entity instanceof EntityCreepBaseOwnable) {
+                    EntityCreepBaseOwnable creep = (EntityCreepBaseOwnable) entity;
 
                     if (creep.isTamed()) {
                         creep.setWanderState(1);

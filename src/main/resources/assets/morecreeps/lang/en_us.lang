@@ -112,6 +112,52 @@ entity.morecreeps.desert_lizard.name=Desert Lizard
 entity.morecreeps.hunchbackskeleton.name=Hunchback Skeleton
 entity.morecreeps.hippo.name=Hippo
 
+# Entities messages
+entity.morecreeps.wanderstate.0=§3%s §6will §7dSTAY§6 right here.
+entity.morecreeps.wanderstate.1=§3%s §6will §dWANDER§6 around and have fun.
+entity.morecreeps.wanderstate.2=§3%s §6will §dFIGHT§6 and follow you!
+entity.morecreeps.speed_boost=§b%s§6 has run out of speedboost.
+entity.morecreeps.speed_boost.left=§3%s§6 has §f%s§6 minute(s) of speedboost left.
+entity.morecreeps.tamed=§6%s §fhas been tamed!
+entity.morecreeps.level_increase=§b%s §fincreased to level §6%s!
+entity.morecreeps.bigbaby.schlump=Now turn that baby into a Schlump on the floor!
+entity.morecreeps.bigbaby.large=That baby is too large.
+entity.morecreeps.schlump.overload=Too close to another Schlump. SCHLUMP OVERLOAD!
+entity.morecreeps.schlump.indoors=Your Schlump needs to be indoors or it will die!
+entity.morecreeps.schlump.bright=It is too bright in here for your little Schlump!
+entity.morecreeps.schlump.room=Your Schlump doesn't have enough room to grow!
+entity.morecreeps.schlump.great=This location is great! Your Schlump will love it here!
+entity.morecreeps.schlump.bad=This is not a good location for your Schlump. It will die here!
+entity.morecreeps.schlump.big=That Schlump is too big to fit in a jar!
+entity.morecreeps.ponygirl.money=You need $%s for a Pony!
+entity.morecreeps.ponygirl.deliver=LOOK UP! Your new Pony is being delivered by a PonyCloud!
+entity.morecreeps.ponygirl.reception=I have to get better reception to order a pony!
+entity.morecreeps.camel.cookie=You need §6%s cookie(s) §fto tame this lovely camel.
+entity.morecreeps.rocket_giraffe.cookie=You need §6%s cookie(s) §fto tame this Rocket Giraffe.
+entity.morecreeps.zebra.cookie=You need §6%s cookie(s) §fto tame this speedy Zebra.
+entity.morecreeps.zebra.small=Your Zebra is too small to ride!
+entity.morecreeps.camel.small=Your Camel is too small to ride!
+entity.morecreeps.rocket_giraffe.small=Your Rocket Giraffe is too small to ride!
+entity.morecreeps.tombstone.lifegem=Use a §4LifeGem§f on this tombstone to bring your pet back to life!
+entity.morecreeps.tombstone.notyour=This is not your tamed pet!
+entity.morecreeps.hotdog.heaven.down=Put your Hotdog down before building the Hotdog Heaven!
+entity.morecreeps.hotdog.heaven.level=Your Hotdog must be level 25 to build a Hotdog Heaven.
+entity.morecreeps.hotdog.heaven.already=§b%s §f has already built a Hotdog Heaven.
+entity.morecreeps.hotdog.heaven.toofar=You are too far up to build Hotdog Heaven!
+entity.morecreeps.hotdog.heaven.built=HOT DOG HEAVEN HAS BEEN BUILT!
+entity.morecreeps.hotdog.heaven.obstructions=Too many obstructions, choose another spot!
+entity.morecreeps.hotdog.currentlevel=§b%s is only level §f%s.
+entity.morecreeps.guinea_pig.hotel.down=Put your Guinea Pig down before building the Guinea Pig Hotel!
+entity.morecreeps.guinea_pig.hotel.level=Your Guinea Pig must be level 20 to build a Hotel.
+entity.morecreeps.guinea_pig.hotel.already=§b%s§f has already built a Hotel.
+entity.morecreeps.guinea_pig.hotel.built=GUINEA PIG HOTEL BUILT!
+entity.morecreeps.guinea_pig.hotel.obstructions=Too many obstructions, choose another spot!
+entity.morecreeps.guinea_pig.currentlevel=§b%s is only level §f%s.
+entity.morecreeps.horse_head.unmount=Unmount all creatures before riding your Horse Head.
+
+# Item messages
+item.morecreeps.guinea_pig_radio.riding=Get off that creature before using the Guinea Pig Radio!
+
 # Creative Tabs
 itemGroup.creepsTab=More Creeps
 
@@ -171,3 +217,61 @@ other.morecreeps.welcome.31=Some Prisoners are just evil and will attack you on 
 other.morecreeps.welcome.32=Evil Scientists will conduct experiments that sometimes backfire.
 other.morecreeps.welcome.33=Your pet loses a level if resurrected with a LifeGem.
 other.morecreeps.welcome.34=Sneaky Sal will sometimes sell goods at a discount.
+
+# Tamed
+other.morecreeps.tamedcount=You have successfully tamed: §6%s
+
+# Hotdog
+other.morecreeps.hotdog.level.0=Just A Pup
+other.morecreeps.hotdog.level.1=Hotdog
+other.morecreeps.hotdog.level.2=A Dirty Dog
+other.morecreeps.hotdog.level.3=An Alley Dog
+other.morecreeps.hotdog.level.4=Scrapyard Puppy
+other.morecreeps.hotdog.level.5=Army Dog
+other.morecreeps.hotdog.level.6=Private
+other.morecreeps.hotdog.level.7=Private First Class
+other.morecreeps.hotdog.level.8=Corporal
+other.morecreeps.hotdog.level.9=Sergeant
+other.morecreeps.hotdog.level.10=Staff Sergeant
+other.morecreeps.hotdog.level.11=Sergeant First Class
+other.morecreeps.hotdog.level.12=Master Segeant
+other.morecreeps.hotdog.level.13=First Sergeant
+other.morecreeps.hotdog.level.14=Sergeant Major
+other.morecreeps.hotdog.level.15=Command Sergeant Major
+other.morecreeps.hotdog.level.16=Second Lieutenant
+other.morecreeps.hotdog.level.17=First Lieutenant
+other.morecreeps.hotdog.level.18=Captain
+other.morecreeps.hotdog.level.19=Major
+other.morecreeps.hotdog.level.20=Lieutenant Colonel
+other.morecreeps.hotdog.level.21=Colonel
+other.morecreeps.hotdog.level.22=General of the Hotdog Army
+other.morecreeps.hotdog.level.23=General of the Hotdog Army
+other.morecreeps.hotdog.level.24=Sparky the Wonder Pooch
+other.morecreeps.hotdog.level.25=Sparky the Wonder Pooch
+
+# Guinea Pig
+other.morecreeps.guineapig.level.0=Guinea Pig
+other.morecreeps.guineapig.level.1=A nothing pig
+other.morecreeps.guineapig.level.2=An inexperienced pig
+other.morecreeps.guineapig.level.3=Trainee
+other.morecreeps.guineapig.level.4=Private
+other.morecreeps.guineapig.level.5=Private First Class
+other.morecreeps.guineapig.level.6=Corporal
+other.morecreeps.guineapig.level.7=Sergeant
+other.morecreeps.guineapig.level.8=Staff Sergeant
+other.morecreeps.guineapig.level.9=Sergeant First Class
+other.morecreeps.guineapig.level.10=Master Sergeant
+other.morecreeps.guineapig.level.11=First Sergeant
+other.morecreeps.guineapig.level.12=Sergeant Major
+other.morecreeps.guineapig.level.13=Command Sergeant Major
+other.morecreeps.guineapig.level.14=Second Lieutenant
+other.morecreeps.guineapig.level.15=First Lieutenant
+other.morecreeps.guineapig.level.16=Captain
+other.morecreeps.guineapig.level.17=Major
+other.morecreeps.guineapig.level.18=Lieutenant Colonel
+other.morecreeps.guineapig.level.19=Colonel
+other.morecreeps.guineapig.level.20=General of the Pig Army
+
+# World Gen
+worldgen.morecreeps.jail.fail1=Couldn't generate jail 1.
+worldgen.morecreeps.jail.fail2=Couldn't generate jail 2.

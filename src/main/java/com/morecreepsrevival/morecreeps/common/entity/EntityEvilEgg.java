@@ -79,7 +79,7 @@ public class EntityEvilEgg extends EntityThrowable {
     }
 
     private void explode() {
-        if (!exploded) {
+        if (!exploded && !world.isRemote) {
             exploded = true;
 
             world.createExplosion(null, posX, posY, posZ, 2.0f, true);

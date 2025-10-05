@@ -77,6 +77,8 @@ public class CreepsItemHandler {
     public static Item medicine;
     public static Item luckyDress;
     public static Item peeBucket;
+
+    // Currently disabled
     public static Item vhsTape;
     public static Item vhsTape2;
     public static Item vHammer;
@@ -143,9 +145,9 @@ public class CreepsItemHandler {
         medicine = new ItemMedicine();
         luckyDress = new ItemLuckyDress();
         peeBucket = new ItemPeeBuck();
-        vhsTape = new ItemVHSTape();
-        vhsTape2 = new ItemTameVHSTape();
-        vHammer = new ItemVhammer();
+        //vhsTape = new ItemVHSTape();
+        //vhsTape2 = new ItemTameVHSTape();
+        //vHammer = new ItemVhammer();
     }
 
     @SubscribeEvent
@@ -205,10 +207,10 @@ public class CreepsItemHandler {
                 ram16k,
                 mobilePhone,
                 medicine,
-                luckyDress,
-                vhsTape,
-                vhsTape2,
-                vHammer
+                luckyDress
+                //vhsTape,
+                //vhsTape2,
+                //vHammer
         );
     }
 

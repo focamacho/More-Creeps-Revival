@@ -31,7 +31,6 @@ public class EntityInvisibleMan extends EntityCreepBase implements IEntityCanCha
     public EntityInvisibleMan(World world) {
         super(world);
 
-        setCreepName("Invisible Man");
 
         creatureType = EnumCreatureType.MONSTER;
 

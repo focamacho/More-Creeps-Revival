@@ -19,8 +19,6 @@ public class EntityBlackSoul extends EntityCreepBase implements IMob, IEntityCan
     public EntityBlackSoul(World world) {
         super(world);
 
-        setCreepTypeName("Black Soul");
-
         creatureType = EnumCreatureType.MONSTER;
 
         spawnOnlyAtNight = true;

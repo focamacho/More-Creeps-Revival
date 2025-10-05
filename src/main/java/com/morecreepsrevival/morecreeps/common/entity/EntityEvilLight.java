@@ -15,7 +15,6 @@ public class EntityEvilLight extends EntityCreepBase {
     public EntityEvilLight(World worldIn) {
         super(worldIn);
 
-        setCreepTypeName("Evil Light");
 
         creatureType = EnumCreatureType.AMBIENT;
 

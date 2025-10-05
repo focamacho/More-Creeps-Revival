@@ -4,7 +4,7 @@ import com.morecreepsrevival.morecreeps.client.models.ModelManDog;
 import com.morecreepsrevival.morecreeps.common.entity.EntityManDog;
 import net.minecraft.client.renderer.entity.RenderManager;
 
-public class RenderManDog<T extends EntityManDog> extends RenderCreep<T> {
+public class RenderManDog<T extends EntityManDog> extends RenderCreepOwnable<T> {
     public RenderManDog(RenderManager renderManager) {
         super(renderManager, new ModelManDog(), 0.5f);
     }

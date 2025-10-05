@@ -1,9 +1,12 @@
 package com.morecreepsrevival.morecreeps.common.entity;
 
+import com.morecreepsrevival.morecreeps.common.config.MoreCreepsConfig;
+import com.morecreepsrevival.morecreeps.common.helpers.EffectHelper;
 import com.morecreepsrevival.morecreeps.common.sounds.CreepsSoundHandler;
 import net.minecraft.block.BlockSapling;
 import net.minecraft.block.BlockStairs;
 import net.minecraft.block.BlockTallGrass;
+import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.MoverType;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
@@ -19,29 +22,16 @@ import net.minecraft.tileentity.TileEntityChest;
 import net.minecraft.util.*;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.text.TextComponentString;
+import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.world.World;
 
-public class EntityHotdog extends EntityCreepBase implements IEntityCanChangeSize {
+public class EntityHotdog extends EntityCreepBaseOwnable implements IEntityCanChangeSize {
     private static final DataParameter<Boolean> heavenBuilt = EntityDataManager.<Boolean>createKey(EntityHotdog.class, DataSerializers.BOOLEAN);
 
     private static final String[] textures = {
             "textures/entity/hotdg1",
             "textures/entity/hotdg2",
             "textures/entity/hotdg3"
-    };
-
-    private static final String[] names = {
-            "Pogo", "Spot", "King", "Prince", "Bosco", "Ralph", "Wendy", "Trixie", "Bowser", "The Heat",
-            "Weiner", "Wendon the Weiner", "Wallace the Weiner", "William the Weiner", "Terrance", "Elijah", "Good Boy", "Boy", "Girl", "Tennis Shoe",
-            "Rusty", "Mean Joe Green", "Lawrence", "Foxy", "SlyFoxHound", "Leroy Brown",
-            "Mickey", "Holly", "Yeontan"
-    };
-
-    private static final String[] levelNames = {
-            "Just A Pup", "Hotdog", "A Dirty Dog", "An Alley Dog", "Scrapyard Puppy", "Army Dog", "Private", "Private First Class", "Corporal", "Sergeant",
-            "Staff Sergeant", "Sergeant First Class", "Master Segeant", "First Sergeant", "Sergeant Major", "Command Sergeant Major", "Second Lieutenant", "First Lieutenant", "Captain", "Major",
-            "Lieutenant Colonel", "Colonel", "General of the Hotdog Army", "General of the Hotdog Army", "Sparky the Wonder Pooch", "Sparky the Wonder Pooch"
     };
 
     private static final int[] levelDamages = {
@@ -53,7 +43,6 @@ public class EntityHotdog extends EntityCreepBase implements IEntityCanChangeSiz
     public EntityHotdog(World world) {
         super(world);
 
-        setCreepTypeName("Hotdog");
 
         setSize(0.5f, 0.75f);
 
@@ -76,6 +65,11 @@ public class EntityHotdog extends EntityCreepBase implements IEntityCanChangeSiz
     @Override
     public int getMaxSpawnedInChunk() {
         return 2;
+    }
+
+    @Override
+    protected String[] getTamedNames() {
+        return MoreCreepsConfig.TamedNames.entityHotDogNames;
     }
 
     @Override
@@ -147,11 +141,6 @@ public class EntityHotdog extends EntityCreepBase implements IEntityCanChangeSiz
     }
 
     @Override
-    protected String[] getTamedNames() {
-        return names;
-    }
-
-    @Override
     protected String[] getAvailableTextures() {
         return textures;
     }
@@ -173,7 +162,7 @@ public class EntityHotdog extends EntityCreepBase implements IEntityCanChangeSiz
 
     @Override
     public String getLevelName() {
-        return levelNames[getLevel()];
+        return I18n.format("other.morecreeps.hotdog.level." + getLevel());
     }
 
     @Override
@@ -221,7 +210,7 @@ public class EntityHotdog extends EntityCreepBase implements IEntityCanChangeSiz
                 if (item == Items.DIAMOND) {
                     if (isRiding()) {
                         if (!world.isRemote) {
-                            player.sendMessage(new TextComponentString("Put your Hotdog down before building the Hotdog Heaven!"));
+                            player.sendMessage(new TextComponentTranslation("entity.morecreeps.hotdog.heaven.down"));
                         }
                     } else if (!getHeavenBuilt()) {
                         if (getLevel() >= 25) {
@@ -234,22 +223,21 @@ public class EntityHotdog extends EntityCreepBase implements IEntityCanChangeSiz
                                 itemStack.shrink(1);
                             }
                         } else if (!world.isRemote) {
-                            player.sendMessage(new TextComponentString("Your Hotdog must be level 25 to build a Hotdog Heaven."));
-
-                            player.sendMessage(new TextComponentString("\247b" + getCreepName() + " is only level \247f" + getLevel() + "."));
+                            player.sendMessage(new TextComponentTranslation("entity.morecreeps.hotdog.heaven.level"));
+                            player.sendMessage(new TextComponentTranslation("entity.morecreeps.hotdog.currentlevel", getName(), getLevel()));
                         }
                     } else if (!world.isRemote) {
-                        player.sendMessage(new TextComponentString("\247b" + getCreepName() + "\247f has already built a Hotdog Heaven."));
+                        player.sendMessage(new TextComponentTranslation("entity.morecreeps.hotdog.heaven.already", getName()));
                     }
 
                     return true;
                 } else if (item == Item.getItemFromBlock(Blocks.RED_FLOWER) || item == Item.getItemFromBlock(Blocks.YELLOW_FLOWER)) {
-                    smokePlain();
+                    EffectHelper.smoke(world, this, rand, true);
 
                     switch (getWanderState()) {
                         case 0:
                             if (!world.isRemote) {
-                                player.sendMessage(new TextComponentString("\2473" + getCreepName() + "\2476 will \247dWANDER\2476 around and have fun."));
+                                player.sendMessage(new TextComponentTranslation("entity.morecreeps.wanderstate.1", getName()));
                             }
 
                             setWanderState(1);
@@ -257,7 +245,7 @@ public class EntityHotdog extends EntityCreepBase implements IEntityCanChangeSiz
                             break;
                         case 1:
                             if (!world.isRemote) {
-                                player.sendMessage(new TextComponentString("\2473" + getCreepName() + "\2476 will \247dFIGHT\2476 and follow you!"));
+                                player.sendMessage(new TextComponentTranslation("entity.morecreeps.wanderstate.2", getName()));
                             }
 
                             setWanderState(2);
@@ -265,7 +253,7 @@ public class EntityHotdog extends EntityCreepBase implements IEntityCanChangeSiz
                             break;
                         case 2:
                             if (!world.isRemote) {
-                                player.sendMessage(new TextComponentString("\2473" + getCreepName() + "\2476 will \247dSTAY\2476 right here."));
+                                player.sendMessage(new TextComponentTranslation("entity.morecreeps.wanderstate.0", getName()));
                             }
 
                             setWanderState(0);
@@ -289,7 +277,7 @@ public class EntityHotdog extends EntityCreepBase implements IEntityCanChangeSiz
 
                     setHealth(getMaxHealth());
 
-                    smoke();
+                    EffectHelper.smoke(world, this, rand, false);
 
                     playSound(CreepsSoundHandler.guineaPigArmorSound, 1.0f, (rand.nextFloat() - rand.nextFloat()) * 0.2f + 1.0f);
 
@@ -301,7 +289,7 @@ public class EntityHotdog extends EntityCreepBase implements IEntityCanChangeSiz
 
                     setHealth(getMaxHealth());
 
-                    smoke();
+                    EffectHelper.smoke(world, this, rand, false);
 
                     playSound(CreepsSoundHandler.guineaPigArmorSound, 1.0f, (rand.nextFloat() - rand.nextFloat()) * 0.2f + 1.0f);
 
@@ -313,7 +301,7 @@ public class EntityHotdog extends EntityCreepBase implements IEntityCanChangeSiz
 
                     setHealth(getMaxHealth());
 
-                    smoke();
+                    EffectHelper.smoke(world, this, rand, false);
 
                     playSound(CreepsSoundHandler.guineaPigArmorSound, 1.0f, (rand.nextFloat() - rand.nextFloat()) * 0.2f + 1.0f);
 
@@ -325,7 +313,7 @@ public class EntityHotdog extends EntityCreepBase implements IEntityCanChangeSiz
 
                     setHealth(getMaxHealth());
 
-                    smoke();
+                    EffectHelper.smoke(world, this, rand, false);
 
                     playSound(CreepsSoundHandler.guineaPigArmorSound, 1.0f, (rand.nextFloat() - rand.nextFloat()) * 0.2f + 1.0f);
 
@@ -366,7 +354,7 @@ public class EntityHotdog extends EntityCreepBase implements IEntityCanChangeSiz
             } else if (item == Items.BONE) {
                 feed(player, 10, 15);
 
-                smoke();
+                EffectHelper.smoke(world, this, rand, false);
 
                 itemStack.shrink(1);
 
@@ -374,7 +362,7 @@ public class EntityHotdog extends EntityCreepBase implements IEntityCanChangeSiz
             } else if (item == Items.PORKCHOP) {
                 feed(player, 15, 30);
 
-                smoke();
+                EffectHelper.smoke(world, this, rand, false);
 
                 itemStack.shrink(1);
 
@@ -382,7 +370,7 @@ public class EntityHotdog extends EntityCreepBase implements IEntityCanChangeSiz
             } else if (item == Items.COOKED_PORKCHOP) {
                 feed(player, 25, 55);
 
-                smoke();
+                EffectHelper.smoke(world, this, rand, false);
 
                 itemStack.shrink(1);
 
@@ -424,7 +412,7 @@ public class EntityHotdog extends EntityCreepBase implements IEntityCanChangeSiz
 
     private boolean buildHeaven(EntityPlayer player, int x, int y, int z) {
         if (y > 95) {
-            player.sendMessage(new TextComponentString("You are too far up to build Hotdog Heaven!"));
+            player.sendMessage(new TextComponentTranslation("entity.morecreeps.hotdog.heaven.toofar"));
 
             return false;
         }
@@ -453,7 +441,7 @@ public class EntityHotdog extends EntityCreepBase implements IEntityCanChangeSiz
             playSound(CreepsSoundHandler.hotdogHeavenSound, getSoundVolume(), getSoundPitch());
 
             if (!world.isRemote) {
-                player.sendMessage(new TextComponentString("HOT DOG HEAVEN HAS BEEN BUILT!"));
+                player.sendMessage(new TextComponentTranslation("entity.morecreeps.hotdog.heaven.built"));
             }
 
             world.setBlockState(new BlockPos(x, y, z), Blocks.PLANKS.getDefaultState());
@@ -690,7 +678,7 @@ public class EntityHotdog extends EntityCreepBase implements IEntityCanChangeSiz
                 chest4.setInventorySlotContents(i, new ItemStack(Items.DIAMOND, 1));
             }
         } else if (!world.isRemote) {
-            player.sendMessage(new TextComponentString("Too many obstructions, choose another spot!"));
+            player.sendMessage(new TextComponentTranslation("entity.morecreeps.hotdog.heaven.obstructions"));
         }
 
         return false;

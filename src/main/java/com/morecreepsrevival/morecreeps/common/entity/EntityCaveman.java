@@ -42,7 +42,6 @@ public class EntityCaveman extends EntityCreepBase implements IEntityCanChangeSi
     public EntityCaveman(World worldIn) {
         super(worldIn);
 
-        setCreepTypeName("Caveman");
 
         float fat = rand.nextFloat() * 1.0f - rand.nextFloat() * 0.55f;
 

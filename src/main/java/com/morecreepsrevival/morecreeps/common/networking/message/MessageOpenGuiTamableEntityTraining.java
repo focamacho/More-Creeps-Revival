@@ -1,7 +1,7 @@
 package com.morecreepsrevival.morecreeps.common.networking.message;
 
 import com.morecreepsrevival.morecreeps.client.gui.GuiTamableEntityTraining;
-import com.morecreepsrevival.morecreeps.common.entity.EntityCreepBase;
+import com.morecreepsrevival.morecreeps.common.entity.EntityCreepBaseOwnable;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.client.Minecraft;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
@@ -36,7 +36,7 @@ public class MessageOpenGuiTamableEntityTraining implements IMessage {
             Minecraft minecraft = Minecraft.getMinecraft();
 
             minecraft.addScheduledTask(() -> {
-                EntityCreepBase entity = (EntityCreepBase) minecraft.world.getEntityByID(message.entityId);
+                EntityCreepBaseOwnable entity = (EntityCreepBaseOwnable) minecraft.world.getEntityByID(message.entityId);
 
                 if (entity != null) {
                     minecraft.displayGuiScreen(new GuiTamableEntityTraining(entity));

@@ -3,6 +3,7 @@ package com.morecreepsrevival.morecreeps.common.entity;
 import com.morecreepsrevival.morecreeps.common.capabilities.ILawyerFine;
 import com.morecreepsrevival.morecreeps.common.capabilities.LawyerFineProvider;
 import com.morecreepsrevival.morecreeps.common.config.MoreCreepsConfig;
+import com.morecreepsrevival.morecreeps.common.helpers.EffectHelper;
 import com.morecreepsrevival.morecreeps.common.items.CreepsItemHandler;
 import com.morecreepsrevival.morecreeps.common.networking.CreepsPacketHandler;
 import com.morecreepsrevival.morecreeps.common.networking.message.MessageSetLawyerFine;
@@ -35,7 +36,6 @@ public class EntityLawyerFromHell extends EntityCreepBase implements IMob, IEnti
     public EntityLawyerFromHell(World world) {
         super(world);
 
-        setCreepTypeName("Lawyer From Hell");
 
         creatureType = EnumCreatureType.MONSTER;
 
@@ -229,7 +229,7 @@ public class EntityLawyerFromHell extends EntityCreepBase implements IMob, IEnti
                     suckMoney(player);
                 }
 
-                if (!world.isRemote && MoreCreepsConfig.jailActive && fine >= 2500 && !getUndead() && JailManager.buildJail(player, world, rand)) {
+                if (!world.isRemote && MoreCreepsConfig.WorldGen.jailActive && fine >= 2500 && !getUndead() && JailManager.buildJail(player, world, rand)) {
                     capability.setFine(0);
 
                     CreepsPacketHandler.INSTANCE.sendTo(new MessageSetLawyerFine(0), (EntityPlayerMP) player);
@@ -299,8 +299,8 @@ public class EntityLawyerFromHell extends EntityCreepBase implements IMob, IEnti
                         }
                     }
                 }
-            } else if (entity instanceof EntityCreepBase) {
-                EntityCreepBase creep = (EntityCreepBase) entity;
+            } else if (entity instanceof EntityCreepBaseOwnable) {
+                EntityCreepBaseOwnable creep = (EntityCreepBaseOwnable) entity;
 
                 if (creep.isTamed()) {
                     playerTarget = creep.getOwner();
@@ -386,7 +386,7 @@ public class EntityLawyerFromHell extends EntityCreepBase implements IMob, IEnti
                 int randAmt = rand.nextInt(4) + 3;
 
                 for (int i = 0; i < randAmt; i++) {
-                    smoke2();
+                    EffectHelper.smoke2(world, this, rand);
 
                     EntityLawyerFromHell lawyer = new EntityLawyerFromHell(world);
 
@@ -416,7 +416,7 @@ public class EntityLawyerFromHell extends EntityCreepBase implements IMob, IEnti
             }
         }
 
-        smoke2();
+        EffectHelper.smoke2(world, this, rand);
 
         super.onDeath(cause);
     }

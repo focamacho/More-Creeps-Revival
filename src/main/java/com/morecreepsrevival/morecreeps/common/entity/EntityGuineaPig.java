@@ -1,10 +1,13 @@
 package com.morecreepsrevival.morecreeps.common.entity;
 
+import com.morecreepsrevival.morecreeps.common.config.MoreCreepsConfig;
+import com.morecreepsrevival.morecreeps.common.helpers.EffectHelper;
 import com.morecreepsrevival.morecreeps.common.items.CreepsItemHandler;
 import com.morecreepsrevival.morecreeps.common.sounds.CreepsSoundHandler;
 import net.minecraft.block.BlockColored;
 import net.minecraft.block.BlockDoor;
 import net.minecraft.block.BlockTorch;
+import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.MoverType;
 import net.minecraft.entity.player.EntityPlayer;
@@ -22,10 +25,10 @@ import net.minecraft.tileentity.TileEntityChest;
 import net.minecraft.util.*;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.text.TextComponentString;
+import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.world.World;
 
-public class EntityGuineaPig extends EntityCreepBase implements IEntityCanChangeSize {
+public class EntityGuineaPig extends EntityCreepBaseOwnable implements IEntityCanChangeSize {
     private static final DataParameter<Boolean> hotelBuilt = EntityDataManager.<Boolean>createKey(EntityGuineaPig.class, DataSerializers.BOOLEAN);
 
     private static final String[] textures = {
@@ -41,54 +44,6 @@ public class EntityGuineaPig extends EntityCreepBase implements IEntityCanChange
             "textures/entity/ggpiga"
     };
 
-    private static final String[] names = {
-            "Sugar", "Clover", "CoCo", "Sprinkles", "Mr. Rabies", "Stinky", "The Incredible Mr. CoCoPants", "Butchie", "Lassie", "Fuzzy",
-            "Nicholas", "Natalie", "Pierre", "Priscilla", "Mrs. McGillicutty", "Dr. Tom Jones", "Peter the Rat", "Wiskers", "Penelope", "Sparky",
-            "Tinkles", "Ricardo", "Jimothy", "Captain Underpants", "CoCo Van Gough", "Chuck Norris", "PeeWee", "Quasimodo", "ZSA ZSA", "Yum Yum",
-            "Deputy Dawg", "Henrietta Pussycat", "Bob Dog", "King Friday", "Jennifer", "The Situation", "Prince Charming", "Sid", "Sunshine", "Bubbles",
-            "Carl", "Snowy", "Dorf", "Chilly Willy", "Angry Bob", "George W. Bush", "Ted Lange from The Love Boat", "Notch", "Frank", "A Very Young Pig",
-            "Blaster", "Darwin", "Ruggles", "Chang", "Spaz", "Fluffy", "Fuzzy", "Charrlotte", "Tootsie", "Mary",
-            "Caroline", "Michelle", "Sandy", "Peach", "Scrappy", "Roxanne", "James the Pest", "Lucifer", "Shaniqua", "Wendy",
-            "Zippy", "Prescott Pig", "Pimpin' Pig", "Big Daddy", "Little Butchie", "The Force", "The Handler", "Little Louie", "Satin", "Sparkly Puff",
-            "Dr. Chews", "Pickles", "Longtooth", "Jeffry", "Pedro the Paunchy", "Wee Willy Wiskers", "Tidy Smith", "Johnson", "Big Joe", "Tiny Mackeral",
-            "Wonderpig", "Wee Wonderpig", "The Polish Baron", "Inconceivable", "Double Danny Dimples", "Jackie Jones", "Pistol", "Tiny Talker", "Strum", "Disco the Pig",
-            "Banjo", "Fingers", "Clean Streak", "Little Sweet", "Fern", "Youngblood", "Lazy Cottonball", "Foxy", "SlyFoxHound",
-            "Namjoon", "Seokjin", "Yoongi", "Hoseok", "Jimin", "Taehyung", "Jungkook", "Suga", "Jinnie",
-            "Halsey",
-            "Rose", "Lisa", "Jennie", "Jisoo",
-            "Momo", "Mina", "Sana",
-            "BamBam",
-            "Yuna",
-            "Soobin",
-            "Solar", "Hwasa",
-            "Hyuna",
-            "DAWN",
-            "Mini",
-            "Kai",
-            "GlockBoyKari",
-            "Wonho",
-            "ㅇㅅㅇ",
-            "Joongie", "Sannie", "Jongho", "Mingi", "Wooyoung", "Yunho", "Hwa", "Yeosang",
-            "Binnie", "Felix", "Chan", "Han",
-            "MINO",
-            "G-Dragon",
-            "BOBBY",
-            "Joshua", "Vernon",
-            "Yuto",
-            "Stan Loona",
-            "Jannabi",
-            "Irene", "Joy",
-            "Mr. Chu",
-            "Rap Monster",
-            "ThreeToe"
-    };
-
-    private static final String[] levelNames = {
-            "Guinea Pig", "A nothing pig", "An inexperienced pig", "Trainee", "Private", "Private First Class", "Corporal", "Sergeant", "Staff Sergeant", "Sergeant First Class",
-            "Master Sergeant", "First Sergeant", "Sergeant Major", "Command Sergeant Major", "Second Lieutenant", "First Lieutenant", "Captain", "Major", "Lieutenant Colonel", "Colonel",
-            "General of the Pig Army", "General of the Pig Army"
-    };
-
     private static final int[] levelDamages = {
             0, 200, 600, 1000, 1500, 2000, 2700, 3500, 4400, 5400,
             6600, 7900, 9300, 10800, 12400, 14100, 15800, 17600, 19500, 21500,
@@ -100,7 +55,6 @@ public class EntityGuineaPig extends EntityCreepBase implements IEntityCanChange
 
         setSize(0.6f, 0.6f);
 
-        setCreepTypeName("Guinea Pig");
 
         baseSpeed = 0.325d;
 
@@ -123,9 +77,7 @@ public class EntityGuineaPig extends EntityCreepBase implements IEntityCanChange
         super.writeEntityToNBT(compound);
 
         NBTTagCompound props = compound.getCompoundTag("MoreCreepsGuineaPig");
-
         props.setBoolean("HotelBuilt", getHotelBuilt());
-
         compound.setTag("MoreCreepsGuineaPig", props);
     }
 
@@ -147,6 +99,11 @@ public class EntityGuineaPig extends EntityCreepBase implements IEntityCanChange
         }
 
         return null;
+    }
+
+    @Override
+    protected String[] getTamedNames() {
+        return MoreCreepsConfig.TamedNames.guineaPigNames;
     }
 
     @Override
@@ -234,7 +191,7 @@ public class EntityGuineaPig extends EntityCreepBase implements IEntityCanChange
                 if (item == Items.DIAMOND) {
                     if (isRiding()) {
                         if (!world.isRemote) {
-                            player.sendMessage(new TextComponentString("Put your Guinea Pig down before building the Guinea Pig Hotel!"));
+                            player.sendMessage(new TextComponentTranslation("entity.morecreeps.guinea_pig.hotel.down"));
                         }
                     } else if (!getHotelBuilt()) {
                         if (getLevel() >= 20) {
@@ -247,22 +204,22 @@ public class EntityGuineaPig extends EntityCreepBase implements IEntityCanChange
                                 itemStack.shrink(1);
                             }
                         } else if (!world.isRemote) {
-                            player.sendMessage(new TextComponentString("Your Guinea Pig must be level 20 to build a Hotel."));
+                            player.sendMessage(new TextComponentTranslation("entity.morecreeps.guinea_pig.hotel.level"));
 
-                            player.sendMessage(new TextComponentString("\247b" + getCreepName() + " is only level \247f" + getLevel() + "."));
+                            player.sendMessage(new TextComponentTranslation("entity.morecreeps.guinea_pig.currentlevel", getName(), getLevel()));
                         }
                     } else if (!world.isRemote) {
-                        player.sendMessage(new TextComponentString("\247b" + getCreepName() + "\247f has already built a Hotel."));
+                        player.sendMessage(new TextComponentTranslation("entity.morecreeps.guinea_pig.hotel.already"));
                     }
 
                     return true;
                 } else if (item == Item.getItemFromBlock(Blocks.RED_FLOWER) || item == Item.getItemFromBlock(Blocks.YELLOW_FLOWER)) {
-                    smokePlain();
+                    EffectHelper.smoke(world, this, rand, true);
 
                     switch (getWanderState()) {
                         case 0:
                             if (!world.isRemote) {
-                                player.sendMessage(new TextComponentString("\2473" + getCreepName() + "\2476 will \247dWANDER\2476 around and have fun."));
+                                player.sendMessage(new TextComponentTranslation("entity.morecreeps.wanderstate.1", getName()));
                             }
 
                             setWanderState(1);
@@ -270,7 +227,7 @@ public class EntityGuineaPig extends EntityCreepBase implements IEntityCanChange
                             break;
                         case 1:
                             if (!world.isRemote) {
-                                player.sendMessage(new TextComponentString("\2473" + getCreepName() + "\2476 will \247dFIGHT\2476 and follow you!"));
+                                player.sendMessage(new TextComponentTranslation("entity.morecreeps.wanderstate.2", getName()));
                             }
 
                             setWanderState(2);
@@ -278,7 +235,7 @@ public class EntityGuineaPig extends EntityCreepBase implements IEntityCanChange
                             break;
                         case 2:
                             if (!world.isRemote) {
-                                player.sendMessage(new TextComponentString("\2473" + getCreepName() + "\2476 will \247dSTAY\2476 right here."));
+                                player.sendMessage(new TextComponentTranslation("entity.morecreeps.wanderstate.0", getName()));
                             }
 
                             setWanderState(0);
@@ -302,7 +259,7 @@ public class EntityGuineaPig extends EntityCreepBase implements IEntityCanChange
 
                     setHealth(getMaxHealth());
 
-                    smoke();
+                    EffectHelper.smoke(world, this, rand, false);
 
                     playSound(CreepsSoundHandler.guineaPigArmorSound, 1.0f, (rand.nextFloat() - rand.nextFloat()) * 0.2f + 1.0f);
 
@@ -314,7 +271,7 @@ public class EntityGuineaPig extends EntityCreepBase implements IEntityCanChange
 
                     setHealth(getMaxHealth());
 
-                    smoke();
+                    EffectHelper.smoke(world, this, rand, false);
 
                     playSound(CreepsSoundHandler.guineaPigArmorSound, 1.0f, (rand.nextFloat() - rand.nextFloat()) * 0.2f + 1.0f);
 
@@ -326,7 +283,7 @@ public class EntityGuineaPig extends EntityCreepBase implements IEntityCanChange
 
                     setHealth(getMaxHealth());
 
-                    smoke();
+                    EffectHelper.smoke(world, this, rand, false);
 
                     playSound(CreepsSoundHandler.guineaPigArmorSound, 1.0f, (rand.nextFloat() - rand.nextFloat()) * 0.2f + 1.0f);
 
@@ -338,7 +295,7 @@ public class EntityGuineaPig extends EntityCreepBase implements IEntityCanChange
 
                     setHealth(getMaxHealth());
 
-                    smoke();
+                    EffectHelper.smoke(world, this, rand, false);
 
                     playSound(CreepsSoundHandler.guineaPigArmorSound, 1.0f, (rand.nextFloat() - rand.nextFloat()) * 0.2f + 1.0f);
 
@@ -379,7 +336,7 @@ public class EntityGuineaPig extends EntityCreepBase implements IEntityCanChange
             } else if (item == Items.WHEAT || item == Items.MELON) {
                 feed(player, 10, 15);
 
-                smoke();
+                EffectHelper.smoke(world, this, rand, false);
 
                 itemStack.shrink(1);
 
@@ -387,7 +344,7 @@ public class EntityGuineaPig extends EntityCreepBase implements IEntityCanChange
             } else if (item == Items.COOKIE) {
                 feed(player, 15, 30);
 
-                smoke();
+                EffectHelper.smoke(world, this, rand, false);
 
                 itemStack.shrink(1);
 
@@ -395,7 +352,7 @@ public class EntityGuineaPig extends EntityCreepBase implements IEntityCanChange
             } else if (item == Items.APPLE) {
                 feed(player, 25, 55);
 
-                smoke();
+                EffectHelper.smoke(world, this, rand, false);
 
                 itemStack.shrink(1);
 
@@ -403,7 +360,7 @@ public class EntityGuineaPig extends EntityCreepBase implements IEntityCanChange
             } else if (item == Items.GOLDEN_APPLE) {
                 feed(player, 75, 111);
 
-                smoke();
+                EffectHelper.smoke(world, this, rand, false);
 
                 itemStack.shrink(1);
 
@@ -441,7 +398,7 @@ public class EntityGuineaPig extends EntityCreepBase implements IEntityCanChange
             playSound(CreepsSoundHandler.guineaPigHotelSound, getSoundVolume(), getSoundPitch());
 
             if (!world.isRemote) {
-                player.sendMessage(new TextComponentString("GUINEA PIG HOTEL BUILT!"));
+                player.sendMessage(new TextComponentTranslation("entity.morecreeps.guinea_pig.hotel.built"));
             }
 
             for (int h = 0; h < (height + 4); h++) {
@@ -612,7 +569,7 @@ public class EntityGuineaPig extends EntityCreepBase implements IEntityCanChange
 
             return true;
         } else if (!world.isRemote) {
-            player.sendMessage(new TextComponentString("Too many obstructions, choose another spot!"));
+            player.sendMessage(new TextComponentTranslation("entity.morecreeps.guinea_pig.heaven.obstructions"));
         }
 
         return false;
@@ -621,11 +578,6 @@ public class EntityGuineaPig extends EntityCreepBase implements IEntityCanChange
     @Override
     protected void dropItemsOnDeath() {
         dropItem(Items.PORKCHOP, 1);
-    }
-
-    @Override
-    protected String[] getTamedNames() {
-        return names;
     }
 
     @Override
@@ -659,7 +611,7 @@ public class EntityGuineaPig extends EntityCreepBase implements IEntityCanChange
 
     @Override
     public String getLevelName() {
-        return levelNames[getLevel()];
+        return I18n.format("other.morecreeps.guineapig.level." + getLevel());
     }
 
     @Override
@@ -673,11 +625,11 @@ public class EntityGuineaPig extends EntityCreepBase implements IEntityCanChange
     }
 
     public boolean getHotelBuilt() {
-        return ((Boolean) dataManager.get(hotelBuilt)).booleanValue();
+        return dataManager.get(hotelBuilt);
     }
 
     protected void setHotelBuilt(boolean b) {
-        dataManager.set(hotelBuilt, Boolean.valueOf(b));
+        dataManager.set(hotelBuilt, b);
     }
 
     @Override
