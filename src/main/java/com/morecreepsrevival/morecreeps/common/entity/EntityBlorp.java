@@ -25,17 +25,16 @@ public class EntityBlorp extends EntityCreepBaseOwnable implements IEntityCanCha
     private static final DataParameter<Boolean> hungry = EntityDataManager.<Boolean>createKey(EntityBlorp.class, DataSerializers.BOOLEAN);
     private static final DataParameter<Integer> hungryTime = EntityDataManager.createKey(EntityBlorp.class, DataSerializers.VARINT);
 
+    private BlockPos targetTree = null;
+
     public EntityBlorp(World worldIn) {
         super(worldIn);
 
         setModelSize(1.0f);
-
         setSize(1.0f, 1.5f);
 
         baseAttackDamage = 2.0d;
-
         baseHealth = 35.0f;
-
         baseSpeed = 0.25d;
 
         updateAttributes();
@@ -59,54 +58,45 @@ public class EntityBlorp extends EntityCreepBaseOwnable implements IEntityCanCha
             ignoreFrustumCheck = true;
         }
 
-        super.onLivingUpdate();
+       super.onLivingUpdate();
 
         if (getAttackTarget() != null) {
             setHungry(false);
-
+            targetTree = null;
             setHungryTime(100);
         }
 
         if (getHungry()) {
-            BlockPos blockPos = findTree(2.0d);
+            BlockPos blockPos;
+            if(targetTree != null) blockPos = targetTree;
+            else blockPos = findTree(2.0d);
 
             if (blockPos != null) {
                 playSound(CreepsSoundHandler.blorpEatSound, getSoundVolume(), getSoundPitch());
-
                 world.setBlockToAir(blockPos);
-
                 setHungryTime(getHungryTime() + rand.nextInt(100) + 25);
 
                 if (getHungryTime() > 1000) {
                     setHungry(false);
 
-                    if (getModelSize() < 6.0f) {
+                    if (getModelSize() < maxGrowth()) {
                         growModelSize(0.15f, maxGrowth());
-                        growHitboxSize(0.15f);
+
+                        float growthDifference = 100 - (currentSize * 100f / getModelSize());
+                        growHitboxSize(currentSize / 100f * growthDifference);
                     }
 
                     setLevel(getLevel() + 1);
-
                     updateAttributes();
-
                     addHealth(getLevelHealthMultiplier());
 
                     playSound(CreepsSoundHandler.blorpGrowSound, getSoundVolume(), getSoundPitch());
                 }
 
                 faceTreeTop();
-
-                if (posX < blockPos.getX()) {
-                    motionX += 0.050000000000000003d;
-                } else {
-                    motionX -= 0.050000000000000003d;
-                }
-
-                if (posZ < blockPos.getZ()) {
-                    motionZ += 0.050000000000000003d;
-                } else {
-                    motionZ -= 0.050000000000000003d;
-                }
+                navigator.tryMoveToXYZ(blockPos.getX(), blockPos.getY(), blockPos.getZ(), 1.0);
+            } else {
+                setHungryTime(100);
             }
         } else {
             setHungryTime(getHungryTime() - 1);
@@ -170,27 +160,17 @@ public class EntityBlorp extends EntityCreepBaseOwnable implements IEntityCanCha
         clearAITasks();
 
         NodeProcessor nodeProcessor = getNavigator().getNodeProcessor();
-
         nodeProcessor.setCanSwim(true);
-
         nodeProcessor.setCanEnterDoors(true);
 
         tasks.addTask(1, new EntityAISwimming(this));
-
         tasks.addTask(2, new EntityAIBreakDoor(this));
-
         tasks.addTask(3, new EntityAIAttackMelee(this, 1.0d, true));
-
         tasks.addTask(4, new EntityAIMoveTowardsRestriction(this, 0.5d));
-
         tasks.addTask(5, new EntityAIWanderAvoidWater(this, 1.0d));
-
         tasks.addTask(6, new EntityAIWatchClosest(this, EntityPlayer.class, 8.0f));
-
         tasks.addTask(6, new EntityAILookIdle(this));
-
         targetTasks.addTask(1, new EntityAIHurtByTarget(this, false));
-
         targetTasks.addTask(2, new EntityAINearestAttackableTarget<>(this, EntityBlorp.class, true));
     }
 
@@ -198,15 +178,10 @@ public class EntityBlorp extends EntityCreepBaseOwnable implements IEntityCanCha
         AxisAlignedBB axisalignedbb = getEntityBoundingBox().grow(d1, d1, d1);
 
         int i = MathHelper.floor(axisalignedbb.minX);
-
         int j = MathHelper.floor(axisalignedbb.maxX + 1.0D);
-
         int k = MathHelper.floor(axisalignedbb.minY);
-
         int l = MathHelper.floor(axisalignedbb.maxY + 1.0D);
-
         int i1 = MathHelper.floor(axisalignedbb.minZ);
-
         int j1 = MathHelper.floor(axisalignedbb.maxZ + 1.0D);
 
         for (int k1 = i; k1 < j; k1++) {
@@ -266,15 +241,11 @@ public class EntityBlorp extends EntityCreepBaseOwnable implements IEntityCanCha
         playSound(CreepsSoundHandler.blorpBounceSound, getSoundVolume(), getSoundPitch());
 
         double d = entity.posX - posX;
-
         double d2 = entity.posZ - posZ;
-
         float f1 = MathHelper.sqrt(d * d + d2 * d2);
 
         motionX = (d / (double) f1) * 0.20000000000000001D * 0.80000001192092896D + motionX * 0.20000000298023224D;
-
         motionZ = (d2 / (double) f1) * 0.20000000000000001D * 0.80000001192092896D + motionZ * 0.20000000298023224D;
-
         motionY = 0.70000000596246448D + (double) getModelSize() * 0.050000004559D;
 
         fallDistance = -25.0f + (getModelSize() * -5.0f);
