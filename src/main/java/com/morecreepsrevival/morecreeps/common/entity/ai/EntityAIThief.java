@@ -29,7 +29,6 @@ public class EntityAIThief extends EntityAIBase {
 
         if (entity != null) {
             thief.getLookHelper().setLookPositionWithEntity(entity, 10.0f, 10.0f);
-
             thief.getNavigator().tryMoveToEntityLiving(entity, 1.0d);
         }
     }
