@@ -66,45 +66,47 @@ public class EntityBlorp extends EntityCreepBaseOwnable implements IEntityCanCha
             setHungryTime(100);
         }
 
-        if (getHungry()) {
-            BlockPos blockPos;
-            if(targetTree != null) blockPos = targetTree;
-            else blockPos = findTree(2.0d);
+        if(!world.isRemote) {
+            if (getHungry()) {
+                BlockPos blockPos;
+                if (targetTree != null) blockPos = targetTree;
+                else blockPos = findTree(2.0d);
 
-            if (blockPos != null) {
-                playSound(CreepsSoundHandler.blorpEatSound, getSoundVolume(), getSoundPitch());
-                world.setBlockToAir(blockPos);
-                setHungryTime(getHungryTime() + rand.nextInt(100) + 25);
+                if (blockPos != null) {
+                    playSound(CreepsSoundHandler.blorpEatSound, getSoundVolume(), getSoundPitch());
+                    world.setBlockToAir(blockPos);
+                    setHungryTime(getHungryTime() + rand.nextInt(100) + 25);
 
-                if (getHungryTime() > 1000) {
-                    setHungry(false);
+                    if (getHungryTime() > 1000) {
+                        setHungry(false);
 
-                    if (getModelSize() < maxGrowth()) {
-                        growModelSize(0.15f, maxGrowth());
+                        if (getModelSize() < maxGrowth()) {
+                            growModelSize(0.15f, maxGrowth());
 
-                        float growthDifference = 100 - (currentSize * 100f / getModelSize());
-                        growHitboxSize(currentSize / 100f * growthDifference);
+                            float growthDifference = 100 - (currentSize * 100f / getModelSize());
+                            growHitboxSize(currentSize / 100f * growthDifference);
+                        }
+
+                        setLevel(getLevel() + 1);
+                        updateAttributes();
+                        addHealth(getLevelHealthMultiplier());
+
+                        playSound(CreepsSoundHandler.blorpGrowSound, getSoundVolume(), getSoundPitch());
                     }
 
-                    setLevel(getLevel() + 1);
-                    updateAttributes();
-                    addHealth(getLevelHealthMultiplier());
-
-                    playSound(CreepsSoundHandler.blorpGrowSound, getSoundVolume(), getSoundPitch());
+                    faceTreeTop();
+                    navigator.tryMoveToXYZ(blockPos.getX(), blockPos.getY(), blockPos.getZ(), 1.0);
+                } else {
+                    setHungryTime(100);
                 }
-
-                faceTreeTop();
-                navigator.tryMoveToXYZ(blockPos.getX(), blockPos.getY(), blockPos.getZ(), 1.0);
             } else {
-                setHungryTime(100);
-            }
-        } else {
-            setHungryTime(getHungryTime() - 1);
+                setHungryTime(getHungryTime() - 1);
 
-            if (getHungryTime() < 1) {
-                setHungry(true);
+                if (getHungryTime() < 1) {
+                    setHungry(true);
 
-                setHungryTime(1);
+                    setHungryTime(1);
+                }
             }
         }
     }
