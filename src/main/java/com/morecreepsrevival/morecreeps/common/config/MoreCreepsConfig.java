@@ -31,14 +31,14 @@ public class MoreCreepsConfig {
         @Config.Comment("Enable Pyramid Gen")
         public static boolean pyramidGen = true;
 
-        @Config.Comment("Pyramid Rarity")
-        public static int pyramidRarity = 500;
+        @Config.Comment("Pyramid Rarity Chance.")
+        public static float pyramidRarityChance = 0.5f;
 
         @Config.Comment("Enable Castle Gen")
         public static boolean castleGen = true;
 
-        @Config.Comment("Castle Rarity")
-        public static int castleRarity = 1000;
+        @Config.Comment("Castle Rarity Chance.")
+        public static float castleRarityChance = 0.5f;
 
         @Config.Comment("Enable Jail")
         public static boolean jailActive = true;

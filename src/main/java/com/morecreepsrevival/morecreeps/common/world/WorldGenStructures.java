@@ -16,10 +16,6 @@ import net.minecraftforge.fml.common.IWorldGenerator;
 import java.util.Random;
 
 public class WorldGenStructures implements IWorldGenerator {
-    private int pyramidCount = 0;
-
-    private int castleCount = 0;
-
     @Override
     public void generate(Random rand, int chunkX, int chunkZ, World world, IChunkGenerator chunkGenerator, IChunkProvider chunkProvider) {
         generateStructures(world, rand, chunkX, chunkZ);
@@ -27,38 +23,29 @@ public class WorldGenStructures implements IWorldGenerator {
 
     private void generateStructures(World world, Random rand, int chunkX, int chunkZ) {
         if (MoreCreepsConfig.WorldGen.pyramidGen) {
-            if (pyramidCount >= (1100 - (MoreCreepsConfig.WorldGen.pyramidRarity * 100) + 100)) {
-                if (rand.nextInt(30) == 0) {
-                    BlockPos pos = new BlockPos((chunkX << 4) + rand.nextInt(16) + 16, 65, (chunkZ << 4) + rand.nextInt(16) + 16);
+            float pyramidChance = Math.max(0f, MoreCreepsConfig.WorldGen.pyramidRarityChance / 100f);
 
-                    if ((new WorldGenPyramid()).generate(world, rand, pos)) {
-                        pyramidCount = 0;
+            if (pyramidChance > 0 && rand.nextFloat() < pyramidChance) {
+                BlockPos pos = new BlockPos((chunkX << 4) + rand.nextInt(16), 65, (chunkZ << 4) + rand.nextInt(16));
 
-                        for (EntityPlayer player : world.getEntitiesWithinAABB(EntityPlayer.class, (new AxisAlignedBB(pos)).grow(256.0d, 256.0d, 256.0d))) {
-                            CreepsPacketHandler.INSTANCE.sendTo(new MessagePlayPyramidDiscoveredSound(), (EntityPlayerMP) player);
-                        }
+                if ((new WorldGenPyramid()).generate(world, rand, pos)) {
+                    for (EntityPlayer player : world.getEntitiesWithinAABB(EntityPlayer.class, (new AxisAlignedBB(pos)).grow(256.0d, 256.0d, 256.0d))) {
+                        CreepsPacketHandler.INSTANCE.sendTo(new MessagePlayPyramidDiscoveredSound(), (EntityPlayerMP) player);
                     }
                 }
-            } else {
-                pyramidCount++;
             }
         }
 
         if (MoreCreepsConfig.WorldGen.castleGen) {
-            if (castleCount >= (1100 - (MoreCreepsConfig.WorldGen.castleRarity * 100) + 1300)) {
-                if (rand.nextInt(30) == 0) {
-                    BlockPos pos = new BlockPos((chunkX << 4) + rand.nextInt(16) + 16, rand.nextInt(40) + 80, (chunkZ << 4) + rand.nextInt(16) + 16);
+            float castleChance = Math.max(0f, MoreCreepsConfig.WorldGen.castleRarityChance / 100f);
+            if (rand.nextFloat() < castleChance) {
+                BlockPos pos = new BlockPos((chunkX << 4) + rand.nextInt(16), rand.nextInt(40) + 80, (chunkZ << 4) + rand.nextInt(16));
 
-                    if ((new WorldGenCastle()).generate(world, rand, pos)) {
-                        castleCount = 0;
-
-                        for (EntityPlayer player : world.getEntitiesWithinAABB(EntityPlayer.class, (new AxisAlignedBB(pos)).grow(256.0d, 256.0d, 256.0d))) {
-                            CreepsPacketHandler.INSTANCE.sendTo(new MessagePlayBattleCastleSound(), (EntityPlayerMP) player);
-                        }
+                if ((new WorldGenCastle()).generate(world, rand, pos)) {
+                    for (EntityPlayer player : world.getEntitiesWithinAABB(EntityPlayer.class, (new AxisAlignedBB(pos)).grow(256.0d, 256.0d, 256.0d))) {
+                        CreepsPacketHandler.INSTANCE.sendTo(new MessagePlayBattleCastleSound(), (EntityPlayerMP) player);
                     }
                 }
-            } else {
-                castleCount++;
             }
         }
     }
