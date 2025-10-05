@@ -2,29 +2,15 @@ package com.morecreepsrevival.morecreeps.common.world;
 
 import com.morecreepsrevival.morecreeps.common.MoreCreepsAndWeirdos;
 import com.morecreepsrevival.morecreeps.common.config.MoreCreepsConfig;
-import com.morecreepsrevival.morecreeps.common.entity.EntityCastleCritter;
-import com.morecreepsrevival.morecreeps.common.entity.EntityCastleGuard;
 import com.morecreepsrevival.morecreeps.common.entity.EntityCastleKing;
-import com.morecreepsrevival.morecreeps.common.entity.EntityMummy;
-import com.morecreepsrevival.morecreeps.common.helpers.CreepsUtil;
-import com.morecreepsrevival.morecreeps.common.items.CreepsItemHandler;
 import net.minecraft.block.Block;
-import net.minecraft.block.BlockStairs;
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.client.Minecraft;
-import net.minecraft.entity.EntityList;
-import net.minecraft.entity.monster.EntitySkeleton;
-import net.minecraft.entity.monster.EntitySpider;
 import net.minecraft.init.Blocks;
-import net.minecraft.init.Items;
-import net.minecraft.item.ItemStack;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityChest;
-import net.minecraft.tileentity.TileEntityMobSpawner;
-import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.text.TextComponentString;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
 import net.minecraft.world.biome.Biome;
@@ -36,6 +22,7 @@ import net.minecraftforge.common.BiomeDictionary;
 import net.minecraftforge.common.BiomeDictionary.Type;
 
 import javax.annotation.Nonnull;
+import java.util.ArrayList;
 import java.util.Objects;
 import java.util.Random;
 
@@ -46,7 +33,7 @@ public class WorldGenCastle extends WorldGenerator {
     private static Template STRUCTURE = null;
     private static BlockPos SIZE_STRUCTURE = null;
 
-    public static boolean tryCasheStructure(World world) {
+    public static boolean tryCacheStructure(World world) {
         if (STRUCTURE != null) return true;
 
         ResourceLocation location = new ResourceLocation(MoreCreepsAndWeirdos.modid, "castle(noentities)");
@@ -64,7 +51,7 @@ public class WorldGenCastle extends WorldGenerator {
     }
 
     public boolean newGenerate(@Nonnull World world, @Nonnull Random rand, @Nonnull BlockPos pos) {
-        if (!tryCasheStructure(world)) return false;
+        if (!tryCacheStructure(world)) return false;
 
         BlockPos structurepos = findStructurePos(world, rand, pos);
         if (structurepos == null) return false;
@@ -78,6 +65,39 @@ public class WorldGenCastle extends WorldGenerator {
         world.notifyBlockUpdate(structurepos, state, state, 3);
 
         STRUCTURE.addBlocksToWorld(world, structurepos, settings);
+
+        // Collect chests to set loot tables
+        ArrayList<TileEntityChest> collectedChests = new ArrayList<>();
+        for (int x = 0; x < structuresize.getX(); x++) {
+            for (int y = 0; y < structuresize.getY(); y++) {
+                for (int z = 0; z < structuresize.getZ(); z++) {
+                    BlockPos currentPos = structurepos.add(x, y, z);
+                    if (world.getBlockState(currentPos).getBlock() == Blocks.CHEST) {
+                        TileEntity tileEntity = world.getTileEntity(currentPos);
+                        if (tileEntity instanceof TileEntityChest) {
+                            collectedChests.add((TileEntityChest) tileEntity);
+                        }
+                    }
+                }
+            }
+        }
+
+        // Add all the gems loot tables, then fill the rest with the default
+        ArrayList<ResourceLocation> lootTablesToSet = new ArrayList<>();
+        lootTablesToSet.add(new ResourceLocation(MoreCreepsAndWeirdos.modid, "chests/castle_earth_gem"));
+        lootTablesToSet.add(new ResourceLocation(MoreCreepsAndWeirdos.modid, "chests/castle_fire_gem"));
+        lootTablesToSet.add(new ResourceLocation(MoreCreepsAndWeirdos.modid, "chests/castle_healing_gem"));
+        lootTablesToSet.add(new ResourceLocation(MoreCreepsAndWeirdos.modid, "chests/castle_mining_gem"));
+        lootTablesToSet.add(new ResourceLocation(MoreCreepsAndWeirdos.modid, "chests/castle_sky_gem"));
+        for(int i = 0; i < collectedChests.size() - 5; i++) {
+            lootTablesToSet.add(new ResourceLocation(MoreCreepsAndWeirdos.modid, "chests/castle"));
+        }
+
+        // Set the loot tables
+        for (TileEntityChest collectedChest : collectedChests) {
+            collectedChest.clear();
+            collectedChest.setLootTable(lootTablesToSet.remove(rand.nextInt(lootTablesToSet.size())), rand.nextLong());
+        }
 
         int stx = structuresize.getX() + structurepos.getX();
         int sty = structurepos.getY() - 1;
@@ -273,4 +293,5 @@ public class WorldGenCastle extends WorldGenerator {
             }
         }
     }
+
 }

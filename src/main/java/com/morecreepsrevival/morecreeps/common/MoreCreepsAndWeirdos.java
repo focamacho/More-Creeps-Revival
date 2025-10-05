@@ -99,7 +99,7 @@ public class MoreCreepsAndWeirdos {
     @SideOnly(Side.SERVER)
     public static void loadWorld(WorldEvent.Load event) {
         JailManager.tryCasheStructure(event.getWorld());
-        WorldGenCastle.tryCasheStructure(event.getWorld());
+        WorldGenCastle.tryCacheStructure(event.getWorld());
     }
 
     @SubscribeEvent
