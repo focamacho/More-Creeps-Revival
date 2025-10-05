@@ -30,10 +30,9 @@ import net.minecraft.world.World;
 import javax.annotation.Nonnull;
 
 public class EntityBum extends EntityCreepBase implements IMob, IEntityCanChangeSize {
+
     private static final DataParameter<Integer> timeToPee = EntityDataManager.createKey(EntityBum.class, DataSerializers.VARINT);
-
-    private static final DataParameter<Boolean> bumGave = EntityDataManager.<Boolean>createKey(EntityBum.class, DataSerializers.BOOLEAN);
-
+    private static final DataParameter<Boolean> bumGave = EntityDataManager.createKey(EntityBum.class, DataSerializers.BOOLEAN);
     private static final DataParameter<Integer> angerLevel = EntityDataManager.createKey(EntityBum.class, DataSerializers.VARINT);
 
     private float bumRotation = 999.0f;
@@ -77,25 +76,16 @@ public class EntityBum extends EntityCreepBase implements IMob, IEntityCanChange
         clearAITasks();
 
         NodeProcessor nodeProcessor = getNavigator().getNodeProcessor();
-
         nodeProcessor.setCanSwim(true);
-
         nodeProcessor.setCanEnterDoors(true);
 
         tasks.addTask(1, new EntityAISwimming(this));
-
         tasks.addTask(2, new EntityAIBreakDoor(this));
-
         tasks.addTask(3, new EntityAIAttackMelee(this, 1.0d, true));
-
         tasks.addTask(4, new EntityAIMoveTowardsRestriction(this, 0.5d));
-
         tasks.addTask(5, new EntityAIWanderAvoidWater(this, 1.0d));
-
         tasks.addTask(6, new EntityAIWatchClosest(this, EntityPlayer.class, 8.0f));
-
         tasks.addTask(6, new EntityAILookIdle(this));
-
         targetTasks.addTask(1, new EntityAIHurtByTarget(this, false));
     }
 
@@ -124,11 +114,11 @@ public class EntityBum extends EntityCreepBase implements IMob, IEntityCanChange
     }
 
     public boolean getBumGave() {
-        return ((Boolean) dataManager.get(bumGave)).booleanValue();
+        return dataManager.get(bumGave);
     }
 
     private void setBumGave(boolean b) {
-        dataManager.set(bumGave, Boolean.valueOf(b));
+        dataManager.set(bumGave, b);
     }
 
     public int getTimeToPee() {
@@ -353,11 +343,8 @@ public class EntityBum extends EntityCreepBase implements IMob, IEntityCanChange
         NBTTagCompound props = compound.getCompoundTag("MoreCreepsBum");
 
         props.setBoolean("BumGave", getBumGave());
-
         props.setInteger("AngerLevel", getAngerLevel());
-
         props.setInteger("TimeToPee", getTimeToPee());
-
         compound.setTag("MoreCreepsBum", props);
     }
 
@@ -369,6 +356,7 @@ public class EntityBum extends EntityCreepBase implements IMob, IEntityCanChange
 
         if (props.hasKey("BumGave")) {
             setBumGave(props.getBoolean("BumGave"));
+            updateTexture();
         }
 
         if (props.hasKey("AngerLevel")) {
