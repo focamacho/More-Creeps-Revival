@@ -81,19 +81,14 @@ public class EntitySneakySal extends EntityCreepBase implements IRangedAttackMob
         super.entityInit();
 
         dataManager.register(dissedMax, rand.nextInt(4) + 1);
-
         dataManager.register(sale, rand.nextInt(2000) + 100);
 
         dataManager.register(salePrice, 0.0f);
-
         dataManager.register(shooting, Boolean.valueOf(false));
-
         dataManager.register(shootingDelay, 0);
 
         dataManager.register(shopItems, new NBTTagCompound());
-
         dataManager.get(shopItems).setIntArray("Items", new int[30]);
-
         dataManager.setDirty(shopItems);
 
         dataManager.register(blackFriday, Boolean.valueOf(false));
@@ -109,25 +104,16 @@ public class EntitySneakySal extends EntityCreepBase implements IRangedAttackMob
         clearAITasks();
 
         NodeProcessor nodeProcessor = getNavigator().getNodeProcessor();
-
         nodeProcessor.setCanSwim(true);
-
         nodeProcessor.setCanEnterDoors(true);
 
         tasks.addTask(1, new EntityAISwimming(this));
-
         tasks.addTask(2, new EntityAIBreakDoor(this));
-
         tasks.addTask(3, new EntityAIAttackRanged(this, 1.0d, 25, 75, 50.0f));
-
         tasks.addTask(4, new EntityAIMoveTowardsRestriction(this, 0.5d));
-
         tasks.addTask(5, new EntityAIWanderAvoidWater(this, 1.0d));
-
         tasks.addTask(6, new EntityAIWatchClosest(this, EntityPlayer.class, 8.0f));
-
         tasks.addTask(6, new EntityAILookIdle(this));
-
         targetTasks.addTask(1, new EntityAIHurtByTarget(this, false));
     }
 
@@ -139,7 +125,12 @@ public class EntitySneakySal extends EntityCreepBase implements IRangedAttackMob
 
         playSound(CreepsSoundHandler.bulletSound, getSoundVolume(), getSoundPitch());
 
-        EntityBullet bullet = new EntityBullet(world, this, target.posX - posX, target.getEntityBoundingBox().minY + (target.height / 2.0f) - posY + (height / 2.0f), target.posZ - posZ);
+        EntityBullet bullet = new EntityBullet(world, this);
+
+        double d0 = target.posX - this.posX;
+        double d1 = target.getEntityBoundingBox().minY + (double)(target.height / 3.0F) - bullet.posY;
+        double d2 = target.posZ - this.posZ;
+        bullet.shoot(d0, d1 + target.height * 0.20000000298023224D, d2, 1.6F, 0.0F);
 
         if (!world.isRemote) {
             world.spawnEntity(bullet);

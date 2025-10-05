@@ -7,15 +7,13 @@ import net.minecraft.item.Item;
 import net.minecraftforge.fml.client.registry.IRenderFactory;
 
 public class RenderCreepsItemFactory implements IRenderFactory<Entity> {
-    private final Item item;
 
+    private final Item item;
     private final float shadowSize;
 
     public RenderCreepsItemFactory(Item itemIn, float shadowSizeIn) {
         super();
-
         item = itemIn;
-
         shadowSize = shadowSizeIn;
     }
 

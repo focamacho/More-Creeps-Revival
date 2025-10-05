@@ -43,7 +43,6 @@ public class CreepsItemHandler {
     public static Item lolly;
     public static Item gooDonut;
     public static Item raygun;
-    public static Item dev_raygun;
     public static Item evilEgg;
     public static Item earthGem;
     public static Item miningGem;
@@ -111,7 +110,6 @@ public class CreepsItemHandler {
         lolly = new ItemLolly();
         gooDonut = new ItemGooDonut();
         raygun = new ItemRaygun();
-        dev_raygun = new ItemDevRaygun();
         evilEgg = new ItemEvilEgg();
         earthGem = new ItemEarthGem();
         miningGem = new ItemMiningGem();
@@ -175,7 +173,6 @@ public class CreepsItemHandler {
                 lolly,
                 gooDonut,
                 raygun,
-                dev_raygun,
                 evilEgg,
                 earthGem,
                 miningGem,

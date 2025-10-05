@@ -37,19 +37,19 @@ public class EntityRay extends Entity implements IProjectile {
             return p_apply_1_.canBeCollidedWith();
         }
     });
-    private static final DataParameter<Byte> CRITICAL = EntityDataManager.<Byte>createKey(EntityRay.class, DataSerializers.BYTE);
+
     /**
      * The owner of this arrow.
      */
     public Entity shootingEntity;
     protected boolean inGround;
-    private int xTile;
-    private int yTile;
-    private int zTile;
-    private Block inTile;
-    private int inData;
-    private int ticksInAir;
-    private double damage;
+    protected int xTile;
+    protected int yTile;
+    protected int zTile;
+    protected Block inTile;
+    protected int inData;
+    protected int ticksInAir;
+    protected double damage;
 
     public EntityRay(World worldIn) {
         super(worldIn);
@@ -60,6 +60,9 @@ public class EntityRay extends Entity implements IProjectile {
         this.setSize(0.25F, 0.25F);
         setNoGravity(true);
     }
+
+    @Override
+    protected void entityInit() {}
 
     public EntityRay(World worldIn, double x, double y, double z) {
         this(worldIn);
@@ -86,11 +89,7 @@ public class EntityRay extends Entity implements IProjectile {
         return distance < d0 * d0;
     }
 
-    protected void entityInit() {
-        this.dataManager.register(CRITICAL, (byte) 0);
-    }
-
-    public void shoot(Entity shooter, float pitch, float yaw, float p_184547_4_, float velocity, float inaccuracy) {
+    public void shoot(Entity shooter, float pitch, float yaw, float velocity, float inaccuracy) {
         float f = -MathHelper.sin(yaw * 0.017453292F) * MathHelper.cos(pitch * 0.017453292F);
         float f1 = -MathHelper.sin(pitch * 0.017453292F);
         float f2 = MathHelper.cos(yaw * 0.017453292F) * MathHelper.cos(pitch * 0.017453292F);
@@ -375,7 +374,7 @@ public class EntityRay extends Entity implements IProjectile {
         }
     }
 
-    private void blast() {
+    protected void blast() {
         for (int i = 0; i < 8; i++) {
             EffectHelper.smokeRay(world, this, rand);
         }
@@ -477,7 +476,7 @@ public class EntityRay extends Entity implements IProjectile {
         return 0.0F;
     }
 
-    private void checkMeltBlock(double x, double y, double z) {
+    protected void checkMeltBlock(double x, double y, double z) {
         if (!MoreCreepsConfig.Miscellaneous.rayGunMelt) {
             return;
         }
