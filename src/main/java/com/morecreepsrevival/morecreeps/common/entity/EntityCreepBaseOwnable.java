@@ -337,20 +337,6 @@ public class EntityCreepBaseOwnable extends EntityCreepBase implements IEntityOw
                     }
 
                     return true;
-                } else if (canRidePlayer() && canRidePlayer(player)) {
-                    if (!player.equals(getRidingEntity())) {
-                        if (isStackable()) {
-                            copyLocationAndAnglesFrom(player);
-
-                            startRiding(player, true);
-                        } else {
-                            startRiding(player);
-                        }
-                    } else {
-                        dismountRidingEntity();
-                    }
-
-                    return true;
                 } else if (isRideable() && canPlayerRide(player) && !player.equals(getFirstPassenger()) && player.startRiding(this)) {
                     return true;
                 }
@@ -586,10 +572,7 @@ public class EntityCreepBaseOwnable extends EntityCreepBase implements IEntityOw
         return (getOwnerId() != null);
     }
 
-    public boolean isTamable() {
-        return false;
-    }
-
+    @Override
     public boolean canRidePlayer(EntityPlayer player) {
         return (!isTamable() || (isTamed() && isPlayerOwner(player)));
     }

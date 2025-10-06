@@ -2,11 +2,15 @@ package com.morecreepsrevival.morecreeps.common.entity;
 
 import com.morecreepsrevival.morecreeps.common.networking.CreepsPacketHandler;
 import com.morecreepsrevival.morecreeps.common.networking.message.MessageDismountEntity;
+import com.morecreepsrevival.morecreeps.common.networking.message.MessageOpenGuiTamableEntity;
 import net.minecraft.block.material.Material;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.*;
 import net.minecraft.entity.ai.*;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.init.Items;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.datasync.DataParameter;
@@ -14,6 +18,7 @@ import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.pathfinding.NodeProcessor;
 import net.minecraft.util.DamageSource;
+import net.minecraft.util.EnumHand;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.BlockPos;
@@ -449,6 +454,45 @@ public class EntityCreepBase extends EntityCreature {
         }
 
         return flag;
+    }
+
+    @Override
+    protected boolean processInteract(EntityPlayer player, EnumHand hand) {
+        if (hand == EnumHand.OFF_HAND) {
+            return super.processInteract(player, hand);
+        }
+
+        ItemStack itemStack = player.getHeldItem(hand);
+
+        if (isEntityAlive()) {
+            if (itemStack.isEmpty()) {
+                if (canRidePlayer() && canRidePlayer(player)) {
+                    if (!player.equals(getRidingEntity())) {
+                        if (isStackable()) {
+                            copyLocationAndAnglesFrom(player);
+
+                            startRiding(player, true);
+                        } else {
+                            startRiding(player);
+                        }
+                    } else {
+                        dismountRidingEntity();
+                    }
+
+                    return true;
+                }
+            }
+        }
+
+        return super.processInteract(player, hand);
+    }
+
+    public boolean canRidePlayer(EntityPlayer player) {
+        return !isTamable();
+    }
+
+    public boolean isTamable() {
+        return false;
     }
 
     @Override
