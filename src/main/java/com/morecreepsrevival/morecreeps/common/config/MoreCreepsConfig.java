@@ -37,7 +37,7 @@ public class MoreCreepsConfig {
         @Config.Comment("Enable Castle Gen")
         public static boolean castleGen = true;
 
-        @Config.Comment("Castle Rarity. Given as a percentage chance per chunk, so 0.5 = 0.5% chance per chunk.")
+        @Config.Comment("Castle Rarity. Given as a percentage chance per chunk, so 0.1 = 0.1% chance per chunk.")
         public static float castleRarityChance = 0.1f;
 
         @Config.Comment("Enable Jail")
