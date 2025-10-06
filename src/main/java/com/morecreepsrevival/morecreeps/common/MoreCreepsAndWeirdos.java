@@ -3,6 +3,7 @@ package com.morecreepsrevival.morecreeps.common;
 import com.morecreepsrevival.morecreeps.common.capabilities.CreepsCapabilityHandler;
 import com.morecreepsrevival.morecreeps.common.capabilities.IPlayerJumping;
 import com.morecreepsrevival.morecreeps.common.capabilities.PlayerJumpingProvider;
+import com.morecreepsrevival.morecreeps.common.command.DebugCastleLoot;
 import com.morecreepsrevival.morecreeps.common.config.MoreCreepsConfig;
 import com.morecreepsrevival.morecreeps.common.entity.EntityBubbleScum;
 import com.morecreepsrevival.morecreeps.common.entity.EntityCreepBase;
@@ -34,10 +35,7 @@ import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 import net.minecraftforge.fml.common.Mod.EventHandler;
 import net.minecraftforge.fml.common.Mod.Instance;
 import net.minecraftforge.fml.common.SidedProxy;
-import net.minecraftforge.fml.common.event.FMLInitializationEvent;
-import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
-import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
-import net.minecraftforge.fml.common.event.FMLServerStoppingEvent;
+import net.minecraftforge.fml.common.event.*;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.InputEvent;
 import net.minecraftforge.fml.common.gameevent.PlayerEvent;
@@ -88,6 +86,11 @@ public class MoreCreepsAndWeirdos {
         GameRegistry.registerWorldGenerator(new WorldGenStructures(), 0);
 
         proxy.init(event);
+    }
+
+    @EventHandler
+    public void serverInit(FMLServerStartingEvent event) {
+        event.registerServerCommand(new DebugCastleLoot());
     }
 
     @EventHandler
