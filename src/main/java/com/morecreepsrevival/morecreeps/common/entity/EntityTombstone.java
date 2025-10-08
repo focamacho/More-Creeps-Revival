@@ -32,6 +32,7 @@ public class EntityTombstone extends EntityCreepBaseOwnable {
 
     public EntityTombstone(World worldIn) {
         super(worldIn);
+        setSize(0.8f, 0.8f);
         additionalProps = new NBTTagCompound();
     }
 
