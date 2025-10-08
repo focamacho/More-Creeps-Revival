@@ -4,7 +4,7 @@ import com.morecreepsrevival.morecreeps.client.models.ModelGuineaPig;
 import com.morecreepsrevival.morecreeps.common.entity.EntityGuineaPig;
 import net.minecraft.client.renderer.entity.RenderManager;
 
-public class RenderGuineaPig<T extends EntityGuineaPig> extends RenderCreep<T> {
+public class RenderGuineaPig<T extends EntityGuineaPig> extends RenderCreepOwnable<T> {
     public RenderGuineaPig(RenderManager renderManager) {
         super(renderManager, new ModelGuineaPig(0.5f), 0.5f);
     }

@@ -9,6 +9,7 @@ import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
+import net.minecraft.client.resources.I18n;
 import net.minecraft.util.ResourceLocation;
 import org.lwjgl.opengl.GL11;
 
@@ -52,7 +53,7 @@ public class RenderCreepOwnable<T extends EntityCreepBaseOwnable> extends Render
         s += entity.getName();
 
         if (entity.getHealth() < (entity.getMaxHealth() / 2)) {
-            s += " §c * WOUNDED *";
+            s += " §c * " + I18n.format("entity.morecreeps.wounded") + " *";
         }
 
         if (entity.canLevelUp()) {
