@@ -33,8 +33,10 @@ public class MessageLevelUpTamedEntity implements IMessage {
         @Override
         public IMessage onMessage(MessageLevelUpTamedEntity message, MessageContext context) {
             EntityPlayerMP player = context.getServerHandler().player;
-
             WorldServer world = player.getServerWorld();
+
+            if(!player.canUseCommand(2, "levelupcreature"))
+                return null;
 
             world.addScheduledTask(() -> {
                 if (!world.getWorldInfo().areCommandsAllowed()) {
