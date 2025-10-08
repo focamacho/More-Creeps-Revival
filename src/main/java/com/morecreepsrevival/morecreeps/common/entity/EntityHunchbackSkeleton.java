@@ -149,11 +149,6 @@ public class EntityHunchbackSkeleton extends EntityCreepBaseOwnable implements I
     }
 
     @Override
-    public boolean getCanSpawnHere() {
-        return true;
-    }
-
-    @Override
     protected SoundEvent getAmbientSound() {
         return SoundEvents.ENTITY_SKELETON_AMBIENT;
     }

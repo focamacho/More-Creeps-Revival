@@ -44,11 +44,6 @@ public class EntityEvilSnowman extends EntityCreepBase implements IMob, IEntityC
     }
 
     @Override
-    public boolean getCanSpawnHere() {
-        return true;
-    }
-
-    @Override
     protected SoundEvent getAmbientSound() {
         return CreepsSoundHandler.snowmanSound;
     }

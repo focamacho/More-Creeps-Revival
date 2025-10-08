@@ -712,24 +712,6 @@ public class EntityCreepBase extends EntityCreature {
     }
 
     @Override
-    public boolean getCanSpawnHere() {
-        switch (getCreatureType()) {
-            case AMBIENT:
-                return true;
-            case MONSTER:
-                if (world.getDifficulty() == EnumDifficulty.PEACEFUL || !isValidLightLevel()) {
-                    return false;
-                }
-
-                break;
-            default:
-                break;
-        }
-
-        return super.getCanSpawnHere();
-    }
-
-    @Override
     public void onUpdate() {
         if (internalWanderState != getWanderState()) {
             initEntityAI();

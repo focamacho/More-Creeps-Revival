@@ -133,11 +133,6 @@ public class EntityCastleGuard extends EntityCreepBase implements IMob, IEntityC
     }
 
     @Override
-    public boolean getCanSpawnHere() {
-        return true;
-    }
-
-    @Override
     public float maxShrink() {
         return 0.4f;
     }

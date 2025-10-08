@@ -155,9 +155,4 @@ public class EntityCastleKing extends EntityCreepBase {
         return super.attackEntityAsMob(entity);
     }
 
-    @Override
-    public boolean getCanSpawnHere() {
-        return true;
-    }
-
 }

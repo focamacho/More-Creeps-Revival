@@ -81,8 +81,4 @@ public class EntityEvilLight extends EntityCreepBase {
         return CreepsSoundHandler.evilLightSound;
     }
 
-    @Override
-    public boolean getCanSpawnHere() {
-        return true;
-    }
 }

@@ -101,11 +101,6 @@ public class EntityCastleCritter extends EntityCreepBase implements IMob, IEntit
     }
 
     @Override
-    public boolean getCanSpawnHere() {
-        return true;
-    }
-
-    @Override
     public float maxShrink() {
         return 0.4f;
     }
