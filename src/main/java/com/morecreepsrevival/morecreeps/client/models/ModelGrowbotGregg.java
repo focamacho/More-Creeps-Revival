@@ -173,6 +173,31 @@ public class ModelGrowbotGregg extends ModelBiped {
 
         this.bipedHead.rotateAngleY = f3 / 57.29578F;
         this.bipedHead.rotateAngleX = f4 / 57.29578F;
+
+        this.mouth.rotateAngleY = this.bipedHead.rotateAngleY;
+        this.mouth.rotateAngleX = this.bipedHead.rotateAngleX;
+
+        this.eyeL.rotateAngleY = this.bipedHead.rotateAngleY;
+        this.eyeL.rotateAngleX = this.bipedHead.rotateAngleX;
+
+        this.eyeR.rotateAngleY = this.bipedHead.rotateAngleY;
+        this.eyeR.rotateAngleX = this.bipedHead.rotateAngleX;
+
+        this.antL.rotateAngleY = this.bipedHead.rotateAngleY;
+        this.antL.rotateAngleX = this.bipedHead.rotateAngleX;
+
+        this.antR.rotateAngleY = this.bipedHead.rotateAngleY;
+        this.antR.rotateAngleX = this.bipedHead.rotateAngleX;
+
+        this.capL.rotateAngleY = this.bipedHead.rotateAngleY;
+        this.capL.rotateAngleX = this.bipedHead.rotateAngleX;
+
+        this.capR.rotateAngleY = this.bipedHead.rotateAngleY;
+        this.capR.rotateAngleX = this.bipedHead.rotateAngleX;
+
+        this.lights.rotateAngleY = this.bipedHead.rotateAngleY;
+        this.lights.rotateAngleX = this.bipedHead.rotateAngleX;
+
         this.bipedRightArm.rotateAngleX = MathHelper.cos(f * 0.6662F + 3.141593F) * 2.0F * f1 * 0.5F;
         this.bipedLeftArm.rotateAngleX = MathHelper.cos(f * 0.6662F) * 2.0F * f1 * 0.5F;
         this.bipedRightArm.rotateAngleZ = 0.0F;
