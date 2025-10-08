@@ -43,19 +43,13 @@ public class EntityGrowbotGregg extends EntityCreepBase {
         clearAITasks();
 
         NodeProcessor nodeProcessor = getNavigator().getNodeProcessor();
-
         nodeProcessor.setCanSwim(true);
-
         nodeProcessor.setCanEnterDoors(true);
 
         tasks.addTask(1, new EntityAISwimming(this));
-
         tasks.addTask(2, new EntityAIBreakDoor(this));
-
         tasks.addTask(3, new EntityAIMoveTowardsTarget(this, 0.2d, 16.0f));
-
         tasks.addTask(4, new EntityAIWanderAvoidWater(this, 1.0d));
-
         tasks.addTask(5, new EntityAILookIdle(this));
     }
 
@@ -120,22 +114,33 @@ public class EntityGrowbotGregg extends EntityCreepBase {
 
         if (targetedEntity instanceof EntityGrowbotGregg) {
             setAttackTarget(null);
-
             targetedEntity = null;
         }
+
+
+        if (targetedEntity instanceof EntityCreepBase) {
+            EntityCreepBase creep = (EntityCreepBase) targetedEntity;
+            if(creep instanceof IEntityCanChangeSize && creep.currentSize >= ((IEntityCanChangeSize) creep).maxGrowth()) {
+                setAttackTarget(null);
+                targetedEntity = null;
+            }
+        }
+
 
         if (targetedEntity == null || aggroCooldown-- <= 0) {
             List<Entity> list = world.getEntitiesWithinAABBExcludingEntity(this, getEntityBoundingBox().expand(16.0d, 16.0d, 16.0d));
 
-            if (list.size() > 0) {
+            if (!list.isEmpty()) {
                 int i = rand.nextInt(list.size());
 
                 Entity entity1 = list.get(i);
 
                 if (entity1 instanceof EntityCreepBase) {
-                    setAttackTarget((EntityLivingBase) entity1);
-
-                    targetedEntity = entity1;
+                    EntityCreepBase creep = (EntityCreepBase) entity1;
+                    if(creep instanceof IEntityCanChangeSize && creep.currentSize < ((IEntityCanChangeSize) creep).maxGrowth()) {
+                        setAttackTarget((EntityLivingBase) entity1);
+                        targetedEntity = entity1;
+                    }
                 }
             }
 
@@ -152,7 +157,6 @@ public class EntityGrowbotGregg extends EntityCreepBase {
 
                 if (attackCounter == 20) {
                     playSound(CreepsSoundHandler.growRaySound, 0.5f, 0.4f / (rand.nextFloat() * 0.4f + 0.8f));
-
                     faceEntity(targetedEntity, 360.0f, 360.0f);
 
                     EntityGrow grow = new EntityGrow(world, this);
