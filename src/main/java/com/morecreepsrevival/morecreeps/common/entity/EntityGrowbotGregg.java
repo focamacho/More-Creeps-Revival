@@ -120,7 +120,7 @@ public class EntityGrowbotGregg extends EntityCreepBase {
 
         if (targetedEntity instanceof EntityCreepBase) {
             EntityCreepBase creep = (EntityCreepBase) targetedEntity;
-            if(creep instanceof IEntityCanChangeSize && creep.currentSize >= ((IEntityCanChangeSize) creep).maxGrowth()) {
+            if(creep instanceof IEntityCanChangeSize && creep.getModelSize() >= ((IEntityCanChangeSize) creep).maxGrowth()) {
                 setAttackTarget(null);
                 targetedEntity = null;
             }
