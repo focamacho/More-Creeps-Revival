@@ -56,7 +56,7 @@ public class MoreCreepsAndWeirdos {
 
     public static final String modid = "morecreeps";
     public static final String name = "More Creeps And Weirdos Revival";
-    public static final String version = "1.0.25";
+    public static final String version = "1.0.27";
 
     public static final CreativeTabs creativeTab = new CreativeTabs("creepsTab") {
         public ItemStack getTabIconItem() {
