@@ -90,7 +90,7 @@ public class MoreCreepsAndWeirdos {
 
     @EventHandler
     public void serverInit(FMLServerStartingEvent event) {
-        event.registerServerCommand(new DebugCastleLoot());
+        //event.registerServerCommand(new DebugCastleLoot());
     }
 
     @EventHandler
