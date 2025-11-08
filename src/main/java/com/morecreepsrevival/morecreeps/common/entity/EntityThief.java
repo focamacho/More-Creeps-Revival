@@ -17,6 +17,7 @@ import net.minecraft.util.EnumHand;
 import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.world.World;
+import java.util.Arrays;
 
 public class EntityThief extends EntityCreepBase implements IMob, IEntityCanChangeSize {
 
@@ -27,6 +28,7 @@ public class EntityThief extends EntityCreepBase implements IMob, IEntityCanChan
         creatureType = EnumCreatureType.MONSTER;
         baseHealth = (float) rand.nextInt(20) + 10.0f;
         baseSpeed = 0.35d;
+        Arrays.fill(inventoryHandsDropChances, 1F);
         updateAttributes();
     }
 
